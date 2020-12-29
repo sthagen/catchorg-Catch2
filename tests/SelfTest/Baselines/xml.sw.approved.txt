@@ -12133,7 +12133,7 @@ Message from section two
       <Section name="Comparisons are deep" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
         <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
           <Original>
-            (char*)buffer1 != (char*)buffer2
+            reinterpret_cast&lt;char*>(buffer1) != reinterpret_cast&lt;char*>(buffer2)
           </Original>
           <Expanded>
             "Hello" != "Hello"
@@ -14533,6 +14533,429 @@ There is no extra whitespace here
           </Expanded>
         </Expression>
         <OverallResults successes="1" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResult success="true"/>
+    </TestCase>
+    <TestCase name="Usage of AllMatch range matcher" tags="[matchers][quantifiers][templated]" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+      <Section name="Basic usage" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Original>
+            data, AllMatch(SizeIs(5))
+          </Original>
+          <Expanded>
+            { { 0, 1, 2, 3, 5 }, { 4, -3, -2, 5, 0 }, { 0, 0, 0, 5, 0 }, { 0, -5, 0, 5, 0 }, { 1, 0, 0, -1, 5 } } all match has size == 5
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Original>
+            data, !AllMatch(Contains(0) &amp;&amp; Contains(1))
+          </Original>
+          <Expanded>
+            { { 0, 1, 2, 3, 5 }, { 4, -3, -2, 5, 0 }, { 0, 0, 0, 5, 0 }, { 0, -5, 0, 5, 0 }, { 1, 0, 0, -1, 5 } } not all match ( contains element 0 and contains element 1 )
+          </Expanded>
+        </Expression>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Type requires ADL found begin and end" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Original>
+            needs_adl, AllMatch( Predicate&lt;int>( []( int elem ) { return elem &lt; 6; } ) )
+          </Original>
+          <Expanded>
+            { 1, 2, 3, 4, 5 } all match matches undescribed predicate
+          </Expanded>
+        </Expression>
+        <OverallResults successes="1" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Shortcircuiting" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Section name="All are read" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked, allMatch
+            </Original>
+            <Expanded>
+              { 1, 2, 3, 4, 5 } all match matches undescribed predicate
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[0]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[1]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[2]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[3]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[4]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <OverallResults successes="6" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="6" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Shortcircuiting" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Section name="Short-circuited" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked, !allMatch
+            </Original>
+            <Expanded>
+              { 1, 2, 3, 4, 5 } not all match matches undescribed predicate
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[0]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[1]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[2]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[3])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[4])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <OverallResults successes="6" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="6" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResult success="true"/>
+    </TestCase>
+    <TestCase name="Usage of AnyMatch range matcher" tags="[matchers][quantifiers][templated]" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+      <Section name="Basic usage" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Original>
+            data, AnyMatch(SizeIs(5))
+          </Original>
+          <Expanded>
+            { { 0, 1, 2, 3, 5 }, { 4, -3, -2, 5, 0 }, { 0, 0, 0, 5, 0 }, { 0, -5, 0, 5, 0 }, { 1, 0, 0, -1, 5 } } any match has size == 5
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Original>
+            data, !AnyMatch(Contains(0) &amp;&amp; Contains(10))
+          </Original>
+          <Expanded>
+            { { 0, 1, 2, 3, 5 }, { 4, -3, -2, 5, 0 }, { 0, 0, 0, 5, 0 }, { 0, -5, 0, 5, 0 }, { 1, 0, 0, -1, 5 } } not any match ( contains element 0 and contains element 10 )
+          </Expanded>
+        </Expression>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Type requires ADL found begin and end" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Original>
+            needs_adl, AnyMatch( Predicate&lt;int>( []( int elem ) { return elem &lt; 3; } ) )
+          </Original>
+          <Expanded>
+            { 1, 2, 3, 4, 5 } any match matches undescribed predicate
+          </Expanded>
+        </Expression>
+        <OverallResults successes="1" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Shortcircuiting" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Section name="All are read" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked, !anyMatch
+            </Original>
+            <Expanded>
+              { 1, 2, 3, 4, 5 } not any match matches undescribed predicate
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[0]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[1]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[2]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[3]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[4]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <OverallResults successes="6" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="6" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Shortcircuiting" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Section name="Short-circuited" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked, anyMatch
+            </Original>
+            <Expanded>
+              { 1, 2, 3, 4, 5 } any match matches undescribed predicate
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[0]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[1])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[2])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[3])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[4])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <OverallResults successes="6" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="6" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResult success="true"/>
+    </TestCase>
+    <TestCase name="Usage of NoneMatch range matcher" tags="[matchers][quantifiers][templated]" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+      <Section name="Basic usage" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Original>
+            data, NoneMatch(SizeIs(6))
+          </Original>
+          <Expanded>
+            { { 0, 1, 2, 3, 5 }, { 4, -3, -2, 5, 0 }, { 0, 0, 0, 5, 0 }, { 0, -5, 0, 5, 0 }, { 1, 0, 0, -1, 5 } } none match has size == 6
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Original>
+            data, !NoneMatch(Contains(0) &amp;&amp; Contains(1))
+          </Original>
+          <Expanded>
+            { { 0, 1, 2, 3, 5 }, { 4, -3, -2, 5, 0 }, { 0, 0, 0, 5, 0 }, { 0, -5, 0, 5, 0 }, { 1, 0, 0, -1, 5 } } not none match ( contains element 0 and contains element 1 )
+          </Expanded>
+        </Expression>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Type requires ADL found begin and end" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Original>
+            needs_adl, NoneMatch( Predicate&lt;int>( []( int elem ) { return elem > 6; } ) )
+          </Original>
+          <Expanded>
+            { 1, 2, 3, 4, 5 } none match matches undescribed predicate
+          </Expanded>
+        </Expression>
+        <OverallResults successes="1" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Shortcircuiting" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Section name="All are read" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked, noneMatch
+            </Original>
+            <Expanded>
+              { 1, 2, 3, 4, 5 } none match matches undescribed predicate
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[0]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[1]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[2]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[3]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[4]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <OverallResults successes="6" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="6" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Shortcircuiting" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+        <Section name="Short-circuited" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+          <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked, !noneMatch
+            </Original>
+            <Expanded>
+              { 1, 2, 3, 4, 5 } not none match matches undescribed predicate
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              mocked.derefed[0]
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[1])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[2])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[3])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/MatchersRanges.tests.cpp" >
+            <Original>
+              !(mocked.derefed[4])
+            </Original>
+            <Expanded>
+              !false
+            </Expanded>
+          </Expression>
+          <OverallResults successes="6" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="6" failures="0" expectedFailures="0"/>
       </Section>
       <OverallResult success="true"/>
     </TestCase>
@@ -18598,9 +19021,9 @@ loose text artifact
       </Section>
       <OverallResult success="true"/>
     </TestCase>
-    <OverallResults successes="1840" failures="149" expectedFailures="21"/>
-    <OverallResultsCases successes="261" failures="86" expectedFailures="4"/>
+    <OverallResults successes="1885" failures="149" expectedFailures="21"/>
+    <OverallResultsCases successes="264" failures="86" expectedFailures="4"/>
   </Group>
-  <OverallResults successes="1840" failures="148" expectedFailures="21"/>
-  <OverallResultsCases successes="261" failures="86" expectedFailures="4"/>
+  <OverallResults successes="1885" failures="148" expectedFailures="21"/>
+  <OverallResultsCases successes="264" failures="86" expectedFailures="4"/>
 </Catch>

@@ -51,7 +51,10 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/internal/catch_source_line_info.hpp
     ${SOURCES_DIR}/internal/catch_compiler_capabilities.hpp
     ${SOURCES_DIR}/catch_config.hpp
+    ${SOURCES_DIR}/internal/catch_config_android_logwrite.hpp
+    ${SOURCES_DIR}/internal/catch_config_counter.hpp
     ${SOURCES_DIR}/internal/catch_config_uncaught_exceptions.hpp
+    ${SOURCES_DIR}/internal/catch_config_wchar.hpp
     ${SOURCES_DIR}/internal/catch_console_colour.hpp
     ${SOURCES_DIR}/internal/catch_context.hpp
     ${SOURCES_DIR}/internal/catch_debug_console.hpp
@@ -88,6 +91,7 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/matchers/catch_matchers_exception.hpp
     ${SOURCES_DIR}/matchers/catch_matchers_floating_point.hpp
     ${SOURCES_DIR}/matchers/catch_matchers_predicate.hpp
+    ${SOURCES_DIR}/matchers/catch_matchers_quantifiers.hpp
     ${SOURCES_DIR}/matchers/catch_matchers_string.hpp
     ${SOURCES_DIR}/matchers/catch_matchers_templated.hpp
     ${SOURCES_DIR}/matchers/catch_matchers_vector.hpp
