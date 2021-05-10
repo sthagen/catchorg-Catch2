@@ -9,16 +9,15 @@ either of these is a breaking change, and thus will not happen until
 at least the next major release.
 
 
+### `ParseAndAddCatchTests.cmake`
+
+The CMake/CTest integration using `ParseAndAddCatchTests.cmake` is deprecated,
+as it can be replaced by `Catch.cmake` that provides the function
+`catch_discover_tests` to get tests directly from a CMake target via the
+command line interface instead of parsing C++ code with regular expressions.
+
 
 ## Planned changes
-
-### `CHECKED_IF` and `CHECKED_ELSE`
-
-To make the `CHECKED_IF` and `CHECKED_ELSE` macros more useful, they will
-be marked as "OK to fail" (`Catch::ResultDisposition::SuppressFail` flag
-will be added), which means that their failure will not fail the test,
-making the `else` actually useful.
-
 
 ### Console Colour API
 

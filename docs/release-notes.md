@@ -3,6 +3,9 @@
 # Release notes
 **Contents**<br>
 [3.0.1](#301)<br>
+[2.13.6](#2136)<br>
+[2.13.5](#2135)<br>
+[2.13.4](#2134)<br>
 [2.13.3](#2133)<br>
 [2.13.2](#2132)<br>
 [2.13.1](#2131)<br>
@@ -170,6 +173,48 @@ new design.
   * `catch2` is the statically compiled implementation by itself
   * `catch2-with-main` also links in the default main
 
+
+## 2.13.6
+
+### Fixes
+* Disabling all signal handlers no longer breaks compilation  (#2212, #2213)
+
+### Miscellaneous
+* `catch_discover_tests` should handle escaped semicolon (`;`) better (#2214, #2215)
+
+
+## 2.13.5
+
+### Improvements
+* Detection of MAC and IPHONE platforms has been improved (#2140, #2157)
+* Added workaround for bug in XLC 16.1.0.1 (#2155)
+* Add detection for LCC when it is masquerading as GCC (#2199)
+* Modified posix signal handling so it supports newer libcs (#2178)
+  * `MINSIGSTKSZ` was no longer usable in constexpr context.
+
+### Fixes
+* Fixed compilation of benchmarking when `min` and `max` macros are defined (#2159)
+  * Including `windows.h` without `NOMINMAX` remains a really bad idea, don't do it
+
+### Miscellaneous
+* The check whether Catch2 is being built as a subproject is now more reliable (#2202, #2204)
+  * The problem was that if the variable name used internally was defined the project including Catch2 as subproject, it would not be properly overwritten for Catch2's CMake.
+
+
+## 2.13.4
+
+### Improvements
+* Improved the hashing algorithm used for shuffling test cases (#2070)
+  * `TEST_CASE`s that differ only in the last character should be properly shuffled
+  * Note that this means that v2.13.4 gives you a different order of test cases than 2.13.3, even given the same seed.
+
+### Miscellaneous
+* Deprecated `ParseAndAddCatchTests` CMake integration (#2092)
+  * It is impossible to implement it properly for all the different test case variants Catch2 provides, and there are better options provided.
+  * Use `catch_discover_tests` instead, which uses runtime information about available tests.
+* Fixed bug in `catch_discover_tests` that would cause it to fail when used in specific project structures (#2119)
+* Added Bazel build file
+* Added an experimental static library target to CMake
 
 
 ## 2.13.3
