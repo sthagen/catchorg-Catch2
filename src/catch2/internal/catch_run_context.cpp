@@ -167,7 +167,6 @@ namespace Catch {
         m_lastAssertionInfo{ StringRef(), SourceLineInfo("",0), StringRef(), ResultDisposition::Normal },
         m_includeSuccessfulResults( m_config->includeSuccessfulResults() || m_reporter->getPreferences().shouldReportAllAssertions )
     {
-        m_context.setRunner(this);
         m_context.setResultCapture(this);
         m_reporter->testRunStarting(m_runInfo);
     }
@@ -520,7 +519,7 @@ namespace Catch {
     void RunContext::handleMessage(
             AssertionInfo const& info,
             ResultWas::OfType resultType,
-            StringRef const& message,
+            StringRef message,
             AssertionReaction& reaction
     ) {
         m_reporter->assertionStarting( info );
