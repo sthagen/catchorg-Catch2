@@ -3541,6 +3541,8 @@ ok {test-number} - encode( stringWithQuotes, Catch::XmlEncode::ForAttributes ) =
 ok {test-number} - encode( "[\x01]" ) == "[\\x01]" for: "[\x01]" == "[\x01]"
 # XmlEncode
 ok {test-number} - encode( "[\x7F]" ) == "[\\x7F]" for: "[\x7F]" == "[\x7F]"
+# XmlWriter writes boolean attributes as true/false
+ok {test-number} - stream.str(), Contains(R"(attr1="true")") && Contains(R"(attr2="false")") for: "<?xml version="1.0" encoding="UTF-8"?> <Element1 attr1="true" attr2="false"/> " ( contains: "attr1="true"" and contains: "attr2="false"" )
 # analyse no analysis
 ok {test-number} - analysis.mean.point.count() == 23 for: 23.0 == 23
 # analyse no analysis
@@ -3701,6 +3703,8 @@ ok {test-number} - long_var == unsigned_short_var for: 1 == 1
 ok {test-number} - long_var == unsigned_int_var for: 1 == 1
 # comparisons between int variables
 ok {test-number} - long_var == unsigned_long_var for: 1 == 1
+# empty tags are not allowed
+ok {test-number} - Catch::TestCaseInfo("", { "test with an empty tag", "[]" }, dummySourceLineInfo)
 # erfc_inv
 ok {test-number} - erfc_inv(1.103560) == Approx(-0.09203687623843015) for: -0.0920368762 == Approx( -0.0920368762 )
 # erfc_inv
@@ -4039,9 +4043,9 @@ ok {test-number} - strlen(std::get<0>(data)) == static_cast<size_t>(std::get<1>(
 # tables
 ok {test-number} - strlen(std::get<0>(data)) == static_cast<size_t>(std::get<1>(data)) for: 6 == 6
 # tags with dots in later positions are not parsed as hidden
-ok {test-number} - testcase->tags.size() == 1 for: 1 == 1
+ok {test-number} - testcase.tags.size() == 1 for: 1 == 1
 # tags with dots in later positions are not parsed as hidden
-ok {test-number} - testcase->tags[0].original == "magic.tag"_catch_sr for: magic.tag == magic.tag
+ok {test-number} - testcase.tags[0].original == "magic.tag"_catch_sr for: magic.tag == magic.tag
 # thrown std::strings are translated
 not ok {test-number} - unexpected exception with message: 'Why would you throw a std::string?'
 # toString on const wchar_t const pointer returns the string contents
@@ -4216,5 +4220,5 @@ ok {test-number} - q3 == 23. for: 23.0 == 23.0
 ok {test-number} -
 # xmlentitycheck
 ok {test-number} -
-1..2107
+1..2109
 

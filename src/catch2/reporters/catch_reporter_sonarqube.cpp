@@ -19,7 +19,7 @@ namespace Catch {
     void SonarQubeReporter::testRunStarting(TestRunInfo const& testRunInfo) {
         CumulativeReporterBase::testRunStarting(testRunInfo);
         xml.startElement("testExecutions");
-        xml.writeAttribute("version", '1');
+        xml.writeAttribute("version"_sr, '1');
     }
 
     void SonarQubeReporter::testGroupEnded(TestGroupStats const& testGroupStats) {
@@ -40,7 +40,7 @@ namespace Catch {
 
     void SonarQubeReporter::writeTestFile(std::string const& filename, std::vector<TestCaseNode const*> const& testCaseNodes) {
         XmlWriter::ScopedElement e = xml.scopedElement("file");
-        xml.writeAttribute("path", filename);
+        xml.writeAttribute("path"_sr, filename);
 
         for (auto const& child : testCaseNodes)
             writeTestCase(*child);
@@ -61,8 +61,8 @@ namespace Catch {
 
         if (!sectionNode.assertions.empty() || !sectionNode.stdOut.empty() || !sectionNode.stdErr.empty()) {
             XmlWriter::ScopedElement e = xml.scopedElement("testCase");
-            xml.writeAttribute("name", name);
-            xml.writeAttribute("duration", static_cast<long>(sectionNode.stats.durationInSeconds * 1000));
+            xml.writeAttribute("name"_sr, name);
+            xml.writeAttribute("duration"_sr, static_cast<long>(sectionNode.stats.durationInSeconds * 1000));
 
             writeAssertions(sectionNode, okToFail);
         }
@@ -113,26 +113,26 @@ namespace Catch {
             XmlWriter::ScopedElement e = xml.scopedElement(elementName);
 
             ReusableStringStream messageRss;
-            messageRss << result.getTestMacroName() << "(" << result.getExpression() << ")";
-            xml.writeAttribute("message", messageRss.str());
+            messageRss << result.getTestMacroName() << '(' << result.getExpression() << ')';
+            xml.writeAttribute("message"_sr, messageRss.str());
 
             ReusableStringStream textRss;
             if (stats.totals.assertions.total() > 0) {
                 textRss << "FAILED:\n";
                 if (result.hasExpression()) {
-                    textRss << "\t" << result.getExpressionInMacro() << "\n";
+                    textRss << '\t' << result.getExpressionInMacro() << '\n';
                 }
                 if (result.hasExpandedExpression()) {
-                    textRss << "with expansion:\n\t" << result.getExpandedExpression() << "\n";
+                    textRss << "with expansion:\n\t" << result.getExpandedExpression() << '\n';
                 }
             }
 
             if (!result.getMessage().empty())
-                textRss << result.getMessage() << "\n";
+                textRss << result.getMessage() << '\n';
 
             for (auto const& msg : stats.infoMessages)
                 if (msg.type == ResultWas::Info)
-                    textRss << msg.message << "\n";
+                    textRss << msg.message << '\n';
 
             textRss << "at " << result.getSourceInfo();
             xml.writeText(textRss.str(), XmlFormatting::Newline);

@@ -69,11 +69,13 @@ namespace Catch {
         // Save previous errno, to prevent sprintf from overwriting it
         ErrnoGuard guard;
 #ifdef _MSC_VER
-        sprintf_s( buffer, "%.3f", duration );
+        size_t printedLength = static_cast<size_t>(
+            sprintf_s( buffer, "%.3f", duration ) );
 #else
-        std::snprintf( buffer, maxDoubleSize, "%.3f", duration );
+        size_t printedLength = static_cast<size_t>(
+            std::snprintf( buffer, maxDoubleSize, "%.3f", duration ) );
 #endif
-        return std::string( buffer );
+        return std::string( buffer, printedLength );
     }
 
     bool shouldShowDuration( IConfig const& config, double duration ) {
@@ -169,7 +171,7 @@ namespace Catch {
                                .width( CATCH_CONFIG_CONSOLE_WIDTH - 10 );
             out << str << wrapper << '\n';
         }
-        out << pluralise( tags.size(), "tag" ) << '\n' << std::endl;
+        out << pluralise(tags.size(), "tag") << "\n\n" << std::flush;
     }
 
     void defaultListTests(std::ostream& out, std::vector<TestCaseHandle> const& tests, bool isFiltered, Verbosity verbosity) {
@@ -196,7 +198,7 @@ namespace Catch {
 
             out << TextFlow::Column(testCaseInfo.name).initialIndent(2).indent(4) << '\n';
             if (verbosity >= Verbosity::High) {
-                out << TextFlow::Column(Catch::Detail::stringify(testCaseInfo.lineInfo)).indent(4) << std::endl;
+                out << TextFlow::Column(Catch::Detail::stringify(testCaseInfo.lineInfo)).indent(4) << '\n';
             }
             if (!testCaseInfo.tags.empty() &&
                 verbosity > Verbosity::Quiet) {
@@ -205,10 +207,11 @@ namespace Catch {
         }
 
         if (isFiltered) {
-            out << pluralise(tests.size(), "matching test case") << '\n' << std::endl;
+            out << pluralise(tests.size(), "matching test case");
         } else {
-            out << pluralise(tests.size(), "test case") << '\n' << std::endl;
+            out << pluralise(tests.size(), "test case");
         }
+        out << "\n\n" << std::flush;
     }
 
 } // namespace Catch

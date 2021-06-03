@@ -16544,6 +16544,19 @@ There is no extra whitespace here
       </Section>
       <OverallResult success="true"/>
     </TestCase>
+    <TestCase name="XmlWriter writes boolean attributes as true/false" tags="[XML][XmlWriter]" filename="tests/<exe-name>/IntrospectiveTests/Xml.tests.cpp" >
+      <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Xml.tests.cpp" >
+        <Original>
+          stream.str(), Contains(R"(attr1="true")") &amp;&amp; Contains(R"(attr2="false")")
+        </Original>
+        <Expanded>
+          "&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;Element1 attr1="true" attr2="false"/>
+" ( contains: "attr1="true"" and contains: "attr2="false"" )
+        </Expanded>
+      </Expression>
+      <OverallResult success="true"/>
+    </TestCase>
     <TestCase name="analyse no analysis" tags="[benchmark]" filename="tests/<exe-name>/IntrospectiveTests/InternalBenchmark.tests.cpp" >
       <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/InternalBenchmark.tests.cpp" >
         <Original>
@@ -17240,6 +17253,17 @@ There is no extra whitespace here
         </Original>
         <Expanded>
           1 == 1
+        </Expanded>
+      </Expression>
+      <OverallResult success="true"/>
+    </TestCase>
+    <TestCase name="empty tags are not allowed" tags="[tags]" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+      <Expression success="true" type="REQUIRE_THROWS" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+        <Original>
+          Catch::TestCaseInfo("", { "test with an empty tag", "[]" }, dummySourceLineInfo)
+        </Original>
+        <Expanded>
+          Catch::TestCaseInfo("", { "test with an empty tag", "[]" }, dummySourceLineInfo)
         </Expanded>
       </Expression>
       <OverallResult success="true"/>
@@ -18973,7 +18997,7 @@ loose text artifact
     <TestCase name="tags with dots in later positions are not parsed as hidden" tags="[tags]" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
       <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
         <Original>
-          testcase->tags.size() == 1
+          testcase.tags.size() == 1
         </Original>
         <Expanded>
           1 == 1
@@ -18981,7 +19005,7 @@ loose text artifact
       </Expression>
       <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
         <Original>
-          testcase->tags[0].original == "magic.tag"_catch_sr
+          testcase.tags[0].original == "magic.tag"_catch_sr
         </Original>
         <Expanded>
           magic.tag == magic.tag
@@ -19802,9 +19826,9 @@ loose text artifact
       </Section>
       <OverallResult success="true"/>
     </TestCase>
-    <OverallResults successes="1938" failures="147" expectedFailures="23"/>
-    <OverallResultsCases successes="271" failures="86" expectedFailures="6"/>
+    <OverallResults successes="1940" failures="147" expectedFailures="23"/>
+    <OverallResultsCases successes="273" failures="86" expectedFailures="6"/>
   </Group>
-  <OverallResults successes="1938" failures="146" expectedFailures="23"/>
-  <OverallResultsCases successes="271" failures="86" expectedFailures="6"/>
+  <OverallResults successes="1940" failures="146" expectedFailures="23"/>
+  <OverallResultsCases successes="273" failures="86" expectedFailures="6"/>
 </Catch>
