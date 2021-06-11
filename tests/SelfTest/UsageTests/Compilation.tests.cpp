@@ -259,3 +259,60 @@ TEST_CASE("Assertion macros support bit operators and bool conversions", "[compi
     REQUIRE_FALSE(lhs ^ lhs);
 }
 
+namespace {
+    struct ImmovableType {
+        ImmovableType() = default;
+
+        ImmovableType(ImmovableType const&) = delete;
+        ImmovableType& operator=(ImmovableType const&) = delete;
+        ImmovableType(ImmovableType&&) = delete;
+        ImmovableType& operator=(ImmovableType&&) = delete;
+
+        friend bool operator==(ImmovableType const&, ImmovableType const&) {
+            return true;
+        }
+    };
+}
+
+TEST_CASE("Immovable types are supported in basic assertions", "[compilation][.approvals]") {
+    REQUIRE(ImmovableType{} == ImmovableType{});
+}
+
+namespace adl {
+
+struct always_true {
+    explicit operator bool() const { return true; }
+};
+
+#define COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(op) \
+template <class T, class U> \
+auto operator op (T&&, U&&) { \
+    return always_true{}; \
+}
+
+COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(==)
+COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(!=)
+COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(<)
+COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(>)
+COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(<=)
+COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(>=)
+COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(|)
+COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(&)
+COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR(^)
+
+#undef COMPILATION_TEST_DEFINE_UNIVERSAL_OPERATOR
+
+}
+
+TEST_CASE("ADL universal operators don't hijack expression deconstruction", "[compilation][.approvals]") {
+    REQUIRE(adl::always_true{});
+    REQUIRE(0 == adl::always_true{});
+    REQUIRE(0 != adl::always_true{});
+    REQUIRE(0 < adl::always_true{});
+    REQUIRE(0 > adl::always_true{});
+    REQUIRE(0 <= adl::always_true{});
+    REQUIRE(0 >= adl::always_true{});
+    REQUIRE(0 | adl::always_true{});
+    REQUIRE(0 & adl::always_true{});
+    REQUIRE(0 ^ adl::always_true{});
+}
