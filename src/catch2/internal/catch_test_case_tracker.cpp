@@ -29,6 +29,10 @@ namespace TestCaseTracking {
 
     ITracker::~ITracker() = default;
 
+    void ITracker::markAsNeedingAnotherRun() {
+        m_runState = NeedsAnotherRun;
+    }
+
     void ITracker::addChild( ITrackerPtr&& child ) {
         m_children.push_back( std::move(child) );
     }
@@ -45,7 +49,27 @@ namespace TestCaseTracking {
         return ( it != m_children.end() ) ? it->get() : nullptr;
     }
 
+    bool ITracker::isSectionTracker() const { return false; }
+    bool ITracker::isGeneratorTracker() const { return false; }
 
+    bool ITracker::isSuccessfullyCompleted() const {
+        return m_runState == CompletedSuccessfully;
+    }
+
+    bool ITracker::isOpen() const {
+        return m_runState != NotStarted && !isComplete();
+    }
+
+    bool ITracker::hasStarted() const { return m_runState != NotStarted; }
+
+    void ITracker::openChild() {
+        if (m_runState != ExecutingChildren) {
+            m_runState = ExecutingChildren;
+            if (m_parent) {
+                m_parent->openChild();
+            }
+        }
+    }
 
     ITracker& TrackerContext::startRun() {
         using namespace std::string_literals;
@@ -84,36 +108,13 @@ namespace TestCaseTracking {
 
 
     TrackerBase::TrackerBase( NameAndLocation const& nameAndLocation, TrackerContext& ctx, ITracker* parent ):
-        ITracker(nameAndLocation),
-        m_ctx( ctx ),
-        m_parent( parent )
+        ITracker(nameAndLocation, parent),
+        m_ctx( ctx )
     {}
 
     bool TrackerBase::isComplete() const {
         return m_runState == CompletedSuccessfully || m_runState == Failed;
     }
-    bool TrackerBase::isSuccessfullyCompleted() const {
-        return m_runState == CompletedSuccessfully;
-    }
-    bool TrackerBase::isOpen() const {
-        return m_runState != NotStarted && !isComplete();
-    }
-
-    ITracker& TrackerBase::parent() {
-        assert( m_parent ); // Should always be non-null except for root
-        return *m_parent;
-    }
-
-    void TrackerBase::openChild() {
-        if( m_runState != ExecutingChildren ) {
-            m_runState = ExecutingChildren;
-            if( m_parent )
-                m_parent->openChild();
-        }
-    }
-
-    bool TrackerBase::isSectionTracker() const { return false; }
-    bool TrackerBase::isGeneratorTracker() const { return false; }
 
     void TrackerBase::open() {
         m_runState = Executing;
@@ -158,9 +159,6 @@ namespace TestCaseTracking {
         moveToParent();
         m_ctx.completeCycle();
     }
-    void TrackerBase::markAsNeedingAnotherRun() {
-        m_runState = NeedsAnotherRun;
-    }
 
     void TrackerBase::moveToParent() {
         assert( m_parent );
@@ -176,7 +174,7 @@ namespace TestCaseTracking {
     {
         if( parent ) {
             while( !parent->isSectionTracker() )
-                parent = &parent->parent();
+                parent = parent->parent();
 
             SectionTracker& parentSection = static_cast<SectionTracker&>( *parent );
             addNextFilters( parentSection.m_filters );
@@ -243,10 +241,6 @@ namespace TestCaseTracking {
     }
 
 } // namespace TestCaseTracking
-
-using TestCaseTracking::ITracker;
-using TestCaseTracking::TrackerContext;
-using TestCaseTracking::SectionTracker;
 
 } // namespace Catch
 
