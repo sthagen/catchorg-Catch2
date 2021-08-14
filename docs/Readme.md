@@ -33,10 +33,10 @@ FAQ:
 * [Known limitations](limitations.md#top)
  
 Other:
-* [Why Catch?](why-catch.md#top)
+* [Why Catch2?](why-catch.md#top)
 * [Migrating from v2 to v3](migrate-v2-to-v3.md#top)
-* [Open Source Projects using Catch](opensource-users.md#top)
-* [Commercial Projects using Catch](commercial-users.md#top)
+* [Open Source Projects using Catch2](opensource-users.md#top)
+* [Commercial Projects using Catch2](commercial-users.md#top)
 * [Contributing](contributing.md#top)
 * [Release Notes](release-notes.md#top)
 * [Deprecations and incoming changes](deprecations.md#top)

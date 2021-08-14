@@ -64,8 +64,10 @@ namespace Detail {
 
         struct OutputDebugWriter {
 
-            void operator()( std::string const&str ) {
-                writeToDebugConsole( str );
+            void operator()( std::string const& str ) {
+                if ( !str.empty() ) {
+                    writeToDebugConsole( str );
+                }
             }
         };
 
@@ -121,17 +123,17 @@ namespace Detail {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    auto makeStream( std::string const& filename ) -> IStream const* {
+    auto makeStream( std::string const& filename ) -> Detail::unique_ptr<IStream const> {
         if( filename.empty() )
-            return new Detail::CoutStream();
+            return Detail::make_unique<Detail::CoutStream>();
         else if( filename[0] == '%' ) {
             if( filename == "%debug" )
-                return new Detail::DebugOutStream();
+                return Detail::make_unique<Detail::DebugOutStream>();
             else
                 CATCH_ERROR( "Unrecognised stream: '" << filename << "'" );
         }
         else
-            return new Detail::FileStream( filename );
+            return Detail::make_unique<Detail::FileStream>( filename );
     }
 
 
@@ -143,7 +145,7 @@ namespace Detail {
 
         auto add() -> std::size_t {
             if( m_unused.empty() ) {
-                m_streams.push_back( Detail::unique_ptr<std::ostringstream>( new std::ostringstream ) );
+                m_streams.push_back( Detail::make_unique<std::ostringstream>() );
                 return m_streams.size()-1;
             }
             else {
