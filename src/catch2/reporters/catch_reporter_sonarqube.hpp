@@ -32,15 +32,14 @@ namespace Catch {
 
         void noMatchingTestCases(std::string const& /*spec*/) override {}
 
-        void testRunStarting(TestRunInfo const& testRunInfo) override;
-
-        void testGroupEnded(TestGroupStats const& testGroupStats) override;
+        void testRunStarting( TestRunInfo const& testRunInfo ) override;
 
         void testRunEndedCumulative() override {
+            writeRun( *m_testRun );
             xml.endElement();
         }
 
-        void writeGroup(TestGroupNode const& groupNode);
+        void writeRun( TestRunNode const& groupNode );
 
         void writeTestFile(std::string const& filename, std::vector<TestCaseNode const*> const& testCaseNodes);
 

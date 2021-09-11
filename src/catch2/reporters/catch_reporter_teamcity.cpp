@@ -31,8 +31,8 @@ namespace Catch {
                   .initialIndent(indent) << '\n';
         }
 
-        std::string escape(std::string const& str) {
-            std::string escaped = str;
+        std::string escape(StringRef str) {
+            std::string escaped = static_cast<std::string>(str);
             replaceInPlace(escaped, "|", "||");
             replaceInPlace(escaped, "'", "|'");
             replaceInPlace(escaped, "\n", "|n");
@@ -46,16 +46,14 @@ namespace Catch {
 
     TeamCityReporter::~TeamCityReporter() {}
 
-    void TeamCityReporter::testGroupStarting(GroupInfo const& groupInfo) {
-        StreamingReporterBase::testGroupStarting(groupInfo);
-        stream << "##teamcity[testSuiteStarted name='"
-            << escape(groupInfo.name) << "']\n";
+    void TeamCityReporter::testRunStarting( TestRunInfo const& runInfo ) {
+        stream << "##teamcity[testSuiteStarted name='" << escape( runInfo.name )
+               << "']\n";
     }
 
-    void TeamCityReporter::testGroupEnded(TestGroupStats const& testGroupStats) {
-        StreamingReporterBase::testGroupEnded(testGroupStats);
+    void TeamCityReporter::testRunEnded( TestRunStats const& runStats ) {
         stream << "##teamcity[testSuiteFinished name='"
-            << escape(testGroupStats.groupInfo.name) << "']\n";
+               << escape( runStats.runInfo.name ) << "']\n";
     }
 
     bool TeamCityReporter::assertionEnded(AssertionStats const& assertionStats) {
