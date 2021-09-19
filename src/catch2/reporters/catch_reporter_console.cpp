@@ -381,31 +381,30 @@ std::string ConsoleReporter::getDescription() {
     return "Reports test results as plain lines of text";
 }
 
-void ConsoleReporter::noMatchingTestCases(std::string const& spec) {
-    stream << "No test cases matched '" << spec << "'\n";
+void ConsoleReporter::noMatchingTestCases( StringRef unmatchedSpec ) {
+    stream << "No test cases matched '" << unmatchedSpec << "'\n";
 }
 
-void ConsoleReporter::reportInvalidArguments(std::string const& arg) {
+void ConsoleReporter::reportInvalidArguments( StringRef arg ) {
     stream << "Invalid Filter: " << arg << '\n';
 }
 
 void ConsoleReporter::assertionStarting(AssertionInfo const&) {}
 
-bool ConsoleReporter::assertionEnded(AssertionStats const& _assertionStats) {
+void ConsoleReporter::assertionEnded(AssertionStats const& _assertionStats) {
     AssertionResult const& result = _assertionStats.assertionResult;
 
     bool includeResults = m_config->includeSuccessfulResults() || !result.isOk();
 
     // Drop out if result was successful but we're not printing them.
     if (!includeResults && result.getResultType() != ResultWas::Warning)
-        return false;
+        return;
 
     lazyPrint();
 
     ConsoleAssertionPrinter printer(stream, _assertionStats, includeResults);
     printer.print();
     stream << '\n' << std::flush;
-    return true;
 }
 
 void ConsoleReporter::sectionStarting(SectionInfo const& _sectionInfo) {

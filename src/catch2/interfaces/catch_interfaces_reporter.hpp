@@ -162,7 +162,7 @@ namespace Catch {
     public:
         IStreamingReporter( IConfig const* config ): m_config( config ) {}
 
-        virtual ~IStreamingReporter() = default;
+        virtual ~IStreamingReporter(); // = default;
 
         // Implementing class must also provide the following static methods:
         // static std::string getDescription();
@@ -171,33 +171,36 @@ namespace Catch {
             return m_preferences;
         }
 
-        virtual void noMatchingTestCases( std::string const& spec ) = 0;
-
-        virtual void reportInvalidArguments(std::string const&) {}
+        virtual void noMatchingTestCases( StringRef unmatchedSpec ) = 0;
+        virtual void reportInvalidArguments( StringRef invalidArgument ) = 0;
 
         virtual void testRunStarting( TestRunInfo const& testRunInfo ) = 0;
 
+        //! Called _once_ for each TEST_CASE, no matter how many times it is entered
         virtual void testCaseStarting( TestCaseInfo const& testInfo ) = 0;
+        //! Called _every time_ a TEST_CASE is entered, including repeats (due to sections)
+        virtual void testCasePartialStarting( TestCaseInfo const& testInfo, uint64_t partNumber ) = 0;
         virtual void sectionStarting( SectionInfo const& sectionInfo ) = 0;
 
-        virtual void benchmarkPreparing( StringRef ) {}
-        virtual void benchmarkStarting( BenchmarkInfo const& ) {}
-        virtual void benchmarkEnded( BenchmarkStats<> const& ) {}
-        virtual void benchmarkFailed( StringRef ) {}
+        virtual void benchmarkPreparing( StringRef benchmarkName ) = 0;
+        virtual void benchmarkStarting( BenchmarkInfo const& benchmarkInfo ) = 0;
+        virtual void benchmarkEnded( BenchmarkStats<> const& benchmarkStats ) = 0;
+        virtual void benchmarkFailed( StringRef benchmarkName ) = 0;
 
         virtual void assertionStarting( AssertionInfo const& assertionInfo ) = 0;
 
-        // The return value indicates if the messages buffer should be cleared:
-        virtual bool assertionEnded( AssertionStats const& assertionStats ) = 0;
+        virtual void assertionEnded( AssertionStats const& assertionStats ) = 0;
 
         virtual void sectionEnded( SectionStats const& sectionStats ) = 0;
+        //! Called _every time_ a TEST_CASE is entered, including repeats (due to sections)
+        virtual void testCasePartialEnded(TestCaseStats const& testCaseStats, uint64_t partNumber ) = 0;
+        //! Called _once_ for each TEST_CASE, no matter how many times it is entered
         virtual void testCaseEnded( TestCaseStats const& testCaseStats ) = 0;
         virtual void testRunEnded( TestRunStats const& testRunStats ) = 0;
 
         virtual void skipTest( TestCaseInfo const& testInfo ) = 0;
 
-        // Default empty implementation provided
-        virtual void fatalErrorEncountered( StringRef name );
+        virtual void fatalErrorEncountered( StringRef error ) = 0;
 
         //! Writes out information about provided reporters using reporter-specific format
         virtual void listReporters(std::vector<ReporterDescription> const& descriptions) = 0;

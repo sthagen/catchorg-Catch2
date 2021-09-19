@@ -22,14 +22,21 @@ namespace Catch {
         m_preferences.shouldRedirectStdOut = m_reporter->getPreferences().shouldRedirectStdOut;
     }
 
-    void ListeningReporter::noMatchingTestCases( std::string const& spec ) {
+    void ListeningReporter::noMatchingTestCases( StringRef unmatchedSpec ) {
         for ( auto& listener : m_listeners ) {
-            listener->noMatchingTestCases( spec );
+            listener->noMatchingTestCases( unmatchedSpec );
         }
-        m_reporter->noMatchingTestCases( spec );
+        m_reporter->noMatchingTestCases( unmatchedSpec );
     }
 
-    void ListeningReporter::reportInvalidArguments(std::string const&arg){
+    void ListeningReporter::fatalErrorEncountered( StringRef error ) {
+        for ( auto& listener : m_listeners ) {
+            listener->fatalErrorEncountered( error );
+        }
+        m_reporter->fatalErrorEncountered( error );
+    }
+
+    void ListeningReporter::reportInvalidArguments( StringRef arg ) {
         for ( auto& listener : m_listeners ) {
             listener->reportInvalidArguments( arg );
         }
@@ -76,6 +83,15 @@ namespace Catch {
         m_reporter->testCaseStarting( testInfo );
     }
 
+    void
+    ListeningReporter::testCasePartialStarting( TestCaseInfo const& testInfo,
+                                                uint64_t partNumber ) {
+        for ( auto& listener : m_listeners ) {
+            listener->testCasePartialStarting( testInfo, partNumber );
+        }
+        m_reporter->testCasePartialStarting( testInfo, partNumber );
+    }
+
     void ListeningReporter::sectionStarting( SectionInfo const& sectionInfo ) {
         for ( auto& listener : m_listeners ) {
             listener->sectionStarting( sectionInfo );
@@ -91,11 +107,11 @@ namespace Catch {
     }
 
     // The return value indicates if the messages buffer should be cleared:
-    bool ListeningReporter::assertionEnded( AssertionStats const& assertionStats ) {
+    void ListeningReporter::assertionEnded( AssertionStats const& assertionStats ) {
         for( auto& listener : m_listeners ) {
-            static_cast<void>( listener->assertionEnded( assertionStats ) );
+            listener->assertionEnded( assertionStats );
         }
-        return m_reporter->assertionEnded( assertionStats );
+        m_reporter->assertionEnded( assertionStats );
     }
 
     void ListeningReporter::sectionEnded( SectionStats const& sectionStats ) {
@@ -103,6 +119,14 @@ namespace Catch {
             listener->sectionEnded( sectionStats );
         }
         m_reporter->sectionEnded( sectionStats );
+    }
+
+    void ListeningReporter::testCasePartialEnded( TestCaseStats const& testInfo,
+                                                  uint64_t partNumber ) {
+        for ( auto& listener : m_listeners ) {
+            listener->testCasePartialEnded( testInfo, partNumber );
+        }
+        m_reporter->testCasePartialEnded( testInfo, partNumber );
     }
 
     void ListeningReporter::testCaseEnded( TestCaseStats const& testCaseStats ) {

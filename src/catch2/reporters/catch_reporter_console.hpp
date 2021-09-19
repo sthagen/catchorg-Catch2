@@ -16,20 +16,19 @@ namespace Catch {
     struct SummaryColumn;
     class TablePrinter;
 
-    struct ConsoleReporter : StreamingReporterBase {
+    struct ConsoleReporter final : StreamingReporterBase {
         Detail::unique_ptr<TablePrinter> m_tablePrinter;
 
         ConsoleReporter(ReporterConfig const& config);
         ~ConsoleReporter() override;
         static std::string getDescription();
 
-        void noMatchingTestCases(std::string const& spec) override;
-
-        void reportInvalidArguments(std::string const&arg) override;
+        void noMatchingTestCases( StringRef unmatchedSpec ) override;
+        void reportInvalidArguments( StringRef arg ) override;
 
         void assertionStarting(AssertionInfo const&) override;
 
-        bool assertionEnded(AssertionStats const& _assertionStats) override;
+        void assertionEnded(AssertionStats const& _assertionStats) override;
 
         void sectionStarting(SectionInfo const& _sectionInfo) override;
         void sectionEnded(SectionStats const& _sectionStats) override;

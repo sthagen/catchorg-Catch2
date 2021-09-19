@@ -64,13 +64,9 @@ namespace Catch {
             m_preferences.shouldReportAllAssertions = true;
         }
 
-    JunitReporter::~JunitReporter() {}
-
     std::string JunitReporter::getDescription() {
         return "Reports test results in an XML format that looks like Ant's junitreport target";
     }
-
-    void JunitReporter::noMatchingTestCases( std::string const& /*spec*/ ) {}
 
     void JunitReporter::testRunStarting( TestRunInfo const& runInfo )  {
         CumulativeReporterBase::testRunStarting( runInfo );
@@ -85,10 +81,10 @@ namespace Catch {
         m_okToFail = testCaseInfo.okToFail();
     }
 
-    bool JunitReporter::assertionEnded( AssertionStats const& assertionStats ) {
+    void JunitReporter::assertionEnded( AssertionStats const& assertionStats ) {
         if( assertionStats.assertionResult.getResultType() == ResultWas::ThrewException && !m_okToFail )
             unexpectedExceptions++;
-        return CumulativeReporterBase::assertionEnded( assertionStats );
+        CumulativeReporterBase::assertionEnded( assertionStats );
     }
 
     void JunitReporter::testCaseEnded( TestCaseStats const& testCaseStats ) {

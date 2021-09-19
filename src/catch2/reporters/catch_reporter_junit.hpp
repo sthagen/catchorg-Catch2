@@ -15,20 +15,18 @@
 
 namespace Catch {
 
-    class JunitReporter : public CumulativeReporterBase {
+    class JunitReporter final : public CumulativeReporterBase {
     public:
         JunitReporter(ReporterConfig const& _config);
 
-        ~JunitReporter() override;
+        ~JunitReporter() override = default;
 
         static std::string getDescription();
-
-        void noMatchingTestCases(std::string const& /*spec*/) override;
 
         void testRunStarting(TestRunInfo const& runInfo) override;
 
         void testCaseStarting(TestCaseInfo const& testCaseInfo) override;
-        bool assertionEnded(AssertionStats const& assertionStats) override;
+        void assertionEnded(AssertionStats const& assertionStats) override;
 
         void testCaseEnded(TestCaseStats const& testCaseStats) override;
 

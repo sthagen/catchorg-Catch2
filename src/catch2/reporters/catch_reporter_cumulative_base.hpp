@@ -49,16 +49,27 @@ namespace Catch {
             stream( _config.stream() ) {}
         ~CumulativeReporterBase() override;
 
+        void benchmarkPreparing( StringRef ) override {}
+        void benchmarkStarting( BenchmarkInfo const& ) override {}
+        void benchmarkEnded( BenchmarkStats<> const& ) override {}
+        void benchmarkFailed( StringRef ) override {}
+
+        void noMatchingTestCases( StringRef ) override {}
+        void reportInvalidArguments( StringRef ) override {}
+        void fatalErrorEncountered( StringRef /*error*/ ) override {}
+
+
         void testRunStarting( TestRunInfo const& ) override {}
 
         void testCaseStarting( TestCaseInfo const& ) override {}
-
+        void testCasePartialStarting( TestCaseInfo const&, uint64_t ) override {}
         void sectionStarting( SectionInfo const& sectionInfo ) override;
 
         void assertionStarting( AssertionInfo const& ) override {}
 
-        bool assertionEnded( AssertionStats const& assertionStats ) override;
+        void assertionEnded( AssertionStats const& assertionStats ) override;
         void sectionEnded( SectionStats const& sectionStats ) override;
+        void testCasePartialEnded( TestCaseStats const&, uint64_t ) override {}
         void testCaseEnded( TestCaseStats const& testCaseStats ) override;
         void testRunEnded( TestRunStats const& testRunStats ) override;
         //! Customization point: called after last test finishes (testRunEnded has been handled)
