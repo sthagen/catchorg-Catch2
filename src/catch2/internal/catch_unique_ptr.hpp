@@ -11,13 +11,27 @@
 #include <cassert>
 #include <type_traits>
 
+#include <catch2/internal/catch_move_and_forward.hpp>
+
+#if defined(__clang__) && defined(__has_attribute)
+#  if __has_attribute(trivial_abi)
+#    define TRIVIAL_ABI [[clang::trivial_abi]]
+#  endif
+#endif
+#if !defined(TRIVIAL_ABI)
+#  define TRIVIAL_ABI
+#endif
+
 namespace Catch {
 namespace Detail {
-    // reimplementation of unique_ptr for improved compilation times
-    // Does not support custom deleters (and thus does not require EBO)
-    // Does not support arrays
+    /**
+     * A reimplementation of `std::unique_ptr` for improved compilation performance
+     *
+     * Does not support arrays nor custom deleters, but has trivial ABI
+     * when supposed by the compiler.
+     */
     template <typename T>
-    class unique_ptr {
+    class TRIVIAL_ABI unique_ptr {
         T* m_ptr;
     public:
         constexpr unique_ptr(std::nullptr_t = nullptr):
@@ -98,20 +112,13 @@ namespace Detail {
         }
     };
 
-    // Purposefully doesn't exist
-    // We could also rely on compiler warning + werror for calling plain delete
-    // on a T[], but this seems better.
-    // Maybe add definition and a static assert?
+    //! Specialization to cause compile-time error for arrays
     template <typename T>
     class unique_ptr<T[]>;
 
     template <typename T, typename... Args>
     unique_ptr<T> make_unique(Args&&... args) {
-        // static_cast<Args&&> does the same thing as std::forward in
-        // this case, but does not require including big header (<utility>)
-        // and compiles faster thanks to not requiring template instantiation
-        // and overload resolution
-        return unique_ptr<T>(new T(static_cast<Args&&>(args)...));
+        return unique_ptr<T>(new T(CATCH_FORWARD(args)...));
     }
 
 

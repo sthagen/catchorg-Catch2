@@ -253,16 +253,6 @@ TEST_CASE( "Nice descriptive name", "[tag1][tag2][tag3][.]" ) {
 TEST_CASE( "first tag", "[tag1]" ) {}
 TEST_CASE( "second tag", "[tag2]" ) {}
 
-//
-//TEST_CASE( "spawn a new process", "[.]" )
-//{
-//    // !TBD Work in progress
-//    char line[200];
-//    FILE* output = popen("./CatchSelfTest ./failing/matchers/StartsWith", "r");
-//    while ( fgets(line, 199, output) )
-//        std::cout << line;
-//}
-
 TEST_CASE( "vectors can be sized and resized", "[vector]" ) {
 
     std::vector<int> v( 5 );
@@ -519,3 +509,6 @@ TEMPLATE_TEST_CASE_SIG("#1954 - 7 arg template test case sig compiles", "[regres
                        (1, 1, 1, 1, 1, 0, 0), (5, 1, 1, 1, 1, 0, 0), (5, 3, 1, 1, 1, 0, 0)) {
     SUCCEED();
 }
+
+TEST_CASE("Same test name but with different tags is fine", "[.approvals][some-tag]") {}
+TEST_CASE("Same test name but with different tags is fine", "[.approvals][other-tag]") {}
