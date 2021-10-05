@@ -268,7 +268,7 @@ namespace {
             if (shouldIndent(fmt)) {
                 m_os << m_indent;
             }
-            m_os << "</" << m_tags.back() << ">";
+            m_os << "</" << m_tags.back() << '>';
         }
         m_os << std::flush;
         applyFormatting(fmt);
@@ -295,13 +295,14 @@ namespace {
     }
 
     XmlWriter& XmlWriter::writeText( StringRef text, XmlFormatting fmt ) {
+        CATCH_ENFORCE(!m_tags.empty(), "Cannot write text as top level element");
         if( !text.empty() ){
             bool tagWasOpen = m_tagIsOpen;
             ensureTagClosed();
             if (tagWasOpen && shouldIndent(fmt)) {
                 m_os << m_indent;
             }
-            m_os << XmlEncode( text );
+            m_os << XmlEncode( text, XmlEncode::ForTextNodes );
             applyFormatting(fmt);
         }
         return *this;
@@ -312,19 +313,13 @@ namespace {
         if (shouldIndent(fmt)) {
             m_os << m_indent;
         }
-        m_os << "<!--" << text << "-->";
+        m_os << "<!-- " << text << " -->";
         applyFormatting(fmt);
         return *this;
     }
 
     void XmlWriter::writeStylesheetRef( StringRef url ) {
         m_os << R"(<?xml-stylesheet type="text/xsl" href=")" << url << R"("?>)" << '\n';
-    }
-
-    XmlWriter& XmlWriter::writeBlankLine() {
-        ensureTagClosed();
-        m_os << '\n';
-        return *this;
     }
 
     void XmlWriter::ensureTagClosed() {

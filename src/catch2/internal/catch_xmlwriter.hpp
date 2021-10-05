@@ -117,17 +117,17 @@ namespace Catch {
             return writeAttribute( name, rss.str() );
         }
 
+        //! Writes escaped `text` in a element
         XmlWriter& writeText( StringRef text,
                               XmlFormatting fmt = XmlFormatting::Newline |
                                                   XmlFormatting::Indent );
 
+        //! Writes XML comment as "<!-- text -->"
         XmlWriter& writeComment( StringRef text,
                                  XmlFormatting fmt = XmlFormatting::Newline |
                                                      XmlFormatting::Indent );
 
         void writeStylesheetRef( StringRef url );
-
-        XmlWriter& writeBlankLine();
 
         void ensureTagClosed();
 

@@ -388,13 +388,11 @@ namespace Catch {
     template<typename T>
     struct StringMaker<std::optional<T> > {
         static std::string convert(const std::optional<T>& optional) {
-            ReusableStringStream rss;
             if (optional.has_value()) {
-                rss << ::Catch::Detail::stringify(*optional);
+                return ::Catch::Detail::stringify(*optional);
             } else {
-                rss << "{ }";
+                return "{ }";
             }
-            return rss.str();
         }
     };
 }
@@ -560,27 +558,27 @@ struct ratio_string {
 
 template <>
 struct ratio_string<std::atto> {
-    static std::string symbol() { return "a"; }
+    static char symbol() { return 'a'; }
 };
 template <>
 struct ratio_string<std::femto> {
-    static std::string symbol() { return "f"; }
+    static char symbol() { return 'f'; }
 };
 template <>
 struct ratio_string<std::pico> {
-    static std::string symbol() { return "p"; }
+    static char symbol() { return 'p'; }
 };
 template <>
 struct ratio_string<std::nano> {
-    static std::string symbol() { return "n"; }
+    static char symbol() { return 'n'; }
 };
 template <>
 struct ratio_string<std::micro> {
-    static std::string symbol() { return "u"; }
+    static char symbol() { return 'u'; }
 };
 template <>
 struct ratio_string<std::milli> {
-    static std::string symbol() { return "m"; }
+    static char symbol() { return 'm'; }
 };
 
     ////////////
