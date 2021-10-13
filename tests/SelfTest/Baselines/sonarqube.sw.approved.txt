@@ -152,6 +152,8 @@
     <testCase name="Comparison ops" duration="{duration}"/>
     <testCase name="Our PCG implementation provides expected results for known seeds/Default seeded" duration="{duration}"/>
     <testCase name="Our PCG implementation provides expected results for known seeds/Specific seed" duration="{duration}"/>
+    <testCase name="Random seed generation accepts known methods" duration="{duration}"/>
+    <testCase name="Random seed generation reports unknown methods" duration="{duration}"/>
   </file>
   <file path="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp">
     <testCase name="Reporter's write listings to provided stream" duration="{duration}"/>
@@ -658,6 +660,30 @@ Condition.tests.cpp:<line number>
       </skipped>
     </testCase>
     <testCase name="Inequality checks that should succeed" duration="{duration}"/>
+    <testCase name="Mayfail test case with nested sections/1/A" duration="{duration}">
+      <skipped message="FAIL()">
+FAILED:
+Condition.tests.cpp:<line number>
+      </skipped>
+    </testCase>
+    <testCase name="Mayfail test case with nested sections/2/A" duration="{duration}">
+      <skipped message="FAIL()">
+FAILED:
+Condition.tests.cpp:<line number>
+      </skipped>
+    </testCase>
+    <testCase name="Mayfail test case with nested sections/1/B" duration="{duration}">
+      <skipped message="FAIL()">
+FAILED:
+Condition.tests.cpp:<line number>
+      </skipped>
+    </testCase>
+    <testCase name="Mayfail test case with nested sections/2/B" duration="{duration}">
+      <skipped message="FAIL()">
+FAILED:
+Condition.tests.cpp:<line number>
+      </skipped>
+    </testCase>
     <testCase name="Ordering comparison checks that should fail" duration="{duration}">
       <failure message="CHECK(data.int_seven > 7)">
 FAILED:

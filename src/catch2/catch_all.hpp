@@ -74,12 +74,13 @@
 #include <catch2/internal/catch_meta.hpp>
 #include <catch2/internal/catch_move_and_forward.hpp>
 #include <catch2/internal/catch_noncopyable.hpp>
-#include <catch2/internal/catch_option.hpp>
+#include <catch2/internal/catch_optional.hpp>
 #include <catch2/internal/catch_output_redirect.hpp>
 #include <catch2/internal/catch_platform.hpp>
 #include <catch2/internal/catch_polyfills.hpp>
 #include <catch2/internal/catch_preprocessor.hpp>
 #include <catch2/internal/catch_random_number_generator.hpp>
+#include <catch2/internal/catch_random_seed_generation.hpp>
 #include <catch2/internal/catch_reporter_registry.hpp>
 #include <catch2/internal/catch_result_type.hpp>
 #include <catch2/internal/catch_run_context.hpp>

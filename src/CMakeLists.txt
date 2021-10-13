@@ -100,12 +100,13 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/internal/catch_message_info.hpp
     ${SOURCES_DIR}/internal/catch_meta.hpp
     ${SOURCES_DIR}/internal/catch_move_and_forward.hpp
-    ${SOURCES_DIR}/internal/catch_option.hpp
+    ${SOURCES_DIR}/internal/catch_optional.hpp
     ${SOURCES_DIR}/internal/catch_output_redirect.hpp
     ${SOURCES_DIR}/internal/catch_platform.hpp
     ${SOURCES_DIR}/internal/catch_polyfills.hpp
     ${SOURCES_DIR}/internal/catch_preprocessor.hpp
     ${SOURCES_DIR}/internal/catch_random_number_generator.hpp
+    ${SOURCES_DIR}/internal/catch_random_seed_generation.hpp
     ${SOURCES_DIR}/catch_reporter_registrars.hpp
     ${SOURCES_DIR}/internal/catch_reporter_registry.hpp
     ${SOURCES_DIR}/internal/catch_result_type.hpp
@@ -175,6 +176,7 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/catch_registry_hub.cpp
     ${SOURCES_DIR}/internal/catch_combined_tu.cpp
     ${SOURCES_DIR}/internal/catch_random_number_generator.cpp
+    ${SOURCES_DIR}/internal/catch_random_seed_generation.cpp
     ${SOURCES_DIR}/internal/catch_reporter_registry.cpp
     ${SOURCES_DIR}/internal/catch_result_type.cpp
     ${SOURCES_DIR}/internal/catch_run_context.cpp

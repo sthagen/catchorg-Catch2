@@ -17,6 +17,7 @@
 #include <cassert>
 #include <ctime>
 #include <algorithm>
+#include <iomanip>
 
 namespace Catch {
 
@@ -54,6 +55,17 @@ namespace Catch {
             }
             return std::string();
         }
+
+        // Formats the duration in seconds to 3 decimal places.
+        // This is done because some genius defined Maven Surefire schema
+        // in a way that only accepts 3 decimal places, and tools like
+        // Jenkins use that schema for validation JUnit reporter output.
+        std::string formatDuration( double seconds ) {
+            ReusableStringStream rss;
+            rss << std::fixed << std::setprecision( 3 ) << seconds;
+            return rss.str();
+        }
+
     } // anonymous namespace
 
     JunitReporter::JunitReporter( ReporterConfig const& _config )
@@ -111,21 +123,19 @@ namespace Catch {
         if( m_config->showDurations() == ShowDurations::Never )
             xml.writeAttribute( "time"_sr, ""_sr );
         else
-            xml.writeAttribute( "time"_sr, suiteTime );
+            xml.writeAttribute( "time"_sr, formatDuration( suiteTime ) );
         xml.writeAttribute( "timestamp"_sr, getCurrentTimestamp() );
 
-        // Write properties if there are any
-        if (m_config->hasTestFilters() || m_config->rngSeed() != 0) {
+        // Write properties
+        {
             auto properties = xml.scopedElement("properties");
+            xml.scopedElement("property")
+                .writeAttribute("name"_sr, "random-seed"_sr)
+                .writeAttribute("value"_sr, m_config->rngSeed());
             if (m_config->hasTestFilters()) {
                 xml.scopedElement("property")
                     .writeAttribute("name"_sr, "filters"_sr)
                     .writeAttribute("value"_sr, serializeFilters(m_config->getTestsOrTags()));
-            }
-            if (m_config->rngSeed() != 0) {
-                xml.scopedElement("property")
-                    .writeAttribute("name"_sr, "random-seed"_sr)
-                    .writeAttribute("value"_sr, m_config->rngSeed());
             }
         }
 
@@ -158,12 +168,13 @@ namespace Catch {
         if ( !m_config->name().empty() )
             className = static_cast<std::string>(m_config->name()) + '.' + className;
 
-        writeSection( className, "", rootSection );
+        writeSection( className, "", rootSection, stats.testInfo->okToFail() );
     }
 
-    void JunitReporter::writeSection(  std::string const& className,
-                        std::string const& rootName,
-                        SectionNode const& sectionNode ) {
+    void JunitReporter::writeSection( std::string const& className,
+                                      std::string const& rootName,
+                                      SectionNode const& sectionNode,
+                                      bool testOkToFail) {
         std::string name = trim( sectionNode.stats.sectionInfo.name );
         if( !rootName.empty() )
             name = rootName + '/' + name;
@@ -180,14 +191,20 @@ namespace Catch {
                 xml.writeAttribute( "classname"_sr, className );
                 xml.writeAttribute( "name"_sr, name );
             }
-            xml.writeAttribute( "time"_sr, ::Catch::Detail::stringify( sectionNode.stats.durationInSeconds ) );
+            xml.writeAttribute( "time"_sr, formatDuration( sectionNode.stats.durationInSeconds ) );
             // This is not ideal, but it should be enough to mimic gtest's
             // junit output.
             // Ideally the JUnit reporter would also handle `skipTest`
             // events and write those out appropriately.
             xml.writeAttribute( "status"_sr, "run"_sr );
 
+            if (sectionNode.stats.assertions.failedButOk) {
+                xml.scopedElement("skipped")
+                    .writeAttribute("message", "TEST_CASE tagged with !mayfail");
+            }
+
             writeAssertions( sectionNode );
+
 
             if( !sectionNode.stdOut.empty() )
                 xml.scopedElement( "system-out" ).writeText( trim( sectionNode.stdOut ), XmlFormatting::Newline );
@@ -196,9 +213,9 @@ namespace Catch {
         }
         for( auto const& childNode : sectionNode.childSections )
             if( className.empty() )
-                writeSection( name, "", *childNode );
+                writeSection( name, "", *childNode, testOkToFail );
             else
-                writeSection( className, name, *childNode );
+                writeSection( className, name, *childNode, testOkToFail );
     }
 
     void JunitReporter::writeAssertions( SectionNode const& sectionNode ) {
