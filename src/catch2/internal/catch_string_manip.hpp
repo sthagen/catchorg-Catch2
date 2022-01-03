@@ -23,6 +23,7 @@ namespace Catch {
     bool contains( std::string const& s, std::string const& infix );
     void toLowerInPlace( std::string& s );
     std::string toLower( std::string const& s );
+    char toLower( char c );
     //! Returns a new string without whitespace at the start/end
     std::string trim( std::string const& str );
     //! Returns a substring of the original ref without whitespace. Beware lifetimes!
@@ -43,14 +44,14 @@ namespace Catch {
      * **Important:** The provided string must outlive the instance
      */
     struct pluralise {
-        pluralise(std::size_t count, StringRef label):
+        pluralise(std::uint64_t count, StringRef label):
             m_count(count),
             m_label(label)
         {}
 
         friend std::ostream& operator << ( std::ostream& os, pluralise const& pluraliser );
 
-        std::size_t m_count;
+        std::uint64_t m_count;
         StringRef m_label;
     };
 }

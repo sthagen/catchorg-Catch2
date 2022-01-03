@@ -44,7 +44,15 @@ The tag expression, ```"[widget]"``` selects A, B & D. ```"[gadget]"``` selects 
 
 For more detail on command line selection see [the command line docs](command-line.md#specifying-which-tests-to-run)
 
-Tag names are not case sensitive and can contain any ASCII characters. This means that tags `[tag with spaces]` and `[I said "good day"]` are both allowed tags and can be filtered on. Escapes are not supported however and `[\]]` is not a valid tag.
+Tag names are not case sensitive and can contain any ASCII characters.
+This means that tags `[tag with spaces]` and `[I said "good day"]`
+are both allowed tags and can be filtered on. However, escapes are not
+supported however and `[\]]` is not a valid tag.
+
+The same tag can be specified multiple times for a single test case,
+but only one of the instances of identical tags will be kept. Which one
+is kept is functionally random.
+
 
 ### Special Tags
 
@@ -252,10 +260,6 @@ TEMPLATE_PRODUCT_TEST_CASE("Product with differing arities", "[template][product
     REQUIRE(std::tuple_size<TestType>::value >= 1);
 }
 ```
-
-_While there is an upper limit on the number of types you can specify
-in single `TEMPLATE_TEST_CASE` or `TEMPLATE_PRODUCT_TEST_CASE`, the limit
-is very high and should not be encountered in practice._
 
 * **TEMPLATE_LIST_TEST_CASE(** _test name_, _tags_, _type list_ **)**
 

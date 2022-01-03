@@ -227,16 +227,6 @@ TEST_CASE( "send a single char to INFO", "[failing][.]" ) {
     REQUIRE(false);
 }
 
-TEST_CASE( "atomic if", "[failing][0]") {
-    std::size_t x = 0;
-
-    if( x )
-        REQUIRE(x > 0);
-    else
-        REQUIRE(x == 0);
-}
-
-
 TEST_CASE( "Factorials are computed", "[factorial]" ) {
   REQUIRE( Factorial(0) == 1 );
   REQUIRE( Factorial(1) == 1 );
@@ -432,10 +422,6 @@ TEST_CASE("not allowed", "[!throws]") {
     SUCCEED();
 }
 
-//TEST_CASE( "Is big endian" ) {
-//    CHECK( Catch::Detail::Endianness::which() == Catch::Detail::Endianness::Little );
-//}
-
 TEST_CASE( "Tabs and newlines show in output", "[.][whitespace][failing]" ) {
 
     // Based on issue #242
@@ -472,7 +458,7 @@ TEST_CASE( "toString on wchar_t returns the string contents", "[toString]" ) {
 #endif // CATCH_CONFIG_WCHAR
 
 TEST_CASE( "long long" ) {
-    long long l = std::numeric_limits<long long>::max();
+    constexpr long long l = std::numeric_limits<long long>::max();
 
     REQUIRE( l == std::numeric_limits<long long>::max() );
 }

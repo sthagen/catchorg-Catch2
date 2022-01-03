@@ -2,7 +2,7 @@
 
 # Release notes
 **Contents**<br>
-[3.0.1](#301)<br>
+[3.0.1 (in progress)](#301-in-progress)<br>
 [2.13.7](#2137)<br>
 [2.13.6](#2136)<br>
 [2.13.5](#2135)<br>
@@ -133,6 +133,10 @@ new design.
   * New pair of events were added
   * One obsolete event was removed
 * Catch2 generates a random seed if one hasn't been specified by the user
+* The short flag for `--list-tests`, `-l`, has been removed.
+  * This is not a commonly used flag and does not need to use up valuable single-letter space.
+* The short flag for `--list-tags`, `-t`, has been removed.
+  * This is not a commonly used flag and does not need to use up valuable single-letter space.
 
 
 ### Improvements
@@ -164,6 +168,26 @@ new design.
 * `Approx::operator()` is now properly `const`
 * Catch2's internal helper variables no longer use reserved identifiers (#578)
 * `--rng-seed` now accepts string `"random-device"` to generate random seed using `std::random_device`
+* Catch2 now supports test sharding (#2257)
+  * You can ask for the tests to be split into N groups and only run one of them.
+  * This greatly simplifies parallelization of tests in a binary through external runner.
+* The embedded CLI parser now supports repeatedly callable lambdas
+  * A lambda-based option parser can opt into being repeatedly specifiable.
+* Added `STATIC_CHECK` macro, similar to `STATIC_REQUIRE` (#2318)
+  * When deferred tu runtime, it behaves like `CHECK`, and not like `REQUIRE`.
+* You can have multiple tests with the same name, as long as other parts of the test identity differ (#1915, #1999, #2175)
+  * Test identity includes test's name, test's tags and and test's class name if applicable.
+* Added new warning, `UnmatchedTestSpec`, to error on test specs with no matching tests
+* The `-w`, `--warn` warning flags can now be provided multiple times to enable multiple warnings
+* The case-insensitive handling of tags is now more reliable and takes up less memory
+* Test case and assertion counting can no longer reasonably overflow on 32 bit systems
+  * The count is now kept in `uint64_t` on all platforms, instead of using `size_t` type.
+* The `-o`, `--out` output destination specifiers recognize `-` as stdout
+  * You have to provide it as `--out=-` to avoid CLI error about missing option
+  * The new reporter specification also recognizes `-` as stdout
+* Multiple reporters can now run at the same time and write to different files (#1712, #2183)
+  * To support this, the `-r`, `--reporter` flag now also accepts optional output destination
+  * For full overview of the semantics of using multiple reporters, look into the reporter documentation
 
 
 ### Fixes
@@ -172,6 +196,9 @@ new design.
 * Various ways of failing a benchmark are now counted and reporter properly
 * The ULP matcher now handles comparing numbers with different signs properly (#2152)
 * Universal ADL-found operators should no longer break decomposition (#2121)
+* Reporter selection is properly case-insensitive
+  * Previously it forced lower cased name, which would fail for reporters with upper case characters in name
+* The cumulative reporter base stores benchmark results alongside assertion results
 
 
 ### Other changes
@@ -185,6 +212,10 @@ new design.
 * Catch2's pkg-config integration also provides 2 packages
   * `catch2` is the statically compiled implementation by itself
   * `catch2-with-main` also links in the default main
+* Passing invalid test specifications passed to Catch2 are now reported before tests are run, and are a hard error.
+* Running 0 tests (e.g. due to empty binary, or test spec not matching anything) returns non-0 exit code
+  * Flag `--allow-running-no-tests` overrides this behaviour.
+  * `NoTests` warning has been removed because it is fully subsumed by this change.
 
 
 

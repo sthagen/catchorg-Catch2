@@ -36,6 +36,7 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/generators/catch_generators_all.hpp
     ${SOURCES_DIR}/interfaces/catch_interfaces_all.hpp
     ${SOURCES_DIR}/matchers/internal/catch_matchers_impl.hpp
+    ${SOURCES_DIR}/internal/catch_case_insensitive_comparisons.hpp
     ${SOURCES_DIR}/internal/catch_console_width.hpp
     ${SOURCES_DIR}/internal/catch_container_nonmembers.hpp
     ${SOURCES_DIR}/internal/catch_noncopyable.hpp
@@ -67,6 +68,7 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/internal/catch_fatal_condition_handler.hpp
     ${SOURCES_DIR}/internal/catch_floating_point_helpers.hpp
     ${SOURCES_DIR}/internal/catch_unique_name.hpp
+    ${SOURCES_DIR}/internal/catch_sharding.hpp
     ${SOURCES_DIR}/generators/catch_generator_exception.hpp
     ${SOURCES_DIR}/generators/catch_generators.hpp
     ${SOURCES_DIR}/generators/catch_generators_adapters.hpp
@@ -107,7 +109,7 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/internal/catch_preprocessor.hpp
     ${SOURCES_DIR}/internal/catch_random_number_generator.hpp
     ${SOURCES_DIR}/internal/catch_random_seed_generation.hpp
-    ${SOURCES_DIR}/catch_reporter_registrars.hpp
+    ${SOURCES_DIR}/reporters/catch_reporter_registrars.hpp
     ${SOURCES_DIR}/internal/catch_reporter_registry.hpp
     ${SOURCES_DIR}/internal/catch_result_type.hpp
     ${SOURCES_DIR}/internal/catch_run_context.hpp
@@ -140,6 +142,7 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/catch_translate_exception.hpp
     ${SOURCES_DIR}/internal/catch_uncaught_exceptions.hpp
     ${SOURCES_DIR}/internal/catch_unique_ptr.hpp
+    ${SOURCES_DIR}/internal/catch_void_type.hpp
     ${SOURCES_DIR}/catch_version.hpp
     ${SOURCES_DIR}/catch_version_macros.hpp
     ${SOURCES_DIR}/internal/catch_wildcard_pattern.hpp
@@ -155,6 +158,7 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/internal/catch_commandline.cpp
     ${SOURCES_DIR}/internal/catch_source_line_info.cpp
     ${SOURCES_DIR}/catch_config.cpp
+    ${SOURCES_DIR}/internal/catch_case_insensitive_comparisons.cpp
     ${SOURCES_DIR}/internal/catch_console_colour.cpp
     ${SOURCES_DIR}/internal/catch_context.cpp
     ${SOURCES_DIR}/internal/catch_debug_console.cpp

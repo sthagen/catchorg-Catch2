@@ -10,34 +10,17 @@
 
 #include <catch2/interfaces/catch_interfaces_reporter.hpp>
 
-#include <catch2/internal/catch_optional.hpp>
-
 #include <iosfwd>
 #include <string>
 #include <vector>
 
 namespace Catch {
 
-    template<typename T>
-    struct LazyStat : Optional<T> {
-        LazyStat& operator=(T const& _value) {
-            Optional<T>::operator=(_value);
-            used = false;
-            return *this;
-        }
-        void reset() {
-            Optional<T>::reset();
-            used = false;
-        }
-        bool used = false;
-    };
-
-
-    struct StreamingReporterBase : IStreamingReporter {
-
+    class StreamingReporterBase : public IStreamingReporter {
+    public:
         StreamingReporterBase( ReporterConfig const& _config ):
             IStreamingReporter( _config.fullConfig() ),
-            stream( _config.stream() ) {}
+            m_stream( _config.stream() ) {}
 
 
         ~StreamingReporterBase() override;
@@ -49,7 +32,7 @@ namespace Catch {
 
         void fatalErrorEncountered( StringRef /*error*/ ) override {}
         void noMatchingTestCases( StringRef /*unmatchedSpec*/ ) override {}
-        void reportInvalidArguments( StringRef /*invalidArgument*/ ) override {}
+        void reportInvalidTestSpec( StringRef /*invalidArgument*/ ) override {}
 
         void testRunStarting( TestRunInfo const& _testRunInfo ) override;
 
@@ -82,11 +65,14 @@ namespace Catch {
         void listTests( std::vector<TestCaseHandle> const& tests ) override;
         void listTags( std::vector<TagInfo> const& tags ) override;
 
-        std::ostream& stream;
+    protected:
+        //! Stream that the reporter output should be written to
+        std::ostream& m_stream;
 
-        LazyStat<TestRunInfo> currentTestRunInfo;
+        TestRunInfo currentTestRunInfo{ "test run has not started yet"_sr };
         TestCaseInfo const* currentTestCaseInfo = nullptr;
 
+        //! Stack of all _active_ sections in the _current_ test case
         std::vector<SectionInfo> m_sectionStack;
     };
 

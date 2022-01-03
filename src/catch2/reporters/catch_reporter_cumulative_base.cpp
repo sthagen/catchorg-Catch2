@@ -32,8 +32,40 @@ namespace Catch {
 
     } // namespace
 
+    namespace Detail {
+        AssertionOrBenchmarkResult::AssertionOrBenchmarkResult(
+            AssertionStats const& assertion ):
+            m_assertion( assertion ) {}
+
+        AssertionOrBenchmarkResult::AssertionOrBenchmarkResult(
+            BenchmarkStats<> const& benchmark ):
+            m_benchmark( benchmark ) {}
+
+        bool AssertionOrBenchmarkResult::isAssertion() const {
+            return m_assertion.some();
+        }
+        bool AssertionOrBenchmarkResult::isBenchmark() const {
+            return m_benchmark.some();
+        }
+
+        AssertionStats const& AssertionOrBenchmarkResult::asAssertion() const {
+            assert(m_assertion.some());
+
+            return *m_assertion;
+        }
+        BenchmarkStats<> const& AssertionOrBenchmarkResult::asBenchmark() const {
+            assert(m_benchmark.some());
+
+            return *m_benchmark;
+        }
+
+    }
 
     CumulativeReporterBase::~CumulativeReporterBase() = default;
+
+    void CumulativeReporterBase::benchmarkEnded(BenchmarkStats<> const& benchmarkStats) {
+        m_sectionStack.back()->assertionsAndBenchmarks.emplace_back(benchmarkStats);
+    }
 
     void
     CumulativeReporterBase::sectionStarting( SectionInfo const& sectionInfo ) {
@@ -72,10 +104,18 @@ namespace Catch {
         // Our section stack copy of the assertionResult will likely outlive the
         // temporary, so it must be expanded or discarded now to avoid calling
         // a destroyed object later.
-        static_cast<void>(
-            assertionStats.assertionResult.getExpandedExpression() );
+        if ( m_shouldStoreFailedAssertions &&
+             !assertionStats.assertionResult.isOk() ) {
+            static_cast<void>(
+                assertionStats.assertionResult.getExpandedExpression() );
+        }
+        if ( m_shouldStoreSuccesfulAssertions &&
+             assertionStats.assertionResult.isOk() ) {
+            static_cast<void>(
+                assertionStats.assertionResult.getExpandedExpression() );
+        }
         SectionNode& sectionNode = *m_sectionStack.back();
-        sectionNode.assertions.push_back( assertionStats );
+        sectionNode.assertionsAndBenchmarks.emplace_back( assertionStats );
     }
 
     void CumulativeReporterBase::sectionEnded( SectionStats const& sectionStats ) {
@@ -106,18 +146,27 @@ namespace Catch {
     }
 
     void CumulativeReporterBase::listReporters(std::vector<ReporterDescription> const& descriptions) {
-        defaultListReporters(stream, descriptions, m_config->verbosity());
+        defaultListReporters(m_stream, descriptions, m_config->verbosity());
     }
 
     void CumulativeReporterBase::listTests(std::vector<TestCaseHandle> const& tests) {
-        defaultListTests(stream,
+        defaultListTests(m_stream,
                          tests,
                          m_config->hasTestFilters(),
                          m_config->verbosity());
     }
 
     void CumulativeReporterBase::listTags(std::vector<TagInfo> const& tags) {
-        defaultListTags( stream, tags, m_config->hasTestFilters() );
+        defaultListTags( m_stream, tags, m_config->hasTestFilters() );
+    }
+
+    bool CumulativeReporterBase::SectionNode::hasAnyAssertions() const {
+        return std::any_of(
+            assertionsAndBenchmarks.begin(),
+            assertionsAndBenchmarks.end(),
+            []( Detail::AssertionOrBenchmarkResult const& res ) {
+                return res.isAssertion();
+            } );
     }
 
 } // end namespace Catch

@@ -3,6 +3,9 @@
 >
   <file path="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp">
     <testCase name="Clara::Arg supports single-arg parse the way Opt does" duration="{duration}"/>
+    <testCase name="Clara::Opt supports accept-many lambdas/Parsing fails on multiple options without accept_many" duration="{duration}"/>
+    <testCase name="Clara::Opt supports accept-many lambdas/Parsing succeeds on multiple options with accept_many" duration="{duration}"/>
+    <testCase name="is_unary_function" duration="{duration}"/>
   </file>
   <file path="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp">
     <testCase name="#1905 -- test spec parser properly clears internal state between compound tests" duration="{duration}"/>
@@ -43,6 +46,15 @@
     <testCase name="Parse test names and tags/Leading and trailing spaces in test name" duration="{duration}"/>
     <testCase name="Parse test names and tags/Shortened hide tags are split apart when parsing" duration="{duration}"/>
     <testCase name="Parse test names and tags/Shortened hide tags also properly handle exclusion" duration="{duration}"/>
+    <testCase name="Parsing sharding-related cli flags/shard-count" duration="{duration}"/>
+    <testCase name="Parsing sharding-related cli flags/Negative shard count reports error" duration="{duration}"/>
+    <testCase name="Parsing sharding-related cli flags/Zero shard count reports error" duration="{duration}"/>
+    <testCase name="Parsing sharding-related cli flags/shard-index" duration="{duration}"/>
+    <testCase name="Parsing sharding-related cli flags/Negative shard index reports error" duration="{duration}"/>
+    <testCase name="Parsing sharding-related cli flags/Shard index 0 is accepted" duration="{duration}"/>
+    <testCase name="Parsing warnings/NoAssertions" duration="{duration}"/>
+    <testCase name="Parsing warnings/NoTests is no longer supported" duration="{duration}"/>
+    <testCase name="Parsing warnings/Combining multiple warnings" duration="{duration}"/>
     <testCase name="Process can be configured on command line/empty args don't cause a crash" duration="{duration}"/>
     <testCase name="Process can be configured on command line/default - no arguments" duration="{duration}"/>
     <testCase name="Process can be configured on command line/test lists/Specify one test case using" duration="{duration}"/>
@@ -51,8 +63,13 @@
     <testCase name="Process can be configured on command line/reporter/-r/console" duration="{duration}"/>
     <testCase name="Process can be configured on command line/reporter/-r/xml" duration="{duration}"/>
     <testCase name="Process can be configured on command line/reporter/--reporter/junit" duration="{duration}"/>
-    <testCase name="Process can be configured on command line/reporter/Only one reporter is accepted" duration="{duration}"/>
     <testCase name="Process can be configured on command line/reporter/must match one of the available ones" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/With output file" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/With Windows-like absolute path as output file" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/Output file cannot be empty" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/Multiple reporters/All with output files" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/Multiple reporters/Mixed output files and default output" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/Multiple reporters/cannot have multiple reporters with default output" duration="{duration}"/>
     <testCase name="Process can be configured on command line/debugger/-b" duration="{duration}"/>
     <testCase name="Process can be configured on command line/debugger/--break" duration="{duration}"/>
     <testCase name="Process can be configured on command line/abort/-a aborts after first failure" duration="{duration}"/>
@@ -77,6 +94,12 @@
     <testCase name="Process can be configured on command line/Benchmark options/warmup-time" duration="{duration}"/>
     <testCase name="Test with special, characters &quot;in name" duration="{duration}"/>
   </file>
+  <file path="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp">
+    <testCase name="CaseInsensitiveEqualsTo is case insensitive/Degenerate cases" duration="{duration}"/>
+    <testCase name="CaseInsensitiveEqualsTo is case insensitive/Plain comparisons" duration="{duration}"/>
+    <testCase name="CaseInsensitiveLess is case insensitive/Degenerate cases" duration="{duration}"/>
+    <testCase name="CaseInsensitiveLess is case insensitive/Plain comparisons" duration="{duration}"/>
+  </file>
   <file path="tests/<exe-name>/IntrospectiveTests/FloatingPoint.tests.cpp">
     <testCase name="convertToBits" duration="{duration}"/>
   </file>
@@ -85,7 +108,9 @@
     <testCase name="Generators internals/Preset values" duration="{duration}"/>
     <testCase name="Generators internals/Generator combinator" duration="{duration}"/>
     <testCase name="Generators internals/Explicitly typed generator sequence" duration="{duration}"/>
-    <testCase name="Generators internals/Filter generator" duration="{duration}"/>
+    <testCase name="Generators internals/Filter generator/Simple filtering" duration="{duration}"/>
+    <testCase name="Generators internals/Filter generator/Filter out multiple elements at the start and end" duration="{duration}"/>
+    <testCase name="Generators internals/Filter generator/Throws on construction if it can't get initial element" duration="{duration}"/>
     <testCase name="Generators internals/Take generator/Take less" duration="{duration}"/>
     <testCase name="Generators internals/Take generator/Take more" duration="{duration}"/>
     <testCase name="Generators internals/Map with explicit return type" duration="{duration}"/>
@@ -156,31 +181,36 @@
     <testCase name="Random seed generation reports unknown methods" duration="{duration}"/>
   </file>
   <file path="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp">
+    <testCase name="Multireporter calls reporters and listeners in correct order" duration="{duration}"/>
+    <testCase name="Multireporter updates ReporterPreferences properly" duration="{duration}"/>
+    <testCase name="Multireporter updates ReporterPreferences properly/Adding listeners" duration="{duration}"/>
+    <testCase name="Multireporter updates ReporterPreferences properly/Adding reporters" duration="{duration}"/>
     <testCase name="Reporter's write listings to provided stream" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/automake reporter lists tags" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/automake reporter lists reporters" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/automake reporter lists tests" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/Automake reporter lists tags" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/Automake reporter lists reporters" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/Automake reporter lists tests" duration="{duration}"/>
     <testCase name="Reporter's write listings to provided stream/compact reporter lists tags" duration="{duration}"/>
     <testCase name="Reporter's write listings to provided stream/compact reporter lists reporters" duration="{duration}"/>
     <testCase name="Reporter's write listings to provided stream/compact reporter lists tests" duration="{duration}"/>
     <testCase name="Reporter's write listings to provided stream/console reporter lists tags" duration="{duration}"/>
     <testCase name="Reporter's write listings to provided stream/console reporter lists reporters" duration="{duration}"/>
     <testCase name="Reporter's write listings to provided stream/console reporter lists tests" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/junit reporter lists tags" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/junit reporter lists reporters" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/junit reporter lists tests" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/sonarqube reporter lists tags" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/sonarqube reporter lists reporters" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/sonarqube reporter lists tests" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/tap reporter lists tags" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/tap reporter lists reporters" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/tap reporter lists tests" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/teamcity reporter lists tags" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/teamcity reporter lists reporters" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/teamcity reporter lists tests" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/xml reporter lists tags" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/xml reporter lists reporters" duration="{duration}"/>
-    <testCase name="Reporter's write listings to provided stream/xml reporter lists tests" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/JUnit reporter lists tags" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/JUnit reporter lists reporters" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/JUnit reporter lists tests" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/SonarQube reporter lists tags" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/SonarQube reporter lists reporters" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/SonarQube reporter lists tests" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/TAP reporter lists tags" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/TAP reporter lists reporters" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/TAP reporter lists tests" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/TeamCity reporter lists tags" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/TeamCity reporter lists reporters" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/TeamCity reporter lists tests" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/XML reporter lists tags" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/XML reporter lists reporters" duration="{duration}"/>
+    <testCase name="Reporter's write listings to provided stream/XML reporter lists tests" duration="{duration}"/>
+    <testCase name="Reproducer for #2309 - a very long description past 80 chars (default console width) with a late colon : blablabla" duration="{duration}"/>
     <testCase name="The default listing implementation write to provided stream/Listing tags" duration="{duration}"/>
     <testCase name="The default listing implementation write to provided stream/Listing reporters" duration="{duration}"/>
     <testCase name="The default listing implementation write to provided stream/Listing tests" duration="{duration}"/>
@@ -189,6 +219,8 @@
     <testCase name="StringRef/Empty string" duration="{duration}"/>
     <testCase name="StringRef/From string literal" duration="{duration}"/>
     <testCase name="StringRef/From sub-string" duration="{duration}"/>
+    <testCase name="StringRef/Copy construction is shallow" duration="{duration}"/>
+    <testCase name="StringRef/Copy assignment is shallow" duration="{duration}"/>
     <testCase name="StringRef/Substrings/zero-based substring" duration="{duration}"/>
     <testCase name="StringRef/Substrings/non-zero-based substring" duration="{duration}"/>
     <testCase name="StringRef/Substrings/Pointer values of full refs should match" duration="{duration}"/>
@@ -220,11 +252,18 @@
     <testCase name="startsWith" duration="{duration}"/>
   </file>
   <file path="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp">
+    <testCase name="Empty tag is not allowed" duration="{duration}"/>
     <testCase name="Tag alias can be registered against tag patterns/The same tag alias can only be registered once" duration="{duration}"/>
     <testCase name="Tag alias can be registered against tag patterns/Tag aliases must be of the form [@name]" duration="{duration}"/>
+    <testCase name="Tags with spaces and non-alphanumerical characters are accepted" duration="{duration}"/>
+    <testCase name="Test case with identical tags keeps just one" duration="{duration}"/>
     <testCase name="empty tags are not allowed" duration="{duration}"/>
     <testCase name="shortened hide tags are split apart" duration="{duration}"/>
     <testCase name="tags with dots in later positions are not parsed as hidden" duration="{duration}"/>
+  </file>
+  <file path="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp">
+    <testCase name="Parsed tags are matched case insensitive" duration="{duration}"/>
+    <testCase name="Parsing tags with non-alphabetical characters is pass-through" duration="{duration}"/>
   </file>
   <file path="tests/<exe-name>/IntrospectiveTests/ToString.tests.cpp">
     <testCase name="Directly creating an EnumInfo" duration="{duration}"/>
@@ -1635,7 +1674,6 @@ Misc.tests.cpp:<line number>
       </skipped>
     </testCase>
     <testCase name="This test 'should' fail but doesn't" duration="{duration}"/>
-    <testCase name="atomic if" duration="{duration}"/>
     <testCase name="checkedElse" duration="{duration}"/>
     <testCase name="checkedElse, failing" duration="{duration}">
       <failure message="REQUIRE(testCheckedElse( false ))">
@@ -1869,8 +1907,6 @@ Tricky.tests.cpp:<line number>
     <testCase name="Comparing function pointers" duration="{duration}"/>
     <testCase name="Objects that evaluated in boolean contexts can be checked" duration="{duration}"/>
     <testCase name="Test enum bit values" duration="{duration}"/>
-    <testCase name="Where the LHS is not a simple value" duration="{duration}"/>
-    <testCase name="Where there is more to the expression after the RHS" duration="{duration}"/>
     <testCase name="X/level/0/a" duration="{duration}"/>
     <testCase name="X/level/0/b" duration="{duration}"/>
     <testCase name="X/level/1/a" duration="{duration}"/>
@@ -1880,15 +1916,6 @@ Tricky.tests.cpp:<line number>
     <testCase name="non-copyable objects" duration="{duration}"/>
     <testCase name="null_ptr" duration="{duration}"/>
     <testCase name="pointer to class" duration="{duration}"/>
-    <testCase name="string literals of different sizes can be compared" duration="{duration}">
-      <failure message="REQUIRE(std::string( &quot;first&quot; ) == &quot;second&quot;)">
-FAILED:
-	REQUIRE( std::string( "first" ) == "second" )
-with expansion:
-	"first" == "second"
-Tricky.tests.cpp:<line number>
-      </failure>
-    </testCase>
   </file>
   <file path="tests/<exe-name>/UsageTests/VariadicMacros.tests.cpp">
     <testCase name="Anonymous test case 1" duration="{duration}"/>

@@ -18,9 +18,10 @@ namespace Catch {
 
         SonarQubeReporter(ReporterConfig const& config)
         : CumulativeReporterBase(config)
-        , xml(config.stream()) {
+        , xml(m_stream) {
             m_preferences.shouldRedirectStdOut = true;
             m_preferences.shouldReportAllAssertions = true;
+            m_shouldStoreSuccesfulAssertions = false;
         }
 
         ~SonarQubeReporter() override = default;

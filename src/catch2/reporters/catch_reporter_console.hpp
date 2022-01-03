@@ -24,7 +24,7 @@ namespace Catch {
         static std::string getDescription();
 
         void noMatchingTestCases( StringRef unmatchedSpec ) override;
-        void reportInvalidArguments( StringRef arg ) override;
+        void reportInvalidTestSpec( StringRef arg ) override;
 
         void assertionStarting(AssertionInfo const&) override;
 
@@ -66,6 +66,7 @@ namespace Catch {
 
     private:
         bool m_headerPrinted = false;
+        bool m_testRunInfoPrinted = false;
     };
 
 } // end namespace Catch

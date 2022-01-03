@@ -28,7 +28,6 @@
 #include <catch2/catch_assertion_result.hpp>
 #include <catch2/catch_config.hpp>
 #include <catch2/catch_message.hpp>
-#include <catch2/catch_reporter_registrars.hpp>
 #include <catch2/catch_section_info.hpp>
 #include <catch2/catch_session.hpp>
 #include <catch2/catch_tag_alias.hpp>
@@ -46,6 +45,7 @@
 #include <catch2/generators/catch_generators_all.hpp>
 #include <catch2/interfaces/catch_interfaces_all.hpp>
 #include <catch2/internal/catch_assertion_handler.hpp>
+#include <catch2/internal/catch_case_insensitive_comparisons.hpp>
 #include <catch2/internal/catch_case_sensitive.hpp>
 #include <catch2/internal/catch_clara.hpp>
 #include <catch2/internal/catch_commandline.hpp>
@@ -85,6 +85,7 @@
 #include <catch2/internal/catch_result_type.hpp>
 #include <catch2/internal/catch_run_context.hpp>
 #include <catch2/internal/catch_section.hpp>
+#include <catch2/internal/catch_sharding.hpp>
 #include <catch2/internal/catch_singletons.hpp>
 #include <catch2/internal/catch_source_line_info.hpp>
 #include <catch2/internal/catch_startup_exception_registry.hpp>
@@ -105,6 +106,7 @@
 #include <catch2/internal/catch_uncaught_exceptions.hpp>
 #include <catch2/internal/catch_unique_name.hpp>
 #include <catch2/internal/catch_unique_ptr.hpp>
+#include <catch2/internal/catch_void_type.hpp>
 #include <catch2/internal/catch_wildcard_pattern.hpp>
 #include <catch2/internal/catch_windows_h_proxy.hpp>
 #include <catch2/internal/catch_xmlwriter.hpp>

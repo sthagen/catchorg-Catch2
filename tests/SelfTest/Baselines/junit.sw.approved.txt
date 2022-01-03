@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuitesloose text artifact
 >
-  <testsuite name="<exe-name>" errors="17" failures="129" tests="2131" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
+  <testsuite name="<exe-name>" errors="17" failures="126" tests="2226" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
     <properties>
       <property name="random-seed" value="1"/>
       <property name="filters" value="~[!nonportable]~[!benchmark]~[approvals] *"/>
@@ -378,10 +378,16 @@ Exception.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="CAPTURE parses string and character constants" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Capture and info messages/Capture should stringify like assertions" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Capture and info messages/Info should NOT stringify the way assertions do" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="CaseInsensitiveEqualsTo is case insensitive/Degenerate cases" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="CaseInsensitiveEqualsTo is case insensitive/Plain comparisons" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="CaseInsensitiveLess is case insensitive/Degenerate cases" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="CaseInsensitiveLess is case insensitive/Plain comparisons" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Character pretty printing/Specifically escaped" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Character pretty printing/General chars" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Character pretty printing/Low ASCII" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Clara::Arg supports single-arg parse the way Opt does" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Clara::Opt supports accept-many lambdas/Parsing fails on multiple options without accept_many" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Clara::Opt supports accept-many lambdas/Parsing succeeds on multiple options with accept_many" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining MatchAllOfGeneric does not nest" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining MatchAnyOfGeneric does not nest" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining MatchNotOfGeneric does not nest" time="{duration}" status="run"/>
@@ -445,6 +451,7 @@ Exception.tests.cpp:<line number>
     </testcase>
     <testcase classname="<exe-name>.global" name="Default scale is invisible to comparison" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Directly creating an EnumInfo" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Empty tag is not allowed" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="EndsWith string matcher" time="{duration}" status="run">
       <failure message="testStringForMatching(), EndsWith( &quot;Substring&quot; )" type="CHECK_THAT">
 FAILED:
@@ -696,7 +703,9 @@ Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Generators internals/Preset values" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Generators internals/Generator combinator" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Generators internals/Explicitly typed generator sequence" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Generators internals/Filter generator" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Generators internals/Filter generator/Simple filtering" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Generators internals/Filter generator/Filter out multiple elements at the start and end" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Generators internals/Filter generator/Throws on construction if it can't get initial element" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Generators internals/Take generator/Take less" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Generators internals/Take generator/Take more" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Generators internals/Map with explicit return type" time="{duration}" status="run"/>
@@ -861,6 +870,10 @@ with expansion:
 Exception.tests.cpp:<line number>
       </failure>
     </testcase>
+    <testcase classname="<exe-name>.global" name="Multireporter calls reporters and listeners in correct order" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Multireporter updates ReporterPreferences properly" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Multireporter updates ReporterPreferences properly/Adding listeners" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Multireporter updates ReporterPreferences properly/Adding reporters" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Nested generators and captured variables" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Nice descriptive name" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Non-std exceptions can be translated" time="{duration}" status="run">
@@ -1060,6 +1073,17 @@ Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Parse test names and tags/Leading and trailing spaces in test name" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Parse test names and tags/Shortened hide tags are split apart when parsing" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Parse test names and tags/Shortened hide tags also properly handle exclusion" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsed tags are matched case insensitive" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing sharding-related cli flags/shard-count" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing sharding-related cli flags/Negative shard count reports error" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing sharding-related cli flags/Zero shard count reports error" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing sharding-related cli flags/shard-index" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing sharding-related cli flags/Negative shard index reports error" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing sharding-related cli flags/Shard index 0 is accepted" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing tags with non-alphabetical characters is pass-through" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing warnings/NoAssertions" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing warnings/NoTests is no longer supported" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Parsing warnings/Combining multiple warnings" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Pointers can be compared to null" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Precision of floating point stringification can be set/Floats" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Precision of floating point stringification can be set/Double" time="{duration}" status="run"/>
@@ -1072,8 +1096,13 @@ Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/-r/console" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/-r/xml" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/--reporter/junit" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Only one reporter is accepted" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/must match one of the available ones" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/With output file" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/With Windows-like absolute path as output file" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Output file cannot be empty" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Multiple reporters/All with output files" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Multiple reporters/Mixed output files and default output" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Multiple reporters/cannot have multiple reporters with default output" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/debugger/-b" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/debugger/--break" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/abort/-a aborts after first failure" time="{duration}" status="run"/>
@@ -1139,30 +1168,31 @@ Matchers.tests.cpp:<line number>
     </testcase>
     <testcase classname="<exe-name>.global" name="Regression test #1" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/automake reporter lists tags" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/automake reporter lists reporters" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/automake reporter lists tests" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/Automake reporter lists tags" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/Automake reporter lists reporters" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/Automake reporter lists tests" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/compact reporter lists tags" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/compact reporter lists reporters" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/compact reporter lists tests" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/console reporter lists tags" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/console reporter lists reporters" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/console reporter lists tests" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/junit reporter lists tags" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/junit reporter lists reporters" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/junit reporter lists tests" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/sonarqube reporter lists tags" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/sonarqube reporter lists reporters" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/sonarqube reporter lists tests" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/tap reporter lists tags" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/tap reporter lists reporters" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/tap reporter lists tests" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/teamcity reporter lists tags" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/teamcity reporter lists reporters" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/teamcity reporter lists tests" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/xml reporter lists tags" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/xml reporter lists reporters" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/xml reporter lists tests" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/JUnit reporter lists tags" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/JUnit reporter lists reporters" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/JUnit reporter lists tests" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/SonarQube reporter lists tags" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/SonarQube reporter lists reporters" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/SonarQube reporter lists tests" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/TAP reporter lists tags" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/TAP reporter lists reporters" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/TAP reporter lists tests" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/TeamCity reporter lists tags" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/TeamCity reporter lists reporters" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/TeamCity reporter lists tests" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/XML reporter lists tags" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/XML reporter lists reporters" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/XML reporter lists tests" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Reproducer for #2309 - a very long description past 80 chars (default console width) with a late colon : blablabla" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="SUCCEED counts as a test pass" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="SUCCEED does not require an argument" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.Fixture" name="Scenario: BDD tests requiring Fixtures to provide commonly-accessed data or methods/Given: No operations precede me" time="{duration}" status="run"/>
@@ -1214,6 +1244,8 @@ Matchers.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="StringRef/Empty string" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/From string literal" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/From sub-string" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="StringRef/Copy construction is shallow" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="StringRef/Copy assignment is shallow" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/Substrings/zero-based substring" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/Substrings/non-zero-based substring" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/Substrings/Pointer values of full refs should match" time="{duration}" status="run"/>
@@ -1255,6 +1287,7 @@ Misc.tests.cpp:<line number>
     </testcase>
     <testcase classname="<exe-name>.global" name="Tag alias can be registered against tag patterns/The same tag alias can only be registered once" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Tag alias can be registered against tag patterns/Tag aliases must be of the form [@name]" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Tags with spaces and non-alphanumerical characters are accepted" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.Template_Fixture" name="Template test case method with test types specified inside std::tuple - MyTypes - 0" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.Template_Fixture" name="Template test case method with test types specified inside std::tuple - MyTypes - 1" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.Template_Fixture" name="Template test case method with test types specified inside std::tuple - MyTypes - 2" time="{duration}" status="run"/>
@@ -1313,6 +1346,7 @@ Misc.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="TemplateTestSig: vectors can be sized and resized - std::string,15/resizing smaller changes size but not capacity/We can use the 'swap trick' to reset the capacity" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="TemplateTestSig: vectors can be sized and resized - std::string,15/reserving bigger changes capacity but not size" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="TemplateTestSig: vectors can be sized and resized - std::string,15/reserving smaller does not change size or capacity" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Test case with identical tags keeps just one" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Test case with one argument" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Test enum bit values" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Test with special, characters &quot;in name" time="{duration}" status="run"/>
@@ -1538,8 +1572,6 @@ unexpected exception
 Exception.tests.cpp:<line number>
       </error>
     </testcase>
-    <testcase classname="<exe-name>.global" name="Where the LHS is not a simple value" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Where there is more to the expression after the RHS" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="X/level/0/a" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="X/level/0/b" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="X/level/1/a" time="{duration}" status="run"/>
@@ -1555,7 +1587,6 @@ Exception.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="XmlWriter writes boolean attributes as true/false" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="analyse no analysis" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="array&lt;int, N> -> toString" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="atomic if" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="benchmark function call/without chronometer" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="benchmark function call/with chronometer" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="boolean member" time="{duration}" status="run"/>
@@ -1594,6 +1625,7 @@ Misc.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="even more nested SECTION tests/c/d (leaf)" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="even more nested SECTION tests/c/e (leaf)" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="even more nested SECTION tests/f (leaf)" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="is_unary_function" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="just failure" time="{duration}" status="run">
       <failure type="FAIL">
 FAILED:
@@ -1803,15 +1835,6 @@ Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="std::set is convertible string/single item" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="std::set is convertible string/several items" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="std::vector&lt;std::pair&lt;std::string,int> > -> toString" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="string literals of different sizes can be compared" time="{duration}" status="run">
-      <failure message="std::string( &quot;first&quot; ) == &quot;second&quot;" type="REQUIRE">
-FAILED:
-  REQUIRE( std::string( "first" ) == "second" )
-with expansion:
-  "first" == "second"
-Tricky.tests.cpp:<line number>
-      </failure>
-    </testcase>
     <testcase classname="<exe-name>.global" name="stringify ranges" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="stringify( has_maker )" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="stringify( has_maker_and_operator )" time="{duration}" status="run"/>

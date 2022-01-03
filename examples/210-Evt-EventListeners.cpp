@@ -7,7 +7,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/reporters/catch_reporter_event_listener.hpp>
-#include <catch2/catch_reporter_registrars.hpp>
+#include <catch2/reporters/catch_reporter_registrars.hpp>
 #include <catch2/catch_test_case_info.hpp>
 #include <iostream>
 
@@ -22,7 +22,7 @@ std::string ws(int const level) {
 }
 
 std::ostream& operator<<(std::ostream& out, Catch::Tag t) {
-    return out << "original: " << t.original << "lower cased: " << t.lowerCased;
+    return out << "original: " << t.original;
 }
 
 template< typename T >

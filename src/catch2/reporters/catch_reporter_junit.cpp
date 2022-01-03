@@ -70,10 +70,11 @@ namespace Catch {
 
     JunitReporter::JunitReporter( ReporterConfig const& _config )
         :   CumulativeReporterBase( _config ),
-            xml( _config.stream() )
+            xml( m_stream )
         {
             m_preferences.shouldRedirectStdOut = true;
             m_preferences.shouldReportAllAssertions = true;
+            m_shouldStoreSuccesfulAssertions = false;
         }
 
     std::string JunitReporter::getDescription() {
@@ -179,9 +180,9 @@ namespace Catch {
         if( !rootName.empty() )
             name = rootName + '/' + name;
 
-        if( !sectionNode.assertions.empty() ||
-            !sectionNode.stdOut.empty() ||
-            !sectionNode.stdErr.empty() ) {
+        if( sectionNode.hasAnyAssertions()
+           || !sectionNode.stdOut.empty()
+           || !sectionNode.stdErr.empty() ) {
             XmlWriter::ScopedElement e = xml.scopedElement( "testcase" );
             if( className.empty() ) {
                 xml.writeAttribute( "classname"_sr, name );
@@ -219,8 +220,11 @@ namespace Catch {
     }
 
     void JunitReporter::writeAssertions( SectionNode const& sectionNode ) {
-        for( auto const& assertion : sectionNode.assertions )
-            writeAssertion( assertion );
+        for (auto const& assertionOrBenchmark : sectionNode.assertionsAndBenchmarks) {
+            if (assertionOrBenchmark.isAssertion()) {
+                writeAssertion(assertionOrBenchmark.asAssertion());
+            }
+        }
     }
 
     void JunitReporter::writeAssertion( AssertionStats const& stats ) {

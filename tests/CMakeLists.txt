@@ -87,6 +87,9 @@ set(TEST_SOURCES
         ${SELF_TEST_DIR}/IntrospectiveTests/RandomNumberGeneration.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Reporters.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Tag.tests.cpp
+        ${SELF_TEST_DIR}/IntrospectiveTests/TestSpecParser.tests.cpp
+        ${SELF_TEST_DIR}/IntrospectiveTests/TextFlow.tests.cpp
+        ${SELF_TEST_DIR}/IntrospectiveTests/Sharding.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/String.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/StringManip.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Xml.tests.cpp
@@ -205,15 +208,53 @@ set_tests_properties(List::Reporters::XmlOutput PROPERTIES
 add_test(NAME NoAssertions COMMAND $<TARGET_FILE:SelfTest> -w NoAssertions "An empty test with no assertions")
 set_tests_properties(NoAssertions PROPERTIES PASS_REGULAR_EXPRESSION "No assertions in test case")
 
-add_test(NAME NoTest COMMAND $<TARGET_FILE:SelfTest> Tracker, "___nonexistent_test___")
-set_tests_properties(NoTest PROPERTIES
+# We cannot combine a regular expression on output with return code check
+# in one test, so we register two instead of making a checking script because
+# the runtime overhead is small enough.
+add_test(NAME TestSpecs::CombiningMatchingAndNonMatchingIsOk-1 COMMAND $<TARGET_FILE:SelfTest> Tracker, "___nonexistent_test___")
+
+add_test(NAME TestSpecs::CombiningMatchingAndNonMatchingIsOk-2 COMMAND $<TARGET_FILE:SelfTest> Tracker, "___nonexistent_test___")
+set_tests_properties(TestSpecs::CombiningMatchingAndNonMatchingIsOk-2 PROPERTIES
     PASS_REGULAR_EXPRESSION "No test cases matched '___nonexistent_test___'"
     FAIL_REGULAR_EXPRESSION "No tests ran"
 )
 
-add_test(NAME WarnAboutNoTests COMMAND ${CMAKE_COMMAND} -P ${SELF_TEST_DIR}/WarnAboutNoTests.cmake $<TARGET_FILE:SelfTest>)
+add_test(NAME TestSpecs::NoMatchedTestsFail
+  COMMAND $<TARGET_FILE:SelfTest> "___nonexistent_test___"
+)
+set_tests_properties(TestSpecs::NoMatchedTestsFail
+  PROPERTIES
+    WILL_FAIL ON
+)
+add_test(NAME TestSpecs::OverrideFailureWithNoMatchedTests
+  COMMAND $<TARGET_FILE:SelfTest> "___nonexistent_test___" --allow-running-no-tests
+)
 
-add_test(NAME UnmatchedOutputFilter COMMAND $<TARGET_FILE:SelfTest> [this-tag-does-not-exist] -w NoTests)
+add_test(NAME Warnings::UnmatchedTestSpecIsAccepted
+  COMMAND $<TARGET_FILE:SelfTest> Tracker --warn UnmatchedTestSpec
+)
+set_tests_properties(Warnings::UnmatchedTestSpecIsAccepted
+  PROPERTIES
+    FAIL_REGULAR_EXPRESSION "Unrecognised warning option: "
+)
+
+add_test(NAME Warnings::MultipleWarningsCanBeSpecified
+  COMMAND
+    $<TARGET_FILE:SelfTest> Tracker
+      --warn NoAssertions
+      --warn UnmatchedTestSpec
+)
+
+add_test(NAME TestSpecs::WarnUnmatchedTestSpecFailsWithUnmatchedTestSpec
+  COMMAND
+    $<TARGET_FILE:SelfTest> Tracker, "___nonexistent_test___" --warn UnmatchedTestSpec
+)
+set_tests_properties(TestSpecs::WarnUnmatchedTestSpecFailsWithUnmatchedTestSpec
+  PROPERTIES
+    WILL_FAIL ON
+)
+
+add_test(NAME UnmatchedOutputFilter COMMAND $<TARGET_FILE:SelfTest> [this-tag-does-not-exist])
 set_tests_properties(UnmatchedOutputFilter
   PROPERTIES
     PASS_REGULAR_EXPRESSION "No test cases matched '\\[this-tag-does-not-exist\\]'"
@@ -292,14 +333,12 @@ set_tests_properties(TestsInFile::SimpleSpecs PROPERTIES PASS_REGULAR_EXPRESSION
 add_test(NAME TestsInFile::EscapeSpecialCharacters COMMAND $<TARGET_FILE:SelfTest> "-f ${SELF_TEST_DIR}/Misc/special-characters-in-file.input")
 set_tests_properties(TestsInFile::EscapeSpecialCharacters PROPERTIES PASS_REGULAR_EXPRESSION "1 assertion in 1 test case")
 
-# CTest does not allow us to create an AND of required regular expressions,
-# so we have to split the test into 2 parts and look for parts of the expected
-# output separately.
 add_test(NAME TestsInFile::InvalidTestNames-1 COMMAND $<TARGET_FILE:SelfTest> "-f ${SELF_TEST_DIR}/Misc/invalid-test-names.input")
-set_tests_properties(TestsInFile::InvalidTestNames-1 PROPERTIES PASS_REGULAR_EXPRESSION "Invalid Filter: \"Test with special, characters in \\\\\" name\"")
-
-add_test(NAME TestsInFile::InvalidTestNames-2 COMMAND $<TARGET_FILE:SelfTest> "-f ${SELF_TEST_DIR}/Misc/invalid-test-names.input")
-set_tests_properties(TestsInFile::InvalidTestNames-2 PROPERTIES PASS_REGULAR_EXPRESSION "No tests ran")
+set_tests_properties(TestsInFile::InvalidTestNames-1
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "Invalid Filter: \"Test with special, characters in \\\\\" name\""
+    FAIL_REGULAR_EXPRESSION "No tests ran"
+)
 
 add_test(NAME TagAlias COMMAND $<TARGET_FILE:SelfTest> [@tricky] --list-tests)
 set_tests_properties(TagAlias PROPERTIES
@@ -309,6 +348,7 @@ set_tests_properties(TagAlias PROPERTIES
 
 add_test(NAME RandomTestOrdering COMMAND ${PYTHON_EXECUTABLE}
   ${CATCH_DIR}/tests/TestScripts/testRandomOrder.py $<TARGET_FILE:SelfTest>)
+
 
 add_test(NAME CheckConvenienceHeaders
   COMMAND
@@ -366,6 +406,69 @@ add_test(NAME "Benchmarking::FailureReporting::ShouldFailIsRespected"
 set_tests_properties("Benchmarking::FailureReporting::ShouldFailIsRespected"
   PROPERTIES
     PASS_REGULAR_EXPRESSION "1 failed as expected"
+)
+
+add_test(NAME "ErrorHandling::InvalidTestSpecExitsEarly"
+  COMMAND
+    $<TARGET_FILE:SelfTest> "[aa,a]"
+)
+set_tests_properties("ErrorHandling::InvalidTestSpecExitsEarly"
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "Invalid Filter: \\[aa\,a\\]"
+    FAIL_REGULAR_EXPRESSION "No tests ran"
+)
+
+if (MSVC)
+  set(_NullFile "NUL")
+else()
+  set(_NullFile "/dev/null")
+endif()
+
+# This test checks that there is nothing written out from the process,
+# but if CMake is running the tests under Valgrind or similar tool, then
+# that will write its own output to stdout and the test would fail.
+if (NOT MEMORYCHECK_COMMAND)
+  add_test(NAME "MultiReporter::CapturingReportersDontPropagateStdOut"
+    COMMAND
+      $<TARGET_FILE:SelfTest> "Sends stuff to stdout and stderr"
+        --reporter xml::${_NullFile}
+        --reporter junit::${_NullFile}
+  )
+  set_tests_properties("MultiReporter::CapturingReportersDontPropagateStdOut"
+    PROPERTIES
+      FAIL_REGULAR_EXPRESSION ".+"
+  )
+endif()
+
+add_test(NAME "MultiReporter::NonCapturingReportersPropagateStdout"
+  COMMAND
+    $<TARGET_FILE:SelfTest> "Sends stuff to stdout and stderr"
+      --reporter xml::${_NullFile}
+      --reporter console::${_NullFile}
+)
+set_tests_properties("MultiReporter::NonCapturingReportersPropagateStdout"
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "A string sent to stderr via clog"
+)
+
+add_test(NAME "Outputs::DashAsOutLocationSendsOutputToStdout"
+  COMMAND
+    $<TARGET_FILE:SelfTest> "Factorials are computed"
+      --out=-
+)
+set_tests_properties("Outputs::DashAsOutLocationSendsOutputToStdout"
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "All tests passed \\(5 assertions in 1 test case\\)"
+)
+
+add_test(NAME "Reporters::DashAsLocationInReporterSpecSendsOutputToStdout"
+  COMMAND
+    $<TARGET_FILE:SelfTest> "Factorials are computed"
+      --reporter console::-
+)
+set_tests_properties("Reporters::DashAsLocationInReporterSpecSendsOutputToStdout"
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "All tests passed \\(5 assertions in 1 test case\\)"
 )
 
 

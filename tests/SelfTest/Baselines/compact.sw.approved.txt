@@ -334,6 +334,21 @@ Message.tests.cpp:<line number>: passed: with 7 messages: 'std::vector<int>{1, 2
 Message.tests.cpp:<line number>: passed: with 11 messages: '("comma, in string", "escaped, \", ") := "escaped, ", "' and '"single quote in string,'," := "single quote in string,',"' and '"some escapes, \\,\\\\" := "some escapes, \,\\"' and '"some, ), unmatched, } prenheses {[<" := "some, ), unmatched, } prenheses {[<"' and ''"' := '"'' and ''\'' := '''' and '',' := ','' and ''}' := '}'' and '')' := ')'' and ''(' := '('' and ''{' := '{''
 ToStringGeneral.tests.cpp:<line number>: passed: true with 1 message: 'i := 2'
 ToStringGeneral.tests.cpp:<line number>: passed: true with 1 message: '3'
+Details.tests.cpp:<line number>: passed: eq( "", "" ) for: true
+Details.tests.cpp:<line number>: passed: !(eq( "", "a" )) for: !false
+Details.tests.cpp:<line number>: passed: eq( "a", "a" ) for: true
+Details.tests.cpp:<line number>: passed: eq( "a", "A" ) for: true
+Details.tests.cpp:<line number>: passed: eq( "A", "a" ) for: true
+Details.tests.cpp:<line number>: passed: eq( "A", "A" ) for: true
+Details.tests.cpp:<line number>: passed: !(eq( "a", "b" )) for: !false
+Details.tests.cpp:<line number>: passed: !(eq( "a", "B" )) for: !false
+Details.tests.cpp:<line number>: passed: lt( "", "a" ) for: true
+Details.tests.cpp:<line number>: passed: !(lt( "a", "a" )) for: !false
+Details.tests.cpp:<line number>: passed: !(lt( "", "" )) for: !false
+Details.tests.cpp:<line number>: passed: lt( "a", "b" ) for: true
+Details.tests.cpp:<line number>: passed: lt( "a", "B" ) for: true
+Details.tests.cpp:<line number>: passed: lt( "A", "b" ) for: true
+Details.tests.cpp:<line number>: passed: lt( "A", "B" ) for: true
 ToStringGeneral.tests.cpp:<line number>: passed: tab == '\t' for: '\t' == '\t'
 ToStringGeneral.tests.cpp:<line number>: passed: newline == '\n' for: '\n' == '\n'
 ToStringGeneral.tests.cpp:<line number>: passed: carr_return == '\r' for: '\r' == '\r'
@@ -350,6 +365,9 @@ ToStringGeneral.tests.cpp:<line number>: passed: c == i for: 4 == 4
 ToStringGeneral.tests.cpp:<line number>: passed: c == i for: 5 == 5
 Clara.tests.cpp:<line number>: passed: name.empty() for: true
 Clara.tests.cpp:<line number>: passed: name == "foo" for: "foo" == "foo"
+Clara.tests.cpp:<line number>: passed: !(parse_result) for: !{?}
+Clara.tests.cpp:<line number>: passed: parse_result for: {?}
+Clara.tests.cpp:<line number>: passed: res == std::vector<std::string>{ "aaa", "bbb" } for: { "aaa", "bbb" } == { "aaa", "bbb" }
 Matchers.tests.cpp:<line number>: passed: with 1 message: 'std::is_same< decltype( ( MatcherA() && MatcherB() ) && MatcherC() ), Catch::Matchers::Detail:: MatchAllOfGeneric<MatcherA, MatcherB, MatcherC>>::value'
 Matchers.tests.cpp:<line number>: passed: 1, ( MatcherA() && MatcherB() ) && MatcherC() for: 1 ( equals: (int) 1 or (float) 1.0f and equals: (long long) 1 and equals: (T) 1 )
 Matchers.tests.cpp:<line number>: passed: with 1 message: 'std::is_same< decltype( MatcherA() && ( MatcherB() && MatcherC() ) ), Catch::Matchers::Detail:: MatchAllOfGeneric<MatcherA, MatcherB, MatcherC>>::value'
@@ -473,6 +491,7 @@ ToString.tests.cpp:<line number>: passed: enumInfo->lookup(1) == "Value2" for: V
 ToString.tests.cpp:<line number>: passed: enumInfo->lookup(3) == "{** unexpected enum value **}" for: {** unexpected enum value **}
 ==
 "{** unexpected enum value **}"
+Tag.tests.cpp:<line number>: passed: Catch::TestCaseInfo( "", { "fake test name", "[]" }, dummySourceLineInfo )
 Matchers.tests.cpp:<line number>: failed: testStringForMatching(), EndsWith( "Substring" ) for: "this string contains 'abc' as a substring" ends with: "Substring"
 Matchers.tests.cpp:<line number>: failed: testStringForMatching(), EndsWith( "this", Catch::CaseSensitive::No ) for: "this string contains 'abc' as a substring" ends with: "this" (case insensitive)
 EnumToString.tests.cpp:<line number>: passed: stringify( EnumClass3::Value1 ) == "Value1" for: "Value1" == "Value1"
@@ -692,7 +711,12 @@ GeneratorsImpl.tests.cpp:<line number>: passed: gen.get() == 1 for: 1 == 1
 GeneratorsImpl.tests.cpp:<line number>: passed: gen.next() for: true
 GeneratorsImpl.tests.cpp:<line number>: passed: gen.get() == 3 for: 3 == 3
 GeneratorsImpl.tests.cpp:<line number>: passed: !(gen.next()) for: !false
-GeneratorsImpl.tests.cpp:<line number>: passed: filter([] (int) { return false; }, value(1)), Catch::GeneratorException
+GeneratorsImpl.tests.cpp:<line number>: passed: gen.get() == 1 for: 1 == 1
+GeneratorsImpl.tests.cpp:<line number>: passed: gen.next() for: true
+GeneratorsImpl.tests.cpp:<line number>: passed: gen.get() == 3 for: 3 == 3
+GeneratorsImpl.tests.cpp:<line number>: passed: !(gen.next()) for: !false
+GeneratorsImpl.tests.cpp:<line number>: passed: filter([](int) { return false; }, value(1)), Catch::GeneratorException
+GeneratorsImpl.tests.cpp:<line number>: passed: filter([](int) { return false; }, values({ 1, 2, 3 })), Catch::GeneratorException
 GeneratorsImpl.tests.cpp:<line number>: passed: gen.get() == 1 for: 1 == 1
 GeneratorsImpl.tests.cpp:<line number>: passed: gen.next() for: true
 GeneratorsImpl.tests.cpp:<line number>: passed: gen.get() == 2 for: 2 == 2
@@ -917,6 +941,25 @@ Condition.tests.cpp:<line number>: failed: explicitly
 Condition.tests.cpp:<line number>: failed: explicitly
 Exception.tests.cpp:<line number>: passed: thisThrows(), "expected exception" for: "expected exception" equals: "expected exception"
 Exception.tests.cpp:<line number>: failed: thisThrows(), "should fail" for: "expected exception" equals: "should fail"
+Reporters.tests.cpp:<line number>: passed: records == expected for: { "Hello", "world", "Goodbye", "world" }
+==
+{ "Hello", "world", "Goodbye", "world" }
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldRedirectStdOut == false for: false == false
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldReportAllAssertions == false for: false == false
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldRedirectStdOut == true for: true == true
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldReportAllAssertions == false for: false == false
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldRedirectStdOut == true for: true == true
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldReportAllAssertions == true for: true == true
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldRedirectStdOut == true for: true == true
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldReportAllAssertions == true for: true == true
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldRedirectStdOut == false for: false == false
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldReportAllAssertions == false for: false == false
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldRedirectStdOut == true for: true == true
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldReportAllAssertions == false for: false == false
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldRedirectStdOut == true for: true == true
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldReportAllAssertions == true for: true == true
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldRedirectStdOut == true for: true == true
+Reporters.tests.cpp:<line number>: passed: multiReporter.getPreferences().shouldReportAllAssertions == true for: true == true
 Generators.tests.cpp:<line number>: passed: values > -6 for: 3 > -6
 Generators.tests.cpp:<line number>: passed: values > -6 for: 4 > -6
 Generators.tests.cpp:<line number>: passed: values > -6 for: 5 > -6
@@ -938,6 +981,8 @@ Exception.tests.cpp:<line number>: failed: unexpected exception with message: 'c
 Tricky.tests.cpp:<line number>: passed: True for: {?}
 Tricky.tests.cpp:<line number>: passed: !False for: true
 Tricky.tests.cpp:<line number>: passed: !(False) for: !{?}
+Compilation.tests.cpp:<line number>: passed: with 1 message: 'std::is_void<void>::value'
+Compilation.tests.cpp:<line number>: passed: with 1 message: '!(std::is_void<int>::value)'
 Compilation.tests.cpp:<line number>: passed: with 1 message: 'std::is_void<void>::value'
 Compilation.tests.cpp:<line number>: passed: with 1 message: '!(std::is_void<int>::value)'
 Condition.tests.cpp:<line number>: failed: data.int_seven > 7 for: 7 > 7
@@ -1178,6 +1223,32 @@ CmdLine.tests.cpp:<line number>: passed: !(spec.matches(*fakeTestCase("hidden an
 CmdLine.tests.cpp:<line number>: passed: !(spec.matches(*fakeTestCase("only foo", "[foo]"))) for: !false
 CmdLine.tests.cpp:<line number>: passed: !(spec.matches(*fakeTestCase("only hidden", "[.]"))) for: !false
 CmdLine.tests.cpp:<line number>: passed: spec.matches(*fakeTestCase("neither foo nor hidden", "[bar]")) for: true
+TestSpecParser.tests.cpp:<line number>: passed: spec.hasFilters() for: true
+TestSpecParser.tests.cpp:<line number>: passed: spec.getInvalidSpecs().empty() for: true
+TestSpecParser.tests.cpp:<line number>: passed: spec.matches( testCase ) for: true
+CmdLine.tests.cpp:<line number>: passed: cli.parse({ "test", "--shard-count=8" }) for: {?}
+CmdLine.tests.cpp:<line number>: passed: config.shardCount == 8 for: 8 == 8
+CmdLine.tests.cpp:<line number>: passed: !(result) for: !{?}
+CmdLine.tests.cpp:<line number>: passed: result.errorMessage(), ContainsSubstring("Shard count must be a positive number") for: "Shard count must be a positive number" contains: "Shard count must be a positive number"
+CmdLine.tests.cpp:<line number>: passed: !(result) for: !{?}
+CmdLine.tests.cpp:<line number>: passed: result.errorMessage(), ContainsSubstring("Shard count must be a positive number") for: "Shard count must be a positive number" contains: "Shard count must be a positive number"
+CmdLine.tests.cpp:<line number>: passed: cli.parse({ "test", "--shard-index=2" }) for: {?}
+CmdLine.tests.cpp:<line number>: passed: config.shardIndex == 2 for: 2 == 2
+CmdLine.tests.cpp:<line number>: passed: !(result) for: !{?}
+CmdLine.tests.cpp:<line number>: passed: result.errorMessage(), ContainsSubstring("Shard index must be a non-negative number") for: "Shard index must be a non-negative number" contains: "Shard index must be a non-negative number"
+CmdLine.tests.cpp:<line number>: passed: cli.parse({ "test", "--shard-index=0" }) for: {?}
+CmdLine.tests.cpp:<line number>: passed: config.shardIndex == 0 for: 0 == 0
+TestSpecParser.tests.cpp:<line number>: passed: spec.hasFilters() for: true with 1 message: 'tagString := "[tag with spaces]"'
+TestSpecParser.tests.cpp:<line number>: passed: spec.getInvalidSpecs().empty() for: true with 1 message: 'tagString := "[tag with spaces]"'
+TestSpecParser.tests.cpp:<line number>: passed: spec.matches( testCase ) for: true with 1 message: 'tagString := "[tag with spaces]"'
+TestSpecParser.tests.cpp:<line number>: passed: spec.hasFilters() for: true with 1 message: 'tagString := "[I said "good day" sir!]"'
+TestSpecParser.tests.cpp:<line number>: passed: spec.getInvalidSpecs().empty() for: true with 1 message: 'tagString := "[I said "good day" sir!]"'
+TestSpecParser.tests.cpp:<line number>: passed: spec.matches( testCase ) for: true with 1 message: 'tagString := "[I said "good day" sir!]"'
+CmdLine.tests.cpp:<line number>: passed: cli.parse( { "test", "-w", "NoAssertions" } ) for: {?}
+CmdLine.tests.cpp:<line number>: passed: config.warnings == WarnAbout::NoAssertions for: 1 == 1
+CmdLine.tests.cpp:<line number>: passed: !(cli.parse( { "test", "-w", "NoTests" } )) for: !{?}
+CmdLine.tests.cpp:<line number>: passed: cli.parse( { "test", "--warn", "NoAssertions", "--warn", "UnmatchedTestSpec" } ) for: {?}
+CmdLine.tests.cpp:<line number>: passed: config.warnings == ( WarnAbout::NoAssertions | WarnAbout::UnmatchedTestSpec ) for: 3 == 3
 Condition.tests.cpp:<line number>: passed: p == 0 for: 0 == 0
 Condition.tests.cpp:<line number>: passed: p == pNULL for: 0 == 0
 Condition.tests.cpp:<line number>: passed: p != 0 for: 0x<hex digits> != 0
@@ -1198,7 +1269,9 @@ CmdLine.tests.cpp:<line number>: passed: config.processName == "test" for: "test
 CmdLine.tests.cpp:<line number>: passed: config.shouldDebugBreak == false for: false == false
 CmdLine.tests.cpp:<line number>: passed: config.abortAfter == -1 for: -1 == -1
 CmdLine.tests.cpp:<line number>: passed: config.noThrow == false for: false == false
-CmdLine.tests.cpp:<line number>: passed: config.reporterName == "console" for: "console" == "console"
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == std::vector<Catch::ConfigData::ReporterAndFile>{ {"console", {}} } for: { { console, <default-output> } }
+==
+{ { console, <default-output> } }
 CmdLine.tests.cpp:<line number>: passed: !(cfg.hasTestFilters()) for: !false
 CmdLine.tests.cpp:<line number>: passed: result for: {?}
 CmdLine.tests.cpp:<line number>: passed: cfg.hasTestFilters() for: true
@@ -1212,15 +1285,40 @@ CmdLine.tests.cpp:<line number>: passed: result for: {?}
 CmdLine.tests.cpp:<line number>: passed: cfg.hasTestFilters() for: true
 CmdLine.tests.cpp:<line number>: passed: cfg.testSpec().matches(*fakeTestCase("test1")) == false for: false == false
 CmdLine.tests.cpp:<line number>: passed: cfg.testSpec().matches(*fakeTestCase("alwaysIncluded")) for: true
-CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-r", "console"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.reporterName == "console" for: "console" == "console"
-CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-r", "xml"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.reporterName == "xml" for: "xml" == "xml"
-CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "--reporter", "junit"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.reporterName == "junit" for: "junit" == "junit"
-CmdLine.tests.cpp:<line number>: passed: !(cli.parse({ "test", "-r", "xml", "-r", "junit" })) for: !{?}
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"console", {}} } for: { { console, <default-output> } }
+==
+{ { console, <default-output> } } with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"xml", {}} } for: { { xml, <default-output> } }
+==
+{ { xml, <default-output> } } with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"junit", {}} } for: { { junit, <default-output> } }
+==
+{ { junit, <default-output> } } with 1 message: 'result.errorMessage() := ""'
 CmdLine.tests.cpp:<line number>: passed: !result for: true
 CmdLine.tests.cpp:<line number>: passed: result.errorMessage(), ContainsSubstring("Unrecognized reporter") for: "Unrecognized reporter, 'unsupported'. Check available with --list-reporters" contains: "Unrecognized reporter"
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"console", "out.txt"s} } for: { { console, out.txt } }
+==
+{ { console, out.txt } } with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"console", "C:\\Temp\\out.txt"s} } for: { { console, C:\Temp\out.txt } }
+==
+{ { console, C:\Temp\out.txt } } with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: !result for: true
+CmdLine.tests.cpp:<line number>: passed: result.errorMessage(), ContainsSubstring("empty filename") for: "Reporter 'console' has empty filename specified as its output. Supply a filename or remove the colons to use the default output." contains: "empty filename"
+CmdLine.tests.cpp:<line number>: passed: cli.parse({ "test", "-r", "xml::output.xml", "-r", "junit::output-junit.xml" }) for: {?}
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"junit", "output-junit.xml"s} } for: { { xml, output.xml }, { junit, output-junit.xml } }
+==
+{ { xml, output.xml }, { junit, output-junit.xml } }
+CmdLine.tests.cpp:<line number>: passed: cli.parse({ "test", "-r", "xml::output.xml", "-r", "console" }) for: {?}
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"console", {}} } for: { { xml, output.xml }, { console, <default-output> } }
+==
+{ { xml, output.xml }, { console, <default-output> } }
+CmdLine.tests.cpp:<line number>: passed: !result for: true
+CmdLine.tests.cpp:<line number>: passed: result.errorMessage(), ContainsSubstring("Only one reporter may have unspecified output file.") for: "Only one reporter may have unspecified output file." contains: "Only one reporter may have unspecified output file."
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-b"}) for: {?}
 CmdLine.tests.cpp:<line number>: passed: config.shouldDebugBreak == true for: true == true
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "--break"}) for: {?}
@@ -1246,9 +1344,9 @@ CmdLine.tests.cpp:<line number>: passed: config.noThrow for: true
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "--nothrow"}) for: {?}
 CmdLine.tests.cpp:<line number>: passed: config.noThrow for: true
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-o", "filename.ext"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.outputFilename == "filename.ext" for: "filename.ext" == "filename.ext"
+CmdLine.tests.cpp:<line number>: passed: config.defaultOutputFilename == "filename.ext" for: "filename.ext" == "filename.ext"
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "--out", "filename.ext"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.outputFilename == "filename.ext" for: "filename.ext" == "filename.ext"
+CmdLine.tests.cpp:<line number>: passed: config.defaultOutputFilename == "filename.ext" for: "filename.ext" == "filename.ext"
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-abe"}) for: {?}
 CmdLine.tests.cpp:<line number>: passed: config.abortAfter == 1 for: 1 == 1
 CmdLine.tests.cpp:<line number>: passed: config.shouldDebugBreak for: true
@@ -1291,19 +1389,19 @@ Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fak
    1  [fakeTag]
 1 tag
 
-" contains: "fakeTag" with 1 message: 'Tested reporter: automake'
+" contains: "fakeTag" with 1 message: 'Tested reporter: Automake'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fake reporter"s) for: "Available reporters:
   fake reporter:  fake description
 
-" contains: "fake reporter" with 1 message: 'Tested reporter: automake'
+" contains: "fake reporter" with 1 message: 'Tested reporter: Automake'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) for: "All available test cases:
   fake test name
       [fakeTestTag]
 1 test case
 
-" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: automake'
+" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: Automake'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fakeTag"s) for: "All available tags:
    1  [fakeTag]
@@ -1346,13 +1444,13 @@ All available tags:
    1  [fakeTag]
 1 tag
 
-" contains: "fakeTag" with 1 message: 'Tested reporter: junit'
+" contains: "fakeTag" with 1 message: 'Tested reporter: JUnit'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fake reporter"s) for: "<?xml version="1.0" encoding="UTF-8"?>
 Available reporters:
   fake reporter:  fake description
 
-" contains: "fake reporter" with 1 message: 'Tested reporter: junit'
+" contains: "fake reporter" with 1 message: 'Tested reporter: JUnit'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) for: "<?xml version="1.0" encoding="UTF-8"?>
 All available test cases:
@@ -1360,20 +1458,20 @@ All available test cases:
       [fakeTestTag]
 1 test case
 
-" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: junit'
+" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: JUnit'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fakeTag"s) for: "<?xml version="1.0" encoding="UTF-8"?>
 All available tags:
    1  [fakeTag]
 1 tag
 
-" contains: "fakeTag" with 1 message: 'Tested reporter: sonarqube'
+" contains: "fakeTag" with 1 message: 'Tested reporter: SonarQube'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fake reporter"s) for: "<?xml version="1.0" encoding="UTF-8"?>
 Available reporters:
   fake reporter:  fake description
 
-" contains: "fake reporter" with 1 message: 'Tested reporter: sonarqube'
+" contains: "fake reporter" with 1 message: 'Tested reporter: SonarQube'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) for: "<?xml version="1.0" encoding="UTF-8"?>
 All available test cases:
@@ -1381,43 +1479,43 @@ All available test cases:
       [fakeTestTag]
 1 test case
 
-" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: sonarqube'
+" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: SonarQube'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fakeTag"s) for: "All available tags:
    1  [fakeTag]
 1 tag
 
-" contains: "fakeTag" with 1 message: 'Tested reporter: tap'
+" contains: "fakeTag" with 1 message: 'Tested reporter: TAP'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fake reporter"s) for: "Available reporters:
   fake reporter:  fake description
 
-" contains: "fake reporter" with 1 message: 'Tested reporter: tap'
+" contains: "fake reporter" with 1 message: 'Tested reporter: TAP'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) for: "All available test cases:
   fake test name
       [fakeTestTag]
 1 test case
 
-" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: tap'
+" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: TAP'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fakeTag"s) for: "All available tags:
    1  [fakeTag]
 1 tag
 
-" contains: "fakeTag" with 1 message: 'Tested reporter: teamcity'
+" contains: "fakeTag" with 1 message: 'Tested reporter: TeamCity'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fake reporter"s) for: "Available reporters:
   fake reporter:  fake description
 
-" contains: "fake reporter" with 1 message: 'Tested reporter: teamcity'
+" contains: "fake reporter" with 1 message: 'Tested reporter: TeamCity'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) for: "All available test cases:
   fake test name
       [fakeTestTag]
 1 test case
 
-" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: teamcity'
+" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: TeamCity'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fakeTag"s) for: "<?xml version="1.0" encoding="UTF-8"?>
 <TagsFromMatchingTests>
@@ -1427,7 +1525,7 @@ Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fak
       <Alias>fakeTag</Alias>
     </Aliases>
   </Tag>
-</TagsFromMatchingTests>" contains: "fakeTag" with 1 message: 'Tested reporter: xml'
+</TagsFromMatchingTests>" contains: "fakeTag" with 1 message: 'Tested reporter: XML'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fake reporter"s) for: "<?xml version="1.0" encoding="UTF-8"?>
 <AvailableReporters>
@@ -1435,7 +1533,7 @@ Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fak
     <Name>fake reporter</Name>
     <Description>fake description</Description>
   </Reporter>
-</AvailableReporters>" contains: "fake reporter" with 1 message: 'Tested reporter: xml'
+</AvailableReporters>" contains: "fake reporter" with 1 message: 'Tested reporter: XML'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) for: "<?xml version="1.0" encoding="UTF-8"?>
 <MatchingTests>
@@ -1448,7 +1546,8 @@ Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fa
       <Line>123456789</Line>
     </SourceInfo>
   </TestCase>
-</MatchingTests>" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: xml'
+</MatchingTests>" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: XML'
+Reporters.tests.cpp:<line number>: passed:
 Message.tests.cpp:<line number>: passed: with 1 message: 'this is a success'
 Message.tests.cpp:<line number>: passed:
 BDD.tests.cpp:<line number>: passed: before == 0 for: 0 == 0
@@ -1501,6 +1600,8 @@ String.tests.cpp:<line number>: passed: std::strcmp( rawChars, "hello" ) == 0 fo
 String.tests.cpp:<line number>: passed: s.data() == rawChars for: "hello" == "hello"
 String.tests.cpp:<line number>: passed: original == "original"
 String.tests.cpp:<line number>: passed: original.data()
+String.tests.cpp:<line number>: passed: original.begin() == copy.begin() for: "original string" == "original string"
+String.tests.cpp:<line number>: passed: original.begin() == copy.begin() for: "original string" == "original string"
 String.tests.cpp:<line number>: passed: ss.empty() == false for: false == false
 String.tests.cpp:<line number>: passed: ss.size() == 5 for: 5 == 5
 String.tests.cpp:<line number>: passed: std::strncmp( ss.data(), "hello", 5 ) == 0 for: 0 == 0
@@ -1584,6 +1685,8 @@ Tag.tests.cpp:<line number>: passed: registry.add( "[no ampersat]", "", Catch::S
 Tag.tests.cpp:<line number>: passed: registry.add( "[the @ is not at the start]", "", Catch::SourceLineInfo( "file", 3 ) )
 Tag.tests.cpp:<line number>: passed: registry.add( "@no square bracket at start]", "", Catch::SourceLineInfo( "file", 3 ) )
 Tag.tests.cpp:<line number>: passed: registry.add( "[@no square bracket at end", "", Catch::SourceLineInfo( "file", 3 ) )
+Tag.tests.cpp:<line number>: passed: testCase.tags.size() == 2 for: 2 == 2
+Tag.tests.cpp:<line number>: passed: testCase.tags, VectorContains( Tag( "tag with spaces" ) ) && VectorContains( Tag( "I said \"good day\" sir!"_catch_sr ) ) for: { {?}, {?} } ( Contains: {?} and Contains: {?} )
 Class.tests.cpp:<line number>: passed: Template_Fixture<TestType>::m_a == 1 for: 1 == 1
 Class.tests.cpp:<line number>: passed: Template_Fixture<TestType>::m_a == 1 for: 1 == 1
 Class.tests.cpp:<line number>: passed: Template_Fixture<TestType>::m_a == 1 for: 1.0 == 1
@@ -1730,6 +1833,8 @@ Misc.tests.cpp:<line number>: passed: v.size() == V for: 15 == 15
 Misc.tests.cpp:<line number>: passed: v.capacity() >= V for: 15 >= 15
 Misc.tests.cpp:<line number>: passed: v.size() == V for: 15 == 15
 Misc.tests.cpp:<line number>: passed: v.capacity() >= V for: 15 >= 15
+Tag.tests.cpp:<line number>: passed: testCase.tags.size() == 1 for: 1 == 1
+Tag.tests.cpp:<line number>: passed: testCase.tags[0] == Tag( "tag1" ) for: {?} == {?}
 VariadicMacros.tests.cpp:<line number>: passed: with 1 message: 'no assertions'
 Tricky.tests.cpp:<line number>: passed: 0x<hex digits> == bit30and31 for: 3221225472 (0x<hex digits>) == 3221225472
 CmdLine.tests.cpp:<line number>: passed:
@@ -1973,8 +2078,6 @@ Exception.tests.cpp:<line number>: failed: unexpected exception with message: 'e
 Exception.tests.cpp:<line number>: failed: unexpected exception with message: 'expected exception'; expression was: thisThrows() == 0
 Exception.tests.cpp:<line number>: failed: unexpected exception with message: 'expected exception'; expression was: thisThrows() == 0
 Exception.tests.cpp:<line number>: failed: unexpected exception with message: 'unexpected exception'
-Tricky.tests.cpp:<line number>: warning: 'Uncomment the code in this test to check that it gives a sensible compiler error'
-Tricky.tests.cpp:<line number>: warning: 'Uncomment the code in this test to check that it gives a sensible compiler error'
 Tricky.tests.cpp:<line number>: passed:
 Tricky.tests.cpp:<line number>: passed:
 Tricky.tests.cpp:<line number>: passed:
@@ -2014,7 +2117,6 @@ InternalBenchmark.tests.cpp:<line number>: passed: analysis.outlier_variance == 
 ToStringVector.tests.cpp:<line number>: passed: Catch::Detail::stringify( empty ) == "{  }" for: "{  }" == "{  }"
 ToStringVector.tests.cpp:<line number>: passed: Catch::Detail::stringify( oneValue ) == "{ 42 }" for: "{ 42 }" == "{ 42 }"
 ToStringVector.tests.cpp:<line number>: passed: Catch::Detail::stringify( twoValues ) == "{ 42, 250 }" for: "{ 42, 250 }" == "{ 42, 250 }"
-Misc.tests.cpp:<line number>: passed: x == 0 for: 0 == 0
 InternalBenchmark.tests.cpp:<line number>: passed: model.started == 1 for: 1 == 1
 InternalBenchmark.tests.cpp:<line number>: passed: model.finished == 0 for: 0 == 0
 InternalBenchmark.tests.cpp:<line number>: passed: model.started == 1 for: 1 == 1
@@ -2098,6 +2200,18 @@ Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
 loose text artifact
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary1)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary2)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary3)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary4)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary5)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary6)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<decltype(binary1)>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<decltype(binary2)>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<decltype(nullary1)>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<decltype(nullary2)>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<int>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<std::string const&>::value)'
 Message.tests.cpp:<line number>: failed: explicitly with 1 message: 'Previous info should not be seen'
 Message.tests.cpp:<line number>: failed: explicitly with 1 message: 'previous unscoped info SHOULD not be seen'
 Misc.tests.cpp:<line number>: passed: l == std::numeric_limits<long long>::max() for: 9223372036854775807 (0x<hex digits>)
@@ -2226,7 +2340,7 @@ InternalBenchmark.tests.cpp:<line number>: passed: Timing.result == Timing.itera
 InternalBenchmark.tests.cpp:<line number>: passed: Timing.iterations >= time.count() for: 128 >= 100
 Misc.tests.cpp:<line number>: failed: false with 1 message: '3'
 Message.tests.cpp:<line number>: failed: false with 2 messages: 'hi' and 'i := 7'
-Tag.tests.cpp:<line number>: passed: tags, VectorContains("magic-tag"_catch_sr) && VectorContains("."_catch_sr) for: { ., magic-tag } ( Contains: magic-tag and Contains: . )
+Tag.tests.cpp:<line number>: passed: testcase.tags, VectorContains( Tag( "magic-tag" ) ) && VectorContains( Tag( "."_catch_sr ) ) for: { {?}, {?} } ( Contains: {?} and Contains: {?} )
 StringManip.tests.cpp:<line number>: passed: splitStringRef("", ','), Equals(std::vector<StringRef>()) for: {  } Equals: {  }
 StringManip.tests.cpp:<line number>: passed: splitStringRef("abc", ','), Equals(std::vector<StringRef>{"abc"}) for: { abc } Equals: { abc }
 StringManip.tests.cpp:<line number>: passed: splitStringRef("abc,def", ','), Equals(std::vector<StringRef>{"abc", "def"}) for: { abc, def } Equals: { abc, def }
@@ -2250,7 +2364,6 @@ ToStringGeneral.tests.cpp:<line number>: passed: Catch::Detail::stringify( set )
 ToStringPair.tests.cpp:<line number>: passed: ::Catch::Detail::stringify( pr ) == "{ { \"green\", 55 } }" for: "{ { "green", 55 } }"
 ==
 "{ { "green", 55 } }"
-Tricky.tests.cpp:<line number>: failed: std::string( "first" ) == "second" for: "first" == "second"
 ToStringWhich.tests.cpp:<line number>: passed: ::Catch::Detail::stringify(streamable_range{}) == "op<<(streamable_range)" for: "op<<(streamable_range)"
 ==
 "op<<(streamable_range)"
@@ -2390,5 +2503,5 @@ InternalBenchmark.tests.cpp:<line number>: passed: med == 18. for: 18.0 == 18.0
 InternalBenchmark.tests.cpp:<line number>: passed: q3 == 23. for: 23.0 == 23.0
 Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
-Failed 86 test cases, failed 146 assertions.
+Failed 83 test cases, failed 143 assertions.
 

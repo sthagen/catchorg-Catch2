@@ -8,6 +8,22 @@ project( Catch2ExtraTests LANGUAGES CXX )
 
 message( STATUS "Extra tests included" )
 
+
+add_test(
+  NAME TestShardingIntegration
+  COMMAND ${PYTHON_EXECUTABLE} ${CATCH_DIR}/tests/TestScripts/testSharding.py $<TARGET_FILE:SelfTest>
+)
+
+add_test(
+  NAME TestSharding::OverlyLargeShardIndex
+  COMMAND $<TARGET_FILE:SelfTest>  --shard-index 5 --shard-count 5
+)
+set_tests_properties(
+    TestSharding::OverlyLargeShardIndex
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "The shard count \\(5\\) must be greater than the shard index \\(5\\)"
+)
+
 # The MinDuration reporting tests do not need separate compilation, but
 # they have non-trivial execution time, so they are categorized as
 # extra tests, so that they are run less.
@@ -135,6 +151,17 @@ set_tests_properties(
 )
 
 
+add_executable(DeferredStaticChecks ${TESTS_DIR}/X05-DeferredStaticChecks.cpp)
+target_link_libraries(DeferredStaticChecks PRIVATE Catch2WithMain)
+target_compile_definitions(DeferredStaticChecks PRIVATE "CATCH_CONFIG_RUNTIME_STATIC_REQUIRE")
+
+add_test(NAME DeferredStaticChecks COMMAND DeferredStaticChecks -r compact)
+set_tests_properties(
+    DeferredStaticChecks
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "Failed 1 test case, failed all 3 assertions."
+)
+
 
 add_executable(FallbackStringifier ${TESTS_DIR}/X10-FallbackStringifier.cpp)
 target_compile_definitions( FallbackStringifier PRIVATE CATCH_CONFIG_FALLBACK_STRINGIFIER=fallbackStringifier )
@@ -178,6 +205,125 @@ target_link_libraries(PartialTestCaseEvents PRIVATE Catch2WithMain)
 add_test(
   NAME PartialTestCaseEvents
   COMMAND ${PYTHON_EXECUTABLE} ${CATCH_DIR}/tests/TestScripts/testPartialTestCaseEvent.py $<TARGET_FILE:PartialTestCaseEvents>
+)
+
+add_executable(BenchmarksInCumulativeReporter ${TESTS_DIR}/X22-BenchmarksInCumulativeReporter.cpp)
+target_link_libraries(BenchmarksInCumulativeReporter PRIVATE Catch2::Catch2WithMain)
+add_test(
+  NAME BenchmarksInCumulativeReporter
+  COMMAND BenchmarksInCumulativeReporter --reporter testReporter
+)
+set_tests_properties(
+    BenchmarksInCumulativeReporter
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "1\n2\n3\n4\n5\n"
+)
+
+
+add_executable(CasingInReporterNames ${TESTS_DIR}/X23-CasingInReporterNames.cpp)
+target_link_libraries(CasingInReporterNames PRIVATE Catch2::Catch2WithMain)
+add_test(
+  NAME Reporters::registration-is-case-preserving
+  COMMAND CasingInReporterNames --list-reporters
+)
+set_tests_properties(
+    Reporters::registration-is-case-preserving
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "testReporterCASED"
+)
+add_test(
+  NAME Reporters::selection-is-case-insensitive
+  COMMAND  CasingInReporterNames -r testReportercased
+)
+set_tests_properties(
+    Reporters::selection-is-case-insensitive
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "TestReporter constructed"
+)
+
+add_executable(CapturedStdoutInTestCaseEvents ${TESTS_DIR}/X27-CapturedStdoutInTestCaseEvents.cpp)
+target_link_libraries(CapturedStdoutInTestCaseEvents PRIVATE Catch2::Catch2WithMain)
+add_test(
+  NAME Reporters::CapturedStdOutInEvents
+  COMMAND CapturedStdoutInTestCaseEvents
+    --reporter test-reporter
+)
+set_tests_properties(
+    Reporters::CapturedStdOutInEvents
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "X27 - TestReporter constructed"
+    FAIL_REGULAR_EXPRESSION "X27 ERROR"
+)
+
+
+if (MSVC)
+  set(_NullFile "NUL")
+else()
+  set(_NullFile "/dev/null")
+endif()
+
+add_executable(ListenerStdoutCaptureInMultireporter ${TESTS_DIR}/X24-ListenerStdoutCaptureInMultireporter.cpp)
+target_link_libraries(ListenerStdoutCaptureInMultireporter PRIVATE Catch2::Catch2WithMain)
+
+# This test checks that there is nothing written out from the process,
+# but if CMake is running the tests under Valgrind or similar tool, then
+# that will write its own output to stdout and the test would fail.
+if (NOT MEMORYCHECK_COMMAND)
+  add_test(
+    NAME MultiReporter::NoncapturingListenerDoesntCauseStdoutPassThrough
+    COMMAND ListenerStdoutCaptureInMultireporter
+      --reporter xml::${_NullFile}
+      --reporter junit::${_NullFile}
+  )
+
+  set_tests_properties(
+      MultiReporter::NoncapturingListenerDoesntCauseStdoutPassThrough
+    PROPERTIES
+      PASS_REGULAR_EXPRESSION "X24 - NonCapturingListener initialized"
+      FAIL_REGULAR_EXPRESSION "X24 - FooBarBaz"
+  )
+endif()
+
+
+add_executable(ListenerCanAskForCapturedStdout ${TESTS_DIR}/X25-ListenerCanAskForCapturedStdout.cpp)
+target_link_libraries(ListenerCanAskForCapturedStdout PRIVATE Catch2::Catch2WithMain)
+add_test(
+  NAME MultiReporter::CapturingListenerCausesStdoutCapture
+  COMMAND ListenerCanAskForCapturedStdout
+    --reporter compact::${_NullFile}
+    --reporter console::${_NullFile}
+)
+set_tests_properties(
+    MultiReporter::CapturingListenerCausesStdoutCapture
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "CapturingListener initialized"
+    FAIL_REGULAR_EXPRESSION "X25 - ERROR"
+)
+
+add_executable(ReporterPreferencesForPassingAssertionsIsRespected ${TESTS_DIR}/X26-ReporterPreferencesForPassingAssertionsIsRespected.cpp)
+target_link_libraries(ReporterPreferencesForPassingAssertionsIsRespected PRIVATE Catch2::Catch2WithMain)
+add_test(
+  NAME Reporters::PreferencesForPassingAssertionsIsRespected
+  COMMAND ReporterPreferencesForPassingAssertionsIsRespected
+    --reporter test-reporter
+)
+set_tests_properties(
+    Reporters::PreferencesForPassingAssertionsIsRespected
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "X26 - TestReporter constructed"
+    FAIL_REGULAR_EXPRESSION "X26 - assertionEnded"
+)
+add_test(
+  NAME MultiReporter::PreferencesForPassingAssertionsIsRespected
+  COMMAND ReporterPreferencesForPassingAssertionsIsRespected
+    --reporter test-reporter
+    --reporter console::${_NullFile}
+)
+set_tests_properties(
+    MultiReporter::PreferencesForPassingAssertionsIsRespected
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "X26 - TestReporter constructed"
+    FAIL_REGULAR_EXPRESSION "X26 - assertionEnded"
 )
 
 
@@ -238,6 +384,22 @@ set_tests_properties(
 #    PASS_REGULAR_EXPRESSION "Pretty please, break into debugger"
 #)
 
+add_executable(NoTests ${TESTS_DIR}/X92-NoTests.cpp)
+target_link_libraries(NoTests PRIVATE Catch2::Catch2WithMain)
+
+add_test(
+  NAME TestSpecs::EmptySpecWithNoTestsFails
+  COMMAND $<TARGET_FILE:NoTests>
+)
+set_tests_properties(TestSpecs::EmptySpecWithNoTestsFails
+  PROPERTIES
+    WILL_FAIL ON
+)
+add_test(
+  NAME TestSpecs::OverrideFailureWithEmptySpec
+  COMMAND $<TARGET_FILE:NoTests> --allow-running-no-tests
+)
+
 set( EXTRA_TEST_BINARIES
     PrefixedMacros
     DisabledMacros
@@ -249,6 +411,7 @@ set( EXTRA_TEST_BINARIES
     DuplicatedTestCases-SameNameAndTags
     DuplicatedTestCases-SameNameDifferentTags
     DuplicatedTestCases-DuplicatedTestCaseMethods
+    NoTests
 #    DebugBreakMacros
 )
 

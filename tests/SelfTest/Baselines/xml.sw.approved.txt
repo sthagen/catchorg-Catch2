@@ -3013,6 +3013,144 @@ Nor would this
     </Section>
     <OverallResult success="true"/>
   </TestCase>
+  <TestCase name="CaseInsensitiveEqualsTo is case insensitive" tags="[comparisons][string-case]" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+    <Section name="Degenerate cases" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          eq( "", "" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          !(eq( "", "a" ))
+        </Original>
+        <Expanded>
+          !false
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Plain comparisons" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          eq( "a", "a" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          eq( "a", "A" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          eq( "A", "a" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          eq( "A", "A" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          !(eq( "a", "b" ))
+        </Original>
+        <Expanded>
+          !false
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          !(eq( "a", "B" ))
+        </Original>
+        <Expanded>
+          !false
+        </Expanded>
+      </Expression>
+      <OverallResults successes="6" failures="0" expectedFailures="0"/>
+    </Section>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="CaseInsensitiveLess is case insensitive" tags="[comparisons][string-case]" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+    <Section name="Degenerate cases" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          lt( "", "a" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          !(lt( "a", "a" ))
+        </Original>
+        <Expanded>
+          !false
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          !(lt( "", "" ))
+        </Original>
+        <Expanded>
+          !false
+        </Expanded>
+      </Expression>
+      <OverallResults successes="3" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Plain comparisons" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          lt( "a", "b" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          lt( "a", "B" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          lt( "A", "b" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
+        <Original>
+          lt( "A", "B" )
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <OverallResults successes="4" failures="0" expectedFailures="0"/>
+    </Section>
+    <OverallResult success="true"/>
+  </TestCase>
   <TestCase name="Character pretty printing" filename="tests/<exe-name>/UsageTests/ToStringGeneral.tests.cpp" >
     <Section name="Specifically escaped" filename="tests/<exe-name>/UsageTests/ToStringGeneral.tests.cpp" >
       <Expression success="true" type="CHECK" filename="tests/<exe-name>/UsageTests/ToStringGeneral.tests.cpp" >
@@ -3154,6 +3292,39 @@ Nor would this
         "foo" == "foo"
       </Expanded>
     </Expression>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="Clara::Opt supports accept-many lambdas" tags="[clara][opt]" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+    <Section name="Parsing fails on multiple options without accept_many" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+      <Expression success="true" type="CHECK_FALSE" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+        <Original>
+          !(parse_result)
+        </Original>
+        <Expanded>
+          !{?}
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Parsing succeeds on multiple options with accept_many" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+      <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+        <Original>
+          parse_result
+        </Original>
+        <Expanded>
+          {?}
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+        <Original>
+          res == std::vector&lt;std::string>{ "aaa", "bbb" }
+        </Original>
+        <Expanded>
+          { "aaa", "bbb" } == { "aaa", "bbb" }
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
     <OverallResult success="true"/>
   </TestCase>
   <TestCase name="Combining MatchAllOfGeneric does not nest" tags="[matchers][templated]" filename="tests/<exe-name>/UsageTests/Matchers.tests.cpp" >
@@ -4131,6 +4302,17 @@ Nor would this
         {** unexpected enum value **}
 ==
 "{** unexpected enum value **}"
+      </Expanded>
+    </Expression>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="Empty tag is not allowed" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+    <Expression success="true" type="REQUIRE_THROWS" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+      <Original>
+        Catch::TestCaseInfo( "", { "fake test name", "[]" }, dummySourceLineInfo )
+      </Original>
+      <Expanded>
+        Catch::TestCaseInfo( "", { "fake test name", "[]" }, dummySourceLineInfo )
       </Expanded>
     </Expression>
     <OverallResult success="true"/>
@@ -6150,47 +6332,102 @@ Nor would this
       <OverallResults successes="7" failures="0" expectedFailures="0"/>
     </Section>
     <Section name="Filter generator" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
-      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
-        <Original>
-          gen.get() == 1
-        </Original>
-        <Expanded>
-          1 == 1
-        </Expanded>
-      </Expression>
-      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
-        <Original>
-          gen.next()
-        </Original>
-        <Expanded>
-          true
-        </Expanded>
-      </Expression>
-      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
-        <Original>
-          gen.get() == 3
-        </Original>
-        <Expanded>
-          3 == 3
-        </Expanded>
-      </Expression>
-      <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
-        <Original>
-          !(gen.next())
-        </Original>
-        <Expanded>
-          !false
-        </Expanded>
-      </Expression>
-      <Expression success="true" type="REQUIRE_THROWS_AS" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
-        <Original>
-          filter([] (int) { return false; }, value(1)), Catch::GeneratorException
-        </Original>
-        <Expanded>
-          filter([] (int) { return false; }, value(1)), Catch::GeneratorException
-        </Expanded>
-      </Expression>
-      <OverallResults successes="5" failures="0" expectedFailures="0"/>
+      <Section name="Simple filtering" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            gen.get() == 1
+          </Original>
+          <Expanded>
+            1 == 1
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            gen.next()
+          </Original>
+          <Expanded>
+            true
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            gen.get() == 3
+          </Original>
+          <Expanded>
+            3 == 3
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            !(gen.next())
+          </Original>
+          <Expanded>
+            !false
+          </Expanded>
+        </Expression>
+        <OverallResults successes="4" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResults successes="4" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Filter generator" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+      <Section name="Filter out multiple elements at the start and end" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            gen.get() == 1
+          </Original>
+          <Expanded>
+            1 == 1
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            gen.next()
+          </Original>
+          <Expanded>
+            true
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            gen.get() == 3
+          </Original>
+          <Expanded>
+            3 == 3
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            !(gen.next())
+          </Original>
+          <Expanded>
+            !false
+          </Expanded>
+        </Expression>
+        <OverallResults successes="4" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResults successes="4" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Filter generator" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+      <Section name="Throws on construction if it can't get initial element" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+        <Expression success="true" type="REQUIRE_THROWS_AS" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            filter([](int) { return false; }, value(1)), Catch::GeneratorException
+          </Original>
+          <Expanded>
+            filter([](int) { return false; }, value(1)), Catch::GeneratorException
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE_THROWS_AS" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
+          <Original>
+            filter([](int) { return false; }, values({ 1, 2, 3 })), Catch::GeneratorException
+          </Original>
+          <Expanded>
+            filter([](int) { return false; }, values({ 1, 2, 3 })), Catch::GeneratorException
+          </Expanded>
+        </Expression>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
     </Section>
     <Section name="Take generator" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
       <Section name="Take less" filename="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp" >
@@ -8482,6 +8719,156 @@ Nor would this
     </Expression>
     <OverallResult success="false"/>
   </TestCase>
+  <TestCase name="Multireporter calls reporters and listeners in correct order" tags="[multi-reporter][reporters]" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+      <Original>
+        records == expected
+      </Original>
+      <Expanded>
+        { "Hello", "world", "Goodbye", "world" }
+==
+{ "Hello", "world", "Goodbye", "world" }
+      </Expanded>
+    </Expression>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="Multireporter updates ReporterPreferences properly" tags="[multi-reporter][reporters]" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+      <Original>
+        multiReporter.getPreferences().shouldRedirectStdOut == false
+      </Original>
+      <Expanded>
+        false == false
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+      <Original>
+        multiReporter.getPreferences().shouldReportAllAssertions == false
+      </Original>
+      <Expanded>
+        false == false
+      </Expanded>
+    </Expression>
+    <Section name="Adding listeners" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldRedirectStdOut == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldReportAllAssertions == false
+        </Original>
+        <Expanded>
+          false == false
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldRedirectStdOut == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldReportAllAssertions == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldRedirectStdOut == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldReportAllAssertions == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <OverallResults successes="6" failures="0" expectedFailures="0"/>
+    </Section>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+      <Original>
+        multiReporter.getPreferences().shouldRedirectStdOut == false
+      </Original>
+      <Expanded>
+        false == false
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+      <Original>
+        multiReporter.getPreferences().shouldReportAllAssertions == false
+      </Original>
+      <Expanded>
+        false == false
+      </Expanded>
+    </Expression>
+    <Section name="Adding reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldRedirectStdOut == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldReportAllAssertions == false
+        </Original>
+        <Expanded>
+          false == false
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldRedirectStdOut == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldReportAllAssertions == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldRedirectStdOut == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+        <Original>
+          multiReporter.getPreferences().shouldReportAllAssertions == true
+        </Original>
+        <Expanded>
+          true == true
+        </Expanded>
+      </Expression>
+      <OverallResults successes="6" failures="0" expectedFailures="0"/>
+    </Section>
+    <OverallResult success="true"/>
+  </TestCase>
   <TestCase name="Nested generators and captured variables" tags="[generators]" filename="tests/<exe-name>/UsageTests/Generators.tests.cpp" >
     <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Generators.tests.cpp" >
       <Original>
@@ -10474,6 +10861,271 @@ Nor would this
     </Section>
     <OverallResult success="true"/>
   </TestCase>
+  <TestCase name="Parsed tags are matched case insensitive" tags="[test-spec][test-spec-parser]" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+      <Original>
+        spec.hasFilters()
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+      <Original>
+        spec.getInvalidSpecs().empty()
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+      <Original>
+        spec.matches( testCase )
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="Parsing sharding-related cli flags" tags="[sharding]" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+    <Section name="shard-count" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          cli.parse({ "test", "--shard-count=8" })
+        </Original>
+        <Expanded>
+          {?}
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          config.shardCount == 8
+        </Original>
+        <Expanded>
+          8 == 8
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Negative shard count reports error" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Expression success="true" type="CHECK_FALSE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          !(result)
+        </Original>
+        <Expanded>
+          !{?}
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          result.errorMessage(), ContainsSubstring("Shard count must be a positive number")
+        </Original>
+        <Expanded>
+          "Shard count must be a positive number" contains: "Shard count must be a positive number"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Zero shard count reports error" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Expression success="true" type="CHECK_FALSE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          !(result)
+        </Original>
+        <Expanded>
+          !{?}
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          result.errorMessage(), ContainsSubstring("Shard count must be a positive number")
+        </Original>
+        <Expanded>
+          "Shard count must be a positive number" contains: "Shard count must be a positive number"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="shard-index" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          cli.parse({ "test", "--shard-index=2" })
+        </Original>
+        <Expanded>
+          {?}
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          config.shardIndex == 2
+        </Original>
+        <Expanded>
+          2 == 2
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Negative shard index reports error" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Expression success="true" type="CHECK_FALSE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          !(result)
+        </Original>
+        <Expanded>
+          !{?}
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          result.errorMessage(), ContainsSubstring("Shard index must be a non-negative number")
+        </Original>
+        <Expanded>
+          "Shard index must be a non-negative number" contains: "Shard index must be a non-negative number"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Shard index 0 is accepted" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          cli.parse({ "test", "--shard-index=0" })
+        </Original>
+        <Expanded>
+          {?}
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          config.shardIndex == 0
+        </Original>
+        <Expanded>
+          0 == 0
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="Parsing tags with non-alphabetical characters is pass-through" tags="[test-spec][test-spec-parser]" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+    <Info>
+      tagString := "[tag with spaces]"
+    </Info>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+      <Original>
+        spec.hasFilters()
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <Info>
+      tagString := "[tag with spaces]"
+    </Info>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+      <Original>
+        spec.getInvalidSpecs().empty()
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <Info>
+      tagString := "[tag with spaces]"
+    </Info>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+      <Original>
+        spec.matches( testCase )
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <Info>
+      tagString := "[I said "good day" sir!]"
+    </Info>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+      <Original>
+        spec.hasFilters()
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <Info>
+      tagString := "[I said "good day" sir!]"
+    </Info>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+      <Original>
+        spec.getInvalidSpecs().empty()
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <Info>
+      tagString := "[I said "good day" sir!]"
+    </Info>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/TestSpecParser.tests.cpp" >
+      <Original>
+        spec.matches( testCase )
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="Parsing warnings" tags="[cli][warnings]" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+    <Section name="NoAssertions" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          cli.parse( { "test", "-w", "NoAssertions" } )
+        </Original>
+        <Expanded>
+          {?}
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          config.warnings == WarnAbout::NoAssertions
+        </Original>
+        <Expanded>
+          1 == 1
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="NoTests is no longer supported" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          !(cli.parse( { "test", "-w", "NoTests" } ))
+        </Original>
+        <Expanded>
+          !{?}
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Combining multiple warnings" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          cli.parse( { "test", "--warn", "NoAssertions", "--warn", "UnmatchedTestSpec" } )
+        </Original>
+        <Expanded>
+          {?}
+        </Expanded>
+      </Expression>
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Original>
+          config.warnings == ( WarnAbout::NoAssertions | WarnAbout::UnmatchedTestSpec )
+        </Original>
+        <Expanded>
+          3 == 3
+        </Expanded>
+      </Expression>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <OverallResult success="true"/>
+  </TestCase>
   <TestCase name="Pointers can be compared to null" filename="tests/<exe-name>/UsageTests/Condition.tests.cpp" >
     <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Condition.tests.cpp" >
       <Original>
@@ -10656,10 +11308,12 @@ Nor would this
       </Expression>
       <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
         <Original>
-          config.reporterName == "console"
+          config.reporterSpecifications == std::vector&lt;Catch::ConfigData::ReporterAndFile>{ {"console", {}} }
         </Original>
         <Expanded>
-          "console" == "console"
+          { { console, &lt;default-output> } }
+==
+{ { console, &lt;default-output> } }
         </Expanded>
       </Expression>
       <Expression success="true" type="CHECK_FALSE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
@@ -10788,20 +11442,28 @@ Nor would this
     </Section>
     <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
       <Section name="-r/console" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Info>
+          result.errorMessage() := ""
+        </Info>
         <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            cli.parse({"test", "-r", "console"})
+            result
           </Original>
           <Expanded>
             {?}
           </Expanded>
         </Expression>
+        <Info>
+          result.errorMessage() := ""
+        </Info>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.reporterName == "console"
+            config.reporterSpecifications == vec_ReporterAndFile{ {"console", {}} }
           </Original>
           <Expanded>
-            "console" == "console"
+            { { console, &lt;default-output> } }
+==
+{ { console, &lt;default-output> } }
           </Expanded>
         </Expression>
         <OverallResults successes="2" failures="0" expectedFailures="0"/>
@@ -10810,20 +11472,28 @@ Nor would this
     </Section>
     <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
       <Section name="-r/xml" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Info>
+          result.errorMessage() := ""
+        </Info>
         <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            cli.parse({"test", "-r", "xml"})
+            result
           </Original>
           <Expanded>
             {?}
           </Expanded>
         </Expression>
+        <Info>
+          result.errorMessage() := ""
+        </Info>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.reporterName == "xml"
+            config.reporterSpecifications == vec_ReporterAndFile{ {"xml", {}} }
           </Original>
           <Expanded>
-            "xml" == "xml"
+            { { xml, &lt;default-output> } }
+==
+{ { xml, &lt;default-output> } }
           </Expanded>
         </Expression>
         <OverallResults successes="2" failures="0" expectedFailures="0"/>
@@ -10832,39 +11502,33 @@ Nor would this
     </Section>
     <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
       <Section name="--reporter/junit" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Info>
+          result.errorMessage() := ""
+        </Info>
         <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            cli.parse({"test", "--reporter", "junit"})
+            result
           </Original>
           <Expanded>
             {?}
           </Expanded>
         </Expression>
+        <Info>
+          result.errorMessage() := ""
+        </Info>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.reporterName == "junit"
+            config.reporterSpecifications == vec_ReporterAndFile{ {"junit", {}} }
           </Original>
           <Expanded>
-            "junit" == "junit"
+            { { junit, &lt;default-output> } }
+==
+{ { junit, &lt;default-output> } }
           </Expanded>
         </Expression>
         <OverallResults successes="2" failures="0" expectedFailures="0"/>
       </Section>
       <OverallResults successes="2" failures="0" expectedFailures="0"/>
-    </Section>
-    <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
-      <Section name="Only one reporter is accepted" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
-        <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
-          <Original>
-            !(cli.parse({ "test", "-r", "xml", "-r", "junit" }))
-          </Original>
-          <Expanded>
-            !{?}
-          </Expanded>
-        </Expression>
-        <OverallResults successes="1" failures="0" expectedFailures="0"/>
-      </Section>
-      <OverallResults successes="1" failures="0" expectedFailures="0"/>
     </Section>
     <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
       <Section name="must match one of the available ones" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
@@ -10884,6 +11548,167 @@ Nor would this
             "Unrecognized reporter, 'unsupported'. Check available with --list-reporters" contains: "Unrecognized reporter"
           </Expanded>
         </Expression>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Section name="With output file" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Info>
+          result.errorMessage() := ""
+        </Info>
+        <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Original>
+            result
+          </Original>
+          <Expanded>
+            {?}
+          </Expanded>
+        </Expression>
+        <Info>
+          result.errorMessage() := ""
+        </Info>
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Original>
+            config.reporterSpecifications == vec_ReporterAndFile{ {"console", "out.txt"s} }
+          </Original>
+          <Expanded>
+            { { console, out.txt } }
+==
+{ { console, out.txt } }
+          </Expanded>
+        </Expression>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Section name="With Windows-like absolute path as output file" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Info>
+          result.errorMessage() := ""
+        </Info>
+        <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Original>
+            result
+          </Original>
+          <Expanded>
+            {?}
+          </Expanded>
+        </Expression>
+        <Info>
+          result.errorMessage() := ""
+        </Info>
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Original>
+            config.reporterSpecifications == vec_ReporterAndFile{ {"console", "C:\\Temp\\out.txt"s} }
+          </Original>
+          <Expanded>
+            { { console, C:\Temp\out.txt } }
+==
+{ { console, C:\Temp\out.txt } }
+          </Expanded>
+        </Expression>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Section name="Output file cannot be empty" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Original>
+            !result
+          </Original>
+          <Expanded>
+            true
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Original>
+            result.errorMessage(), ContainsSubstring("empty filename")
+          </Original>
+          <Expanded>
+            "Reporter 'console' has empty filename specified as its output. Supply a filename or remove the colons to use the default output." contains: "empty filename"
+          </Expanded>
+        </Expression>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Section name="Multiple reporters" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Section name="All with output files" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              cli.parse({ "test", "-r", "xml::output.xml", "-r", "junit::output-junit.xml" })
+            </Original>
+            <Expanded>
+              {?}
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"junit", "output-junit.xml"s} }
+            </Original>
+            <Expanded>
+              { { xml, output.xml }, { junit, output-junit.xml } }
+==
+{ { xml, output.xml }, { junit, output-junit.xml } }
+            </Expanded>
+          </Expression>
+          <OverallResults successes="2" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Section name="Multiple reporters" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Section name="Mixed output files and default output" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              cli.parse({ "test", "-r", "xml::output.xml", "-r", "console" })
+            </Original>
+            <Expanded>
+              {?}
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"console", {}} }
+            </Original>
+            <Expanded>
+              { { xml, output.xml }, { console, &lt;default-output> } }
+==
+{ { xml, output.xml }, { console, &lt;default-output> } }
+            </Expanded>
+          </Expression>
+          <OverallResults successes="2" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+      <Section name="Multiple reporters" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Section name="cannot have multiple reporters with default output" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              !result
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              result.errorMessage(), ContainsSubstring("Only one reporter may have unspecified output file.")
+            </Original>
+            <Expanded>
+              "Only one reporter may have unspecified output file." contains: "Only one reporter may have unspecified output file."
+            </Expanded>
+          </Expression>
+          <OverallResults successes="2" failures="0" expectedFailures="0"/>
+        </Section>
         <OverallResults successes="2" failures="0" expectedFailures="0"/>
       </Section>
       <OverallResults successes="2" failures="0" expectedFailures="0"/>
@@ -11179,7 +12004,7 @@ Nor would this
         </Expression>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.outputFilename == "filename.ext"
+            config.defaultOutputFilename == "filename.ext"
           </Original>
           <Expanded>
             "filename.ext" == "filename.ext"
@@ -11201,7 +12026,7 @@ Nor would this
         </Expression>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.outputFilename == "filename.ext"
+            config.defaultOutputFilename == "filename.ext"
           </Original>
           <Expanded>
             "filename.ext" == "filename.ext"
@@ -11611,9 +12436,9 @@ Nor would this
         !false
       </Expanded>
     </Expression>
-    <Section name="automake reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="Automake reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: automake
+        Tested reporter: Automake
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -11637,9 +12462,9 @@ Nor would this
         !false
       </Expanded>
     </Expression>
-    <Section name="automake reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="Automake reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: automake
+        Tested reporter: Automake
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -11662,9 +12487,9 @@ Nor would this
         !false
       </Expanded>
     </Expression>
-    <Section name="automake reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="Automake reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: automake
+        Tested reporter: Automake
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -11845,9 +12670,9 @@ Nor would this
         !false
       </Expanded>
     </Expression>
-    <Section name="junit reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="JUnit reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: junit
+        Tested reporter: JUnit
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -11872,9 +12697,9 @@ All available tags:
         !false
       </Expanded>
     </Expression>
-    <Section name="junit reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="JUnit reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: junit
+        Tested reporter: JUnit
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -11898,9 +12723,9 @@ Available reporters:
         !false
       </Expanded>
     </Expression>
-    <Section name="junit reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="JUnit reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: junit
+        Tested reporter: JUnit
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -11926,9 +12751,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="sonarqube reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="SonarQube reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: sonarqube
+        Tested reporter: SonarQube
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -11953,9 +12778,9 @@ All available tags:
         !false
       </Expanded>
     </Expression>
-    <Section name="sonarqube reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="SonarQube reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: sonarqube
+        Tested reporter: SonarQube
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -11979,9 +12804,9 @@ Available reporters:
         !false
       </Expanded>
     </Expression>
-    <Section name="sonarqube reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="SonarQube reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: sonarqube
+        Tested reporter: SonarQube
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12007,9 +12832,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="tap reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="TAP reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: tap
+        Tested reporter: TAP
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12033,9 +12858,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="tap reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="TAP reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: tap
+        Tested reporter: TAP
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12058,9 +12883,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="tap reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="TAP reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: tap
+        Tested reporter: TAP
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12085,9 +12910,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="teamcity reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="TeamCity reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: teamcity
+        Tested reporter: TeamCity
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12111,9 +12936,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="teamcity reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="TeamCity reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: teamcity
+        Tested reporter: TeamCity
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12136,9 +12961,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="teamcity reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="TeamCity reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: teamcity
+        Tested reporter: TeamCity
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12163,9 +12988,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="xml reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="XML reporter lists tags" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: xml
+        Tested reporter: XML
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12193,9 +13018,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="xml reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="XML reporter lists reporters" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: xml
+        Tested reporter: XML
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12221,9 +13046,9 @@ All available test cases:
         !false
       </Expanded>
     </Expression>
-    <Section name="xml reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
+    <Section name="XML reporter lists tests" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
       <Info>
-        Tested reporter: xml
+        Tested reporter: XML
       </Info>
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
         <Original>
@@ -12246,6 +13071,9 @@ All available test cases:
       </Expression>
       <OverallResults successes="1" failures="0" expectedFailures="0"/>
     </Section>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="Reproducer for #2309 - a very long description past 80 chars (default console width) with a late colon : blablabla" tags="[console-reporter]" filename="tests/<exe-name>/IntrospectiveTests/Reporters.tests.cpp" >
     <OverallResult success="true"/>
   </TestCase>
   <TestCase name="SUCCEED counts as a test pass" tags="[messages]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
@@ -12716,6 +13544,28 @@ Message from section two
         </Expanded>
       </Expression>
       <OverallResults successes="2" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Copy construction is shallow" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
+        <Original>
+          original.begin() == copy.begin()
+        </Original>
+        <Expanded>
+          "original string" == "original string"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0"/>
+    </Section>
+    <Section name="Copy assignment is shallow" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
+        <Original>
+          original.begin() == copy.begin()
+        </Original>
+        <Expanded>
+          "original string" == "original string"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0"/>
     </Section>
     <Section name="Substrings" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
       <Section name="zero-based substring" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
@@ -13240,6 +14090,25 @@ Message from section two
       </Expression>
       <OverallResults successes="4" failures="0" expectedFailures="0"/>
     </Section>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="Tags with spaces and non-alphanumerical characters are accepted" tags="[tags]" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+      <Original>
+        testCase.tags.size() == 2
+      </Original>
+      <Expanded>
+        2 == 2
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+      <Original>
+        testCase.tags, VectorContains( Tag( "tag with spaces" ) ) &amp;&amp; VectorContains( Tag( "I said \"good day\" sir!"_catch_sr ) )
+      </Original>
+      <Expanded>
+        { {?}, {?} } ( Contains: {?} and Contains: {?} )
+      </Expanded>
+    </Expression>
     <OverallResult success="true"/>
   </TestCase>
   <TestCase name="Template test case method with test types specified inside std::tuple - MyTypes - 0" tags="[class][list][template]" filename="tests/<exe-name>/UsageTests/Class.tests.cpp" >
@@ -14582,6 +15451,25 @@ Message from section two
       </Expression>
       <OverallResults successes="2" failures="0" expectedFailures="0"/>
     </Section>
+    <OverallResult success="true"/>
+  </TestCase>
+  <TestCase name="Test case with identical tags keeps just one" tags="[tags]" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+      <Original>
+        testCase.tags.size() == 1
+      </Original>
+      <Expanded>
+        1 == 1
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
+      <Original>
+        testCase.tags[0] == Tag( "tag1" )
+      </Original>
+      <Expanded>
+        {?} == {?}
+      </Expanded>
+    </Expression>
     <OverallResult success="true"/>
   </TestCase>
   <TestCase name="Test case with one argument" filename="tests/<exe-name>/UsageTests/VariadicMacros.tests.cpp" >
@@ -16526,18 +17414,6 @@ There is no extra whitespace here
   <TestCase name="When unchecked exceptions are thrown, but caught, they do not affect the test" tags="[!throws]" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
     <OverallResult success="false"/>
   </TestCase>
-  <TestCase name="Where the LHS is not a simple value" tags="[.][failing][Tricky]" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
-    <Warning>
-      Uncomment the code in this test to check that it gives a sensible compiler error
-    </Warning>
-    <OverallResult success="false"/>
-  </TestCase>
-  <TestCase name="Where there is more to the expression after the RHS" tags="[.][failing][Tricky]" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
-    <Warning>
-      Uncomment the code in this test to check that it gives a sensible compiler error
-    </Warning>
-    <OverallResult success="false"/>
-  </TestCase>
   <TestCase name="X/level/0/a" tags="[Tricky]" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
     <OverallResult success="true"/>
   </TestCase>
@@ -16806,17 +17682,6 @@ There is no extra whitespace here
       </Original>
       <Expanded>
         "{ 42, 250 }" == "{ 42, 250 }"
-      </Expanded>
-    </Expression>
-    <OverallResult success="true"/>
-  </TestCase>
-  <TestCase name="atomic if" tags="[0][failing]" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
-    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
-      <Original>
-        x == 0
-      </Original>
-      <Expanded>
-        0 == 0
       </Expanded>
     </Expression>
     <OverallResult success="true"/>
@@ -17512,6 +18377,9 @@ There is no extra whitespace here
   <TestCase name="has printf" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
 loose text artifact
     <OverallResult success="false"/>
+  </TestCase>
+  <TestCase name="is_unary_function" tags="[clara][compilation]" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+    <OverallResult success="true"/>
   </TestCase>
   <TestCase name="just failure" tags="[.][fail][isolated info][messages]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
     <Failure filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
@@ -18757,10 +19625,10 @@ loose text artifact
   <TestCase name="shortened hide tags are split apart" tags="[tags]" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
     <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Tag.tests.cpp" >
       <Original>
-        tags, VectorContains("magic-tag"_catch_sr) &amp;&amp; VectorContains("."_catch_sr)
+        testcase.tags, VectorContains( Tag( "magic-tag" ) ) &amp;&amp; VectorContains( Tag( "."_catch_sr ) )
       </Original>
       <Expanded>
-        { ., magic-tag } ( Contains: magic-tag and Contains: . )
+        { {?}, {?} } ( Contains: {?} and Contains: {?} )
       </Expanded>
     </Expression>
     <OverallResult success="true"/>
@@ -18972,17 +19840,6 @@ loose text artifact
       </Expanded>
     </Expression>
     <OverallResult success="true"/>
-  </TestCase>
-  <TestCase name="string literals of different sizes can be compared" tags="[.][failing][Tricky]" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
-    <Expression success="false" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
-      <Original>
-        std::string( "first" ) == "second"
-      </Original>
-      <Expanded>
-        "first" == "second"
-      </Expanded>
-    </Expression>
-    <OverallResult success="false"/>
   </TestCase>
   <TestCase name="stringify ranges" tags="[toString]" filename="tests/<exe-name>/UsageTests/ToStringWhich.tests.cpp" >
     <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/ToStringWhich.tests.cpp" >
@@ -20027,6 +20884,6 @@ loose text artifact
     </Section>
     <OverallResult success="true"/>
   </TestCase>
-  <OverallResults successes="1958" failures="146" expectedFailures="27"/>
-  <OverallResultsCases successes="279" failures="86" expectedFailures="7"/>
+  <OverallResults successes="2056" failures="143" expectedFailures="27"/>
+  <OverallResultsCases successes="292" failures="83" expectedFailures="7"/>
 </Catch2TestRun>
