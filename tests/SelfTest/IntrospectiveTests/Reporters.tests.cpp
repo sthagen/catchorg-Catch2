@@ -13,25 +13,39 @@
 #include <catch2/interfaces/catch_interfaces_reporter.hpp>
 #include <catch2/interfaces/catch_interfaces_reporter_factory.hpp>
 #include <catch2/interfaces/catch_interfaces_reporter_registry.hpp>
+#include <catch2/internal/catch_console_colour.hpp>
+#include <catch2/internal/catch_enforce.hpp>
 #include <catch2/internal/catch_list.hpp>
+#include <catch2/internal/catch_reporter_registry.hpp>
+#include <catch2/internal/catch_stream.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <catch2/reporters/catch_reporter_helpers.hpp>
 #include <catch2/reporters/catch_reporter_event_listener.hpp>
 #include <catch2/reporters/catch_reporter_streaming_base.hpp>
-#include <catch2/reporters/catch_reporter_listening.hpp>
+#include <catch2/reporters/catch_reporter_multi.hpp>
 
 #include <sstream>
+
+namespace {
+    class StringIStream : public Catch::IStream {
+    public:
+        std::ostream& stream() const override { return sstr; }
+        std::string str() const { return sstr.str(); }
+    private:
+        mutable std::stringstream sstr;
+    };
+}
 
 TEST_CASE( "The default listing implementation write to provided stream",
            "[reporters][reporter-helpers]" ) {
     using Catch::Matchers::ContainsSubstring;
     using namespace std::string_literals;
 
-    std::stringstream sstream;
+    StringIStream sstream;
     SECTION( "Listing tags" ) {
         std::vector<Catch::TagInfo> tags(1);
         tags[0].add("fakeTag"_catch_sr);
-        Catch::defaultListTags(sstream, tags, false);
+        Catch::defaultListTags(sstream.stream(), tags, false);
 
         auto listingString = sstream.str();
         REQUIRE_THAT(listingString, ContainsSubstring("[fakeTag]"s));
@@ -39,7 +53,7 @@ TEST_CASE( "The default listing implementation write to provided stream",
     SECTION( "Listing reporters" ) {
         std::vector<Catch::ReporterDescription> reporters(
             { { "fake reporter", "fake description" } } );
-        Catch::defaultListReporters(sstream, reporters, Catch::Verbosity::Normal);
+        Catch::defaultListReporters(sstream.stream(), reporters, Catch::Verbosity::Normal);
 
         auto listingString = sstream.str();
         REQUIRE_THAT(listingString, ContainsSubstring("fake reporter"s));
@@ -50,7 +64,8 @@ TEST_CASE( "The default listing implementation write to provided stream",
             { "fake test name"_catch_sr, "[fakeTestTag]"_catch_sr },
             { "fake-file.cpp", 123456789 } };
         std::vector<Catch::TestCaseHandle> tests({ {&fakeInfo, nullptr} });
-        Catch::defaultListTests(sstream, tests, false, Catch::Verbosity::Normal);
+        auto colour = Catch::makeColourImpl( Catch::ColourMode::None, &sstream);
+        Catch::defaultListTests(sstream.stream(), colour.get(), tests, false, Catch::Verbosity::Normal);
 
         auto listingString = sstream.str();
         REQUIRE_THAT( listingString,
@@ -70,11 +85,12 @@ TEST_CASE( "Reporter's write listings to provided stream", "[reporters]" ) {
 
     for (auto const& factory : factories) {
         INFO("Tested reporter: " << factory.first);
-        std::stringstream sstream;
+        StringIStream sstream;
 
         Catch::ConfigData config_data;
         Catch::Config config( config_data );
-        Catch::ReporterConfig rep_config( &config, sstream );
+        Catch::ReporterConfig rep_config(
+            &config, &sstream, Catch::ColourMode::None, {} );
         auto reporter = factory.second->create( rep_config );
 
         DYNAMIC_SECTION( factory.first << " reporter lists tags" ) {
@@ -125,7 +141,7 @@ namespace {
     public:
         MockListener( std::string witness,
                       std::vector<std::string>& recorder,
-                      Catch::ReporterConfig const& config ):
+                      Catch::IConfig const* config ):
             EventListenerBase( config ),
             m_witness( witness ),
             m_recorder( recorder )
@@ -160,19 +176,20 @@ TEST_CASE("Multireporter calls reporters and listeners in correct order",
 
     Catch::ConfigData config_data;
     Catch::Config config( config_data );
-    std::stringstream sstream;
-    Catch::ReporterConfig rep_config( &config, sstream );
+    StringIStream sstream;
+    Catch::ReporterConfig rep_config(
+        &config, &sstream, Catch::ColourMode::None, {} );
 
     // We add reporters before listeners, to check that internally they
     // get sorted properly, and listeners are called first anyway.
-    Catch::ListeningReporter multiReporter( &config );
+    Catch::MultiReporter multiReporter( &config );
     std::vector<std::string> records;
     multiReporter.addReporter( Catch::Detail::make_unique<MockReporter>(
         "Goodbye", records, rep_config ) );
-    multiReporter.addListener( Catch::Detail::make_unique<MockListener>(
-        "Hello", records, rep_config ) );
-    multiReporter.addListener( Catch::Detail::make_unique<MockListener>(
-        "world", records, rep_config ) );
+    multiReporter.addListener(
+        Catch::Detail::make_unique<MockListener>( "Hello", records, &config ) );
+    multiReporter.addListener(
+        Catch::Detail::make_unique<MockListener>( "world", records, &config ) );
     multiReporter.addReporter( Catch::Detail::make_unique<MockReporter>(
         "world", records, rep_config ) );
     multiReporter.testRunStarting( { "" } );
@@ -188,7 +205,7 @@ namespace {
     public:
         PreferenceListener( bool redirectStdout,
                             bool reportAllAssertions,
-                            Catch::ReporterConfig const& config ):
+                            Catch::IConfig const* config ):
             EventListenerBase( config ) {
             m_preferences.shouldRedirectStdOut = redirectStdout;
             m_preferences.shouldReportAllAssertions = reportAllAssertions;
@@ -213,9 +230,10 @@ TEST_CASE("Multireporter updates ReporterPreferences properly",
 
     Catch::ConfigData config_data;
     Catch::Config config( config_data );
-    std::stringstream sstream;
-    Catch::ReporterConfig rep_config( &config, sstream );
-    Catch::ListeningReporter multiReporter( &config );
+    StringIStream sstream;
+    Catch::ReporterConfig rep_config(
+        &config, &sstream, Catch::ColourMode::None, {} );
+    Catch::MultiReporter multiReporter( &config );
 
     // Post init defaults
     REQUIRE( multiReporter.getPreferences().shouldRedirectStdOut == false );
@@ -224,19 +242,19 @@ TEST_CASE("Multireporter updates ReporterPreferences properly",
     SECTION( "Adding listeners" ) {
         multiReporter.addListener(
             Catch::Detail::make_unique<PreferenceListener>(
-                true, false, rep_config ) );
+                true, false, &config ) );
         REQUIRE( multiReporter.getPreferences().shouldRedirectStdOut == true );
         REQUIRE( multiReporter.getPreferences().shouldReportAllAssertions == false );
 
         multiReporter.addListener(
             Catch::Detail::make_unique<PreferenceListener>(
-                false, true, rep_config ) );
+                false, true, &config ) );
         REQUIRE( multiReporter.getPreferences().shouldRedirectStdOut == true );
         REQUIRE( multiReporter.getPreferences().shouldReportAllAssertions == true);
 
         multiReporter.addListener(
             Catch::Detail::make_unique<PreferenceListener>(
-                false, false, rep_config ) );
+                false, false, &config ) );
         REQUIRE( multiReporter.getPreferences().shouldRedirectStdOut == true );
         REQUIRE( multiReporter.getPreferences().shouldReportAllAssertions == true );
     }
@@ -259,4 +277,26 @@ TEST_CASE("Multireporter updates ReporterPreferences properly",
         REQUIRE( multiReporter.getPreferences().shouldRedirectStdOut == true );
         REQUIRE( multiReporter.getPreferences().shouldReportAllAssertions == true );
     }
+}
+
+namespace {
+    class TestReporterFactory : public Catch::IReporterFactory {
+        Catch::IEventListenerPtr create( Catch::ReporterConfig const& ) const override {
+            CATCH_INTERNAL_ERROR(
+                "This factory should never create a reporter" );
+        }
+        std::string getDescription() const override {
+            return "Fake test factory";
+        }
+    };
+}
+
+TEST_CASE("Registering reporter with '::' in name fails",
+          "[reporters][registration]") {
+    Catch::ReporterRegistry registry;
+
+    REQUIRE_THROWS_WITH( registry.registerReporter(
+        "with::doublecolons",
+        Catch::Detail::make_unique<TestReporterFactory>() ),
+        "'::' is not allowed in reporter name: 'with::doublecolons'" );
 }

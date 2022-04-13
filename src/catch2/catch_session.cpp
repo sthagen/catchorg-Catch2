@@ -19,7 +19,7 @@
 #include <catch2/internal/catch_sharding.hpp>
 #include <catch2/internal/catch_textflow.hpp>
 #include <catch2/internal/catch_windows_h_proxy.hpp>
-#include <catch2/reporters/catch_reporter_listening.hpp>
+#include <catch2/reporters/catch_reporter_multi.hpp>
 #include <catch2/interfaces/catch_interfaces_reporter_registry.hpp>
 #include <catch2/interfaces/catch_interfaces_reporter_factory.hpp>
 #include <catch2/internal/catch_move_and_forward.hpp>
@@ -34,31 +34,44 @@ namespace Catch {
     namespace {
         const int MaxExitCode = 255;
 
-        IStreamingReporterPtr createReporter(std::string const& reporterName, ReporterConfig const& config) {
+        IEventListenerPtr createReporter(std::string const& reporterName, ReporterConfig const& config) {
             auto reporter = Catch::getRegistryHub().getReporterRegistry().create(reporterName, config);
             CATCH_ENFORCE(reporter, "No reporter registered with name: '" << reporterName << '\'');
 
             return reporter;
         }
 
-        IStreamingReporterPtr makeReporter(Config const* config) {
+        IEventListenerPtr prepareReporters(Config const* config) {
             if (Catch::getRegistryHub().getReporterRegistry().getListeners().empty()
-                    && config->getReportersAndOutputFiles().size() == 1) {
-                auto& stream = config->getReporterOutputStream(0);
-                return createReporter(config->getReportersAndOutputFiles()[0].reporterName, ReporterConfig(config, stream));
+                    && config->getReporterSpecs().size() == 1) {
+                auto const& spec = config->getReporterSpecs()[0];
+                auto stream = config->getReporterOutputStream(0);
+                return createReporter(
+                    config->getReporterSpecs()[0].name(),
+                    ReporterConfig(
+                        config,
+                        stream,
+                        spec.colourMode().valueOr( config->defaultColourMode() ),
+                        spec.customOptions() ) );
             }
 
-            auto multi = Detail::make_unique<ListeningReporter>(config);
+            auto multi = Detail::make_unique<MultiReporter>(config);
 
             auto const& listeners = Catch::getRegistryHub().getReporterRegistry().getListeners();
             for (auto const& listener : listeners) {
-                multi->addListener(listener->create(Catch::ReporterConfig(config, config->defaultStream())));
+                multi->addListener(listener->create(config));
             }
 
             std::size_t reporterIdx = 0;
-            for (auto const& reporterAndFile : config->getReportersAndOutputFiles()) {
-                auto& stream = config->getReporterOutputStream(reporterIdx);
-                multi->addReporter(createReporter(reporterAndFile.reporterName, ReporterConfig(config, stream)));
+            for (auto const& reporterSpec : config->getReporterSpecs()) {
+                auto stream = config->getReporterOutputStream(reporterIdx);
+                multi->addReporter( createReporter(
+                    reporterSpec.name(),
+                    ReporterConfig( config,
+                                    stream,
+                                    reporterSpec.colourMode().valueOr(
+                                        config->defaultColourMode() ),
+                                    reporterSpec.customOptions() ) ) );
                 reporterIdx++;
             }
 
@@ -67,7 +80,7 @@ namespace Catch {
 
         class TestGroup {
         public:
-            explicit TestGroup(IStreamingReporterPtr&& reporter, Config const* config):
+            explicit TestGroup(IEventListenerPtr&& reporter, Config const* config):
                 m_reporter(reporter.get()),
                 m_config{config},
                 m_context{config, CATCH_MOVE(reporter)} {
@@ -120,7 +133,7 @@ namespace Catch {
 
 
         private:
-            IStreamingReporter* m_reporter;
+            IEventListener* m_reporter;
             Config const* m_config;
             RunContext m_context;
             std::set<TestCaseHandle const*> m_tests;
@@ -151,14 +164,17 @@ namespace Catch {
             getCurrentMutableContext().setConfig(m_config.get());
 
             m_startupExceptions = true;
-            Colour colourGuard( Colour::Red );
-            Catch::cerr() << "Errors occurred during startup!" << '\n';
+            auto errStream = makeStream( "%stderr" );
+            auto colourImpl = makeColourImpl(
+                ColourMode::PlatformDefault, errStream.get() );
+            auto guard = colourImpl->guardColour( Colour::Red );
+            errStream->stream() << "Errors occurred during startup!" << '\n';
             // iterate over all exceptions and notify user
             for ( const auto& ex_ptr : exceptions ) {
                 try {
                     std::rethrow_exception(ex_ptr);
                 } catch ( std::exception const& ex ) {
-                    Catch::cerr() << TextFlow::Column( ex.what() ).indent(2) << '\n';
+                    errStream->stream() << TextFlow::Column( ex.what() ).indent(2) << '\n';
                 }
             }
         }
@@ -173,7 +189,7 @@ namespace Catch {
 
     void Session::showHelp() const {
         Catch::cout()
-                << "\nCatch v" << libraryVersion() << '\n'
+                << "\nCatch2 v" << libraryVersion() << '\n'
                 << m_cli << '\n'
                 << "For more detailed usage please see the project docs\n\n" << std::flush;
     }
@@ -181,7 +197,7 @@ namespace Catch {
         Catch::cout()
                 << std::left << std::setw(16) << "description: " << "A Catch2 test executable\n"
                 << std::left << std::setw(16) << "category: " << "testframework\n"
-                << std::left << std::setw(16) << "framework: " << "Catch Test\n"
+                << std::left << std::setw(16) << "framework: " << "Catch2\n"
                 << std::left << std::setw(16) << "version: " << libraryVersion() << '\n' << std::flush;
     }
 
@@ -194,12 +210,15 @@ namespace Catch {
         if( !result ) {
             config();
             getCurrentMutableContext().setConfig(m_config.get());
-            Catch::cerr()
-                << Colour( Colour::Red )
+            auto errStream = makeStream( "%stderr" );
+            auto colour = makeColourImpl( ColourMode::PlatformDefault, errStream.get() );
+
+            errStream->stream()
+                << colour->guardColour( Colour::Red )
                 << "\nError(s) in input:\n"
                 << TextFlow::Column( result.errorMessage() ).indent( 2 )
                 << "\n\n";
-            Catch::cerr() << "Run with -? for usage\n\n" << std::flush;
+            errStream->stream() << "Run with -? for usage\n\n" << std::flush;
             return MaxExitCode;
         }
 
@@ -298,7 +317,7 @@ namespace Catch {
             getCurrentMutableContext().setConfig(m_config.get());
 
             // Create reporter(s) so we can route listings through them
-            auto reporter = makeReporter(m_config.get());
+            auto reporter = prepareReporters(m_config.get());
 
             auto const& invalidSpecs = m_config->testSpec().getInvalidSpecs();
             if ( !invalidSpecs.empty() ) {
@@ -330,7 +349,7 @@ namespace Catch {
             // Note that on unices only the lower 8 bits are usually used, clamping
             // the return value to 255 prevents false negative when some multiple
             // of 256 tests has failed
-            return (std::min) (MaxExitCode, (std::max) (totals.error, static_cast<int>(totals.assertions.failed)));
+            return (std::min) (MaxExitCode, static_cast<int>(totals.assertions.failed));
         }
 #if !defined(CATCH_CONFIG_DISABLE_EXCEPTIONS)
         catch( std::exception& ex ) {

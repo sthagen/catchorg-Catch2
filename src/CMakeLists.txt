@@ -1,4 +1,11 @@
-include(MiscFunctions)
+include(CatchMiscFunctions)
+
+# CMake derives a Visual Studio project GUID from the file path but can be overridden via a property
+# (see https://gitlab.kitware.com/cmake/cmake/-/commit/c85367f4).  Using a non-constant GUID
+# can cause problems if other projects/repos want to reference the vcxproj file,
+# so we force a constant GUID here.
+set(Catch2_GUID_CMAKE "8d538cbe-01bf-4a2e-a98a-6c368fdf13d7" CACHE INTERNAL "Project GUID")
+set(Catch2WithMain_GUID_CMAKE "8bd3552a-2cfb-4a59-ab15-2031b97ada1e" CACHE INTERNAL "Project GUID")
 
 # Please keep these ordered alphabetically
 set(BENCHMARK_HEADERS
@@ -31,6 +38,8 @@ set(BENCHMARK_SOURCES
 SOURCE_GROUP("benchmark" FILES ${BENCHMARK_HEADERS} ${BENCHMARK_SOURCES})
 
 set(INTERNAL_HEADERS
+   "${CMAKE_BINARY_DIR}/generated-includes/catch2/catch_user_config.hpp"
+   "${SOURCES_DIR}/catch_user_config.hpp.in"
     ${SOURCES_DIR}/catch_all.hpp
     ${SOURCES_DIR}/matchers/catch_matchers_all.hpp
     ${SOURCES_DIR}/generators/catch_generators_all.hpp
@@ -111,6 +120,7 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/internal/catch_random_seed_generation.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_registrars.hpp
     ${SOURCES_DIR}/internal/catch_reporter_registry.hpp
+    ${SOURCES_DIR}/internal/catch_reporter_spec_parser.hpp
     ${SOURCES_DIR}/internal/catch_result_type.hpp
     ${SOURCES_DIR}/internal/catch_run_context.hpp
     ${SOURCES_DIR}/internal/catch_section.hpp
@@ -148,6 +158,7 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/internal/catch_wildcard_pattern.hpp
     ${SOURCES_DIR}/internal/catch_windows_h_proxy.hpp
     ${SOURCES_DIR}/internal/catch_xmlwriter.hpp
+    ${SOURCES_DIR}/internal/catch_test_case_info_hasher.hpp
 )
 set(IMPL_SOURCES
     ${SOURCES_DIR}/catch_approx.cpp
@@ -182,6 +193,7 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/internal/catch_random_number_generator.cpp
     ${SOURCES_DIR}/internal/catch_random_seed_generation.cpp
     ${SOURCES_DIR}/internal/catch_reporter_registry.cpp
+    ${SOURCES_DIR}/internal/catch_reporter_spec_parser.cpp
     ${SOURCES_DIR}/internal/catch_result_type.cpp
     ${SOURCES_DIR}/internal/catch_run_context.cpp
     ${SOURCES_DIR}/internal/catch_section.cpp
@@ -204,6 +216,7 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/catch_version.cpp
     ${SOURCES_DIR}/internal/catch_wildcard_pattern.cpp
     ${SOURCES_DIR}/internal/catch_xmlwriter.cpp
+    ${SOURCES_DIR}/internal/catch_test_case_info_hasher.cpp
 )
 set(INTERNAL_FILES ${IMPL_SOURCES} ${INTERNAL_HEADERS})
 
@@ -211,13 +224,14 @@ set(INTERNAL_FILES ${IMPL_SOURCES} ${INTERNAL_HEADERS})
 set(REPORTER_HEADERS
     ${SOURCES_DIR}/reporters/catch_reporters_all.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_automake.hpp
+    ${SOURCES_DIR}/reporters/catch_reporter_common_base.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_compact.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_console.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_cumulative_base.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_event_listener.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_helpers.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_junit.hpp
-    ${SOURCES_DIR}/reporters/catch_reporter_listening.hpp
+    ${SOURCES_DIR}/reporters/catch_reporter_multi.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_sonarqube.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_streaming_base.hpp
     ${SOURCES_DIR}/reporters/catch_reporter_tap.hpp
@@ -227,11 +241,12 @@ set(REPORTER_HEADERS
 set(REPORTER_SOURCES
     ${SOURCES_DIR}/reporters/catch_reporter_automake.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_combined_tu.cpp
+    ${SOURCES_DIR}/reporters/catch_reporter_common_base.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_compact.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_console.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_cumulative_base.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_junit.cpp
-    ${SOURCES_DIR}/reporters/catch_reporter_listening.cpp
+    ${SOURCES_DIR}/reporters/catch_reporter_multi.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_sonarqube.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_streaming_base.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_tap.cpp
@@ -282,9 +297,15 @@ target_compile_features(Catch2
     cxx_variadic_macros
 )
 
+configure_file(
+  "${SOURCES_DIR}/catch_user_config.hpp.in"
+  "${CMAKE_BINARY_DIR}/generated-includes/catch2/catch_user_config.hpp"
+)
+
 target_include_directories(Catch2
   PUBLIC
     $<BUILD_INTERFACE:${SOURCES_DIR}/..>
+    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated-includes>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
@@ -323,7 +344,15 @@ if (NOT_SUBPROJECT)
         ${CATCH_CMAKE_CONFIG_DESTINATION}
     )
     # Install the headers
-    install(DIRECTORY ${SOURCES_DIR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*.h*")
+    install(
+      DIRECTORY
+        "${SOURCES_DIR}"
+        "${CMAKE_BINARY_DIR}/generated-includes/catch2" # Also install the generated header
+      DESTINATION
+        "${CMAKE_INSTALL_INCLUDEDIR}"
+      FILES_MATCHING
+        PATTERN "*.hpp"
+    )
 endif()
 
 # Some tests require a full recompilation of Catch2 lib with different
@@ -342,6 +371,7 @@ if (CATCH_BUILD_EXAMPLES OR CATCH_BUILD_EXTRA_TESTS)
     target_include_directories(Catch2_buildall_interface
       INTERFACE
         $<BUILD_INTERFACE:${SOURCES_DIR}/..>
+        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated-includes>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
     target_compile_features(Catch2_buildall_interface

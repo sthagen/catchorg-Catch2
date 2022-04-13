@@ -121,6 +121,14 @@ set_tests_properties(
     FAIL_REGULAR_EXPRESSION "abort;terminate;fatal"
 )
 
+add_executable( BazelReporter ${TESTS_DIR}/X30-BazelReporter.cpp )
+target_compile_definitions( BazelReporter PRIVATE CATCH_CONFIG_BAZEL_SUPPORT )
+target_link_libraries(BazelReporter Catch2_buildall_interface)
+add_test(NAME CATCH_CONFIG_BAZEL_REPORTER-1
+  COMMAND
+  "${PYTHON_EXECUTABLE}" "${CATCH_DIR}/tests/TestScripts/testBazelReporter.py" $<TARGET_FILE:BazelReporter> "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
 
 # The default handler on Windows leads to the just-in-time debugger firing,
 # which makes this test unsuitable for CI and headless runs, as it opens
@@ -272,8 +280,8 @@ if (NOT MEMORYCHECK_COMMAND)
   add_test(
     NAME MultiReporter::NoncapturingListenerDoesntCauseStdoutPassThrough
     COMMAND ListenerStdoutCaptureInMultireporter
-      --reporter xml::${_NullFile}
-      --reporter junit::${_NullFile}
+      --reporter xml::out=${_NullFile}
+      --reporter junit::out=${_NullFile}
   )
 
   set_tests_properties(
@@ -290,8 +298,8 @@ target_link_libraries(ListenerCanAskForCapturedStdout PRIVATE Catch2::Catch2With
 add_test(
   NAME MultiReporter::CapturingListenerCausesStdoutCapture
   COMMAND ListenerCanAskForCapturedStdout
-    --reporter compact::${_NullFile}
-    --reporter console::${_NullFile}
+    --reporter compact::out=${_NullFile}
+    --reporter console::out=${_NullFile}
 )
 set_tests_properties(
     MultiReporter::CapturingListenerCausesStdoutCapture
@@ -317,13 +325,39 @@ add_test(
   NAME MultiReporter::PreferencesForPassingAssertionsIsRespected
   COMMAND ReporterPreferencesForPassingAssertionsIsRespected
     --reporter test-reporter
-    --reporter console::${_NullFile}
+    --reporter console::out=${_NullFile}
 )
 set_tests_properties(
     MultiReporter::PreferencesForPassingAssertionsIsRespected
   PROPERTIES
     PASS_REGULAR_EXPRESSION "X26 - TestReporter constructed"
     FAIL_REGULAR_EXPRESSION "X26 - assertionEnded"
+)
+
+add_executable(ListenersGetEventsBeforeReporters ${TESTS_DIR}/X28-ListenersGetEventsBeforeReporters.cpp)
+target_link_libraries(ListenersGetEventsBeforeReporters PRIVATE Catch2::Catch2WithMain)
+add_test(
+  NAME ListenersGetEventsBeforeReporters
+  COMMAND ListenersGetEventsBeforeReporters --reporter test-reporter
+)
+set_tests_properties(
+    ListenersGetEventsBeforeReporters
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "X28 - TestReporter constructed"
+    FAIL_REGULAR_EXPRESSION "X28 - ERROR"
+)
+
+add_executable(CustomArgumentsForReporters ${TESTS_DIR}/X29-CustomArgumentsForReporters.cpp)
+target_link_libraries(CustomArgumentsForReporters PRIVATE Catch2::Catch2WithMain)
+add_test(
+  NAME CustomArgumentsForReporters
+  COMMAND CustomArgumentsForReporters
+    --reporter "test-reporter::Xa b=c 1::Xz:e = 1234"
+)
+set_tests_properties(
+    CustomArgumentsForReporters
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "Xa b=c 1::Xz:e = 1234"
 )
 
 
@@ -412,6 +446,7 @@ set( EXTRA_TEST_BINARIES
     DuplicatedTestCases-SameNameDifferentTags
     DuplicatedTestCases-DuplicatedTestCaseMethods
     NoTests
+    ListenersGetEventsBeforeReporters
 #    DebugBreakMacros
 )
 

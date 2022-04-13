@@ -1,5 +1,4 @@
 :test-result: PASS # A test name that starts with a #
-:test-result: PASS #1005: Comparing pointer to int and long (NULL can be either on various systems)
 :test-result: PASS #1027: Bitfields can be captured
 :test-result: PASS #1147
 :test-result: PASS #1175 - Hidden Test
@@ -29,7 +28,7 @@ Nor would this
 :test-result: XFAIL #748 - captures with unexpected exceptions
 :test-result: PASS #809
 :test-result: PASS #833
-:test-result: XFAIL #835 -- errno should not be touched by Catch
+:test-result: XFAIL #835 -- errno should not be touched by Catch2
 :test-result: PASS #872
 :test-result: PASS #961 -- Dynamically created sections should all be reported
 :test-result: FAIL 'Not' checks that should fail
@@ -105,6 +104,7 @@ Nor would this
 :test-result: PASS Character pretty printing
 :test-result: PASS Clara::Arg supports single-arg parse the way Opt does
 :test-result: PASS Clara::Opt supports accept-many lambdas
+:test-result: PASS ColourGuard behaviour
 :test-result: PASS Combining MatchAllOfGeneric does not nest
 :test-result: PASS Combining MatchAnyOfGeneric does not nest
 :test-result: PASS Combining MatchNotOfGeneric does not nest
@@ -123,11 +123,13 @@ Nor would this
 :test-result: PASS Composed matchers shortcircuit
 :test-result: FAIL Contains string matcher
 :test-result: PASS Copy and then generate a range
+:test-result: PASS Cout stream properly declares it writes to stdout
 :test-result: FAIL Custom exceptions can be translated when testing for nothrow
 :test-result: FAIL Custom exceptions can be translated when testing for throwing as something else
 :test-result: FAIL Custom std-exceptions can be custom translated
 :test-result: PASS Default scale is invisible to comparison
 :test-result: PASS Directly creating an EnumInfo
+:test-result: PASS Empty stream name opens cout stream
 :test-result: PASS Empty tag is not allowed
 :test-result: FAIL EndsWith string matcher
 :test-result: PASS Enums can quickly have stringification enabled using REGISTER_ENUM
@@ -153,6 +155,10 @@ Nor would this
 :test-result: PASS Generators -- simple
 :test-result: PASS Generators internals
 :test-result: PASS Greater-than inequalities with different epsilons
+:test-result: PASS Hashers with different seed produce different hash with same test case
+:test-result: PASS Hashers with same seed produce same hash
+:test-result: PASS Hashing different test cases produces different result
+:test-result: PASS Hashing test case produces same hash across multiple calls
 :test-result: FAIL INFO and WARN do not abort tests
 :test-result: FAIL INFO gets logged on failure
 :test-result: FAIL INFO gets logged on failure, even if captured before successful assertions
@@ -199,6 +205,7 @@ Nor would this
 :test-result: PASS Range type with sentinel
 :test-result: FAIL Reconstruction should be based on stringification: #914
 :test-result: FAIL Regex string matcher
+:test-result: PASS Registering reporter with '::' in name fails
 :test-result: PASS Regression test #1
 :test-result: PASS Reporter's write listings to provided stream
 :test-result: PASS Reproducer for #2309 - a very long description past 80 chars (default console width) with a late colon : blablabla
@@ -335,6 +342,7 @@ loose text artifact
 :test-result: FAIL prints unscoped info only for the first assertion
 :test-result: PASS random SECTION tests
 :test-result: PASS replaceInPlace
+:test-result: PASS request an unknown %-starting stream fails
 :test-result: PASS resolution
 :test-result: PASS run_for_at_least, chronometer
 :test-result: PASS run_for_at_least, int
@@ -350,6 +358,7 @@ loose text artifact
 :test-result: PASS std::pair<int,std::string> -> toString
 :test-result: PASS std::set is convertible string
 :test-result: PASS std::vector<std::pair<std::string,int> > -> toString
+:test-result: PASS stdout and stderr streams have %-starting name
 :test-result: PASS stringify ranges
 :test-result: PASS stringify( has_maker )
 :test-result: PASS stringify( has_maker_and_operator )
@@ -374,7 +383,6 @@ loose text artifact
 :test-result: PASS tuple<>
 :test-result: PASS tuple<float,int>
 :test-result: PASS tuple<int>
-:test-result: PASS tuple<0,int,const char *>
 :test-result: PASS tuple<string,string>
 :test-result: PASS tuple<tuple<int>,tuple<>,float>
 :test-result: PASS uniform samples

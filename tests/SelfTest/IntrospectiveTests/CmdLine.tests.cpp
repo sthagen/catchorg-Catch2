@@ -1,20 +1,22 @@
-/*
- *  Distributed under the Boost Software License, Version 1.0. (See accompanying
- *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
- */
+
+//              Copyright Catch2 Authors
+// Distributed under the Boost Software License, Version 1.0.
+//   (See accompanying file LICENSE_1_0.txt or copy at
+//        https://www.boost.org/LICENSE_1_0.txt)
+
+// SPDX-License-Identifier: BSL-1.0
 
 #include <catch2/catch_config.hpp>
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <catch2/internal/catch_test_spec_parser.hpp>
+#include <catch2/catch_user_config.hpp>
 #include <catch2/catch_test_case_info.hpp>
 #include <catch2/internal/catch_commandline.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/internal/catch_compiler_capabilities.hpp>
 
-#ifdef __clang__
-#   pragma clang diagnostic ignored "-Wc++98-compat"
-#endif
 
 namespace {
     auto fakeTestCase(const char* name, const char* desc = "") { return Catch::makeTestCaseInfo("", { name, desc }, CATCH_INTERNAL_LINEINFO); }
@@ -345,10 +347,23 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
         CHECK(config.shouldDebugBreak == false);
         CHECK(config.abortAfter == -1);
         CHECK(config.noThrow == false);
-        CHECK(config.reporterSpecifications == std::vector<Catch::ConfigData::ReporterAndFile>{ {"console", {}} });
+        CHECK( config.reporterSpecifications.empty() );
 
         Catch::Config cfg(config);
         CHECK_FALSE(cfg.hasTestFilters());
+
+        // The Config is responsible for mixing in the default reporter
+        auto expectedReporter =
+#if defined( CATCH_CONFIG_DEFAULT_REPORTER )
+            CATCH_CONFIG_DEFAULT_REPORTER
+#else
+            "console"
+#endif
+            ;
+
+        CHECK( cfg.getReporterSpecs().size() == 1 );
+        CHECK( cfg.getReporterSpecs()[0] ==
+               Catch::ReporterSpec{ expectedReporter, {}, {}, {} } );
     }
 
     SECTION("test lists") {
@@ -384,28 +399,31 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
     }
 
     SECTION("reporter") {
-        using vec_ReporterAndFile = std::vector<Catch::ConfigData::ReporterAndFile>;
+        using vec_Specs = std::vector<Catch::ReporterSpec>;
         using namespace std::string_literals;
         SECTION("-r/console") {
             auto result = cli.parse({"test", "-r", "console"});
             CAPTURE(result.errorMessage());
             CHECK(result);
 
-            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"console", {}} });
+            REQUIRE( config.reporterSpecifications ==
+                     vec_Specs{ { "console", {}, {}, {} } } );
         }
         SECTION("-r/xml") {
             auto result = cli.parse({"test", "-r", "xml"});
             CAPTURE(result.errorMessage());
             CHECK(result);
 
-            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"xml", {}} });
+            REQUIRE( config.reporterSpecifications ==
+                     vec_Specs{ { "xml", {}, {}, {} } } );
         }
         SECTION("--reporter/junit") {
             auto result = cli.parse({"test", "--reporter", "junit"});
             CAPTURE(result.errorMessage());
             CHECK(result);
 
-            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"junit", {}} });
+            REQUIRE( config.reporterSpecifications ==
+                     vec_Specs{ { "junit", {}, {}, {} } } );
         }
         SECTION("must match one of the available ones") {
             auto result = cli.parse({"test", "--reporter", "unsupported"});
@@ -414,34 +432,34 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
             REQUIRE_THAT(result.errorMessage(), ContainsSubstring("Unrecognized reporter"));
         }
         SECTION("With output file") {
-            auto result = cli.parse({ "test", "-r", "console::out.txt" });
+            auto result = cli.parse({ "test", "-r", "console::out=out.txt" });
             CAPTURE(result.errorMessage());
             CHECK(result);
-            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"console", "out.txt"s} });
+            REQUIRE( config.reporterSpecifications ==
+                     vec_Specs{ { "console", "out.txt"s, {}, {} } } );
         }
         SECTION("With Windows-like absolute path as output file") {
-            auto result = cli.parse({ "test", "-r", "console::C:\\Temp\\out.txt" });
+            auto result = cli.parse({ "test", "-r", "console::out=C:\\Temp\\out.txt" });
             CAPTURE(result.errorMessage());
             CHECK(result);
-            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"console", "C:\\Temp\\out.txt"s} });
-        }
-        SECTION("Output file cannot be empty") {
-            auto result = cli.parse({"test", "--reporter", "console::"});
-            CHECK(!result);
-
-            REQUIRE_THAT(result.errorMessage(), ContainsSubstring("empty filename"));
+            REQUIRE( config.reporterSpecifications ==
+                     vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {} } } );
         }
         SECTION("Multiple reporters") {
             SECTION("All with output files") {
-                CHECK(cli.parse({ "test", "-r", "xml::output.xml", "-r", "junit::output-junit.xml" }));
-                REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"junit", "output-junit.xml"s} });
+                CHECK(cli.parse({ "test", "-r", "xml::out=output.xml", "-r", "junit::out=output-junit.xml" }));
+                REQUIRE( config.reporterSpecifications ==
+                         vec_Specs{ { "xml", "output.xml"s, {}, {} },
+                               { "junit", "output-junit.xml"s, {}, {} } } );
             }
             SECTION("Mixed output files and default output") {
-                CHECK(cli.parse({ "test", "-r", "xml::output.xml", "-r", "console" }));
-                REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"console", {}} });
+                CHECK(cli.parse({ "test", "-r", "xml::out=output.xml", "-r", "console" }));
+                REQUIRE( config.reporterSpecifications ==
+                         vec_Specs{ { "xml", "output.xml"s, {}, {} },
+                                    { "console", {}, {}, {} } } );
             }
             SECTION("cannot have multiple reporters with default output") {
-                auto result = cli.parse({ "test", "-r", "console", "-r", "xml::output.xml", "-r", "junit" });
+                auto result = cli.parse({ "test", "-r", "console", "-r", "xml::out=output.xml", "-r", "junit" });
                 CHECK(!result);
                 REQUIRE_THAT(result.errorMessage(), ContainsSubstring("Only one reporter may have unspecified output file."));
             }
@@ -543,34 +561,34 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
 
     SECTION( "use-colour") {
 
-        using Catch::UseColour;
+        using Catch::ColourMode;
 
         SECTION( "without option" ) {
             CHECK(cli.parse({"test"}));
 
-            REQUIRE( config.useColour == UseColour::Auto );
+            REQUIRE( config.defaultColourMode == ColourMode::PlatformDefault );
         }
 
         SECTION( "auto" ) {
-            CHECK(cli.parse({"test", "--use-colour", "auto"}));
+            CHECK( cli.parse( { "test", "--colour-mode", "default" } ) );
 
-            REQUIRE( config.useColour == UseColour::Auto );
+            REQUIRE( config.defaultColourMode == ColourMode::PlatformDefault );
         }
 
         SECTION( "yes" ) {
-            CHECK(cli.parse({"test", "--use-colour", "yes"}));
+            CHECK(cli.parse({"test", "--colour-mode", "ansi"}));
 
-            REQUIRE( config.useColour == UseColour::Yes );
+            REQUIRE( config.defaultColourMode == ColourMode::ANSI );
         }
 
         SECTION( "no" ) {
-            CHECK(cli.parse({"test", "--use-colour", "no"}));
+            CHECK(cli.parse({"test", "--colour-mode", "none"}));
 
-            REQUIRE( config.useColour == UseColour::No );
+            REQUIRE( config.defaultColourMode == ColourMode::None );
         }
 
         SECTION( "error" ) {
-            auto result = cli.parse({"test", "--use-colour", "wrong"});
+            auto result = cli.parse({"test", "--colour-mode", "wrong"});
             CHECK( !result );
             CHECK_THAT( result.errorMessage(), ContainsSubstring( "colour mode must be one of" ) );
         }
@@ -698,4 +716,18 @@ TEST_CASE("Various suspicious reporter specs are rejected",
 
     auto result = cli.parse( { "test", "--reporter", spec } );
     REQUIRE_FALSE( result );
+}
+
+TEST_CASE("Win32 colour implementation is compile-time optional",
+          "[approvals][cli][colours]") {
+    Catch::ConfigData config;
+    auto cli = Catch::makeCommandLineParser( config );
+
+    auto result = cli.parse( { "test", "--colour-mode", "win32" } );
+
+#if defined( CATCH_CONFIG_COLOUR_WIN32 )
+    REQUIRE( result );
+#else
+    REQUIRE_FALSE( result );
+#endif
 }

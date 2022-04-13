@@ -15,7 +15,6 @@
 [Warnings](#warnings)<br>
 [Reporting timings](#reporting-timings)<br>
 [Load test names to run from a file](#load-test-names-to-run-from-a-file)<br>
-[Just test names](#just-test-names)<br>
 [Specify the order test cases are run](#specify-the-order-test-cases-are-run)<br>
 [Specify a seed for the Random Number Generator](#specify-a-seed-for-the-random-number-generator)<br>
 [Identify framework and version according to the libIdentify standard](#identify-framework-and-version-according-to-the-libidentify-standard)<br>
@@ -31,6 +30,7 @@
 [Override output colouring](#override-output-colouring)<br>
 [Test Sharding](#test-sharding)<br>
 [Allow running the binary without tests](#allow-running-the-binary-without-tests)<br>
+[Output verbosity](#output-verbosity)<br>
 
 Catch works quite nicely without any command line options at all - but for those times when you want greater control the following options are available.
 Click one of the following links to take you straight to that option - or scroll on to browse the available options.
@@ -67,7 +67,7 @@ Click one of the following links to take you straight to that option - or scroll
 <a href="#benchmark-confidence-interval">               `    --benchmark-confidence-interval`</a><br />
 <a href="#benchmark-no-analysis">                       `    --benchmark-no-analysis`</a><br />
 <a href="#benchmark-warmup-time">                       `    --benchmark-warmup-time`</a><br />
-<a href="#use-colour">                                  `    --use-colour`</a><br />
+<a href="#colour-mode">                                 `    --colour-mode`</a><br />
 <a href="#test-sharding">                               `    --shard-count`</a><br />
 <a href="#test-sharding">                               `    --shard-index`</a><br />
 <a href=#no-tests-override>                             `    --allow-running-no-tests`</a><br />
@@ -123,21 +123,32 @@ Test names containing special characters, such as `,` or `[` can specify them on
 <a id="choosing-a-reporter-to-use"></a>
 ## Choosing a reporter to use
 
-<pre>-r, --reporter &lt;reporter[::output-file]&gt;</pre>
-
-> Support for providing output-file through the `-r`, `--reporter` flag was [introduced](https://github.com/catchorg/Catch2/pull/2183) in Catch2 X.Y.Z
+<pre>-r, --reporter &lt;reporter[::key=value]*&gt;</pre>
 
 Reporters are how the output from Catch2 (results of assertions, tests,
 benchmarks and so on) is formatted and written out. The default reporter
 is called the "Console" reporter and is intended to provide relatively
 verbose and human-friendly output.
 
+Reporters are also individually configurable. To pass configuration options
+to the reporter, you append `::key=value` to the reporter specification
+as many times as you want, e.g. `--reporter xml::out=someFile.xml`.
+
+The keys must either be prefixed by "X", in which case they are not parsed
+by Catch2 and are only passed down to the reporter, or one of options
+hardcoded into Catch2. Currently there are only 2,
+["out"](#sending-output-to-a-file), and ["colour-mode"](#colour-mode).
+
+_Note that the reporter might still check the X-prefixed options for
+validity, and throw an error if they are wrong._
+
+> Support for passing arguments to reporters through the `-r`, `--reporter` flag was introduced in Catch2 X.Y.Z
+
 There are multiple built-in reporters, you can see what they do by using the 
 [`--list-reporter`](command-line.md#listing-available-tests-tags-or-reporters)
 flag. If you need a reporter providing custom format outside of the already
 provided ones, look at the ["write your own reporter" part of the reporter
 documentation](reporters.md#writing-your-own-reporter).
-
 
 This option may be passed multiple times to use multiple (different)
 reporters  at the same time. See the [reporter documentation](reporters.md#multiple-reporters)
@@ -148,13 +159,12 @@ the [`-o`, `--out`](#sending-output-to-a-file) option.
 
 > Support for using multiple different reporters at the same time was [introduced](https://github.com/catchorg/Catch2/pull/2183) in Catch2 X.Y.Z
 
-As with the `--out` option, using `-` for the output file name sends the
-output to stdout.
 
 _Note: There is currently no way to escape `::` in the reporter spec,
-and thus reporter/file names with `::` in them will not work properly.
-As `::` in paths is relatively obscure (unlike `:`), we do not consider
-this an issue._
+and thus the reporter names, or configuration keys and values, cannot
+contain `::`. As `::` in paths is relatively obscure (unlike ':'), we do
+not consider this an issue._
+
 
 <a id="breaking-into-the-debugger"></a>
 ## Breaking into the debugger
@@ -208,11 +218,23 @@ similar information.
 <pre>-o, --out &lt;filename&gt;
 </pre>
 
-Use this option to send all output to a file. By default output is sent to stdout (note that uses of stdout and stderr *from within test cases* are redirected and included in the report - so even stderr will effectively end up on stdout).
-
-Using `-` as the filename sends the output to stdout.
+Use this option to send all output to a file, instead of stdout. You can
+use `-` as the filename to explicitly send the output to stdout (this is
+useful e.g. when using multiple reporters).
 
 > Support for `-` as the filename was introduced in Catch2 X.Y.Z
+
+Filenames starting with "%" (percent symbol) are reserved by Catch2 for
+meta purposes, e.g. using `%debug` as the filename opens stream that
+writes to platform specific debugging/logging mechanism.
+
+Catch2 currently recognizes 3 meta streams:
+
+* `%debug` - writes to platform specific debugging/logging output
+* `%stdout` - writes to stdout
+* `%stderr` - writes to stderr
+
+> Support for `%stdout` and `%stderr` was introduced in Catch2 X.Y.Z
 
 
 <a id="naming-a-test-run"></a>
@@ -457,16 +479,29 @@ filename it is found in, with any extension stripped, prefixed with the `#` char
 
 So, for example,  tests within the file `~\Dev\MyProject\Ferrets.cpp` would be tagged `[#Ferrets]`.
 
-<a id="use-colour"></a>
+<a id="colour-mode"></a>
 ## Override output colouring
-<pre>--use-colour &lt;yes|no|auto&gt;</pre>
+<pre>--colour-mode &lt;ansi|win32|none|default&gt;</pre>
 
-Catch colours output for terminals, but omits colouring when it detects that
-output is being sent to a pipe. This is done to avoid interfering with automated
-processing of output.
+> The `--colour-mode` option replaced the old `--colour` option in Catch2 X.Y.Z
 
-`--use-colour yes` forces coloured output, `--use-colour no` disables coloured
-output. The default behaviour is `--use-colour auto`.
+
+Catch2 support two different ways of colouring terminal output, and by
+default it attempts to make a good guess on which implementation to use
+(and whether to even use it, e.g. Catch2 tries to avoid writing colour
+codes when writing the results into a file).
+
+`--colour-mode` allows the user to explicitly select what happens.
+
+* `--colour-mode ansi` tells Catch2 to always use ANSI colour codes, even
+when writing to a file
+* `--colour-mode win32` tells Catch2 to use colour implementation based
+  on Win32 terminal API
+* `--colour-mode none` tells Catch2 to disable colours completely
+* `--colour-mode default` lets Catch2 decide
+
+`--colour-mode default` is the default setting.
+
 
 <a id="test-sharding"></a>
 ## Test Sharding

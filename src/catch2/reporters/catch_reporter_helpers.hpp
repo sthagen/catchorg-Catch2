@@ -17,8 +17,9 @@
 
 namespace Catch {
 
-    struct IConfig;
+    class IConfig;
     class TestCaseHandle;
+    class ColourImpl;
 
     // Returns double formatted as %.3f (format expected on output)
     std::string getFormattedDuration( double duration );
@@ -67,6 +68,7 @@ namespace Catch {
      * `--list-test-names-only` option, for people who used it in integrations.
      */
     void defaultListTests( std::ostream& out,
+                           ColourImpl* streamColour,
                            std::vector<TestCaseHandle> const& tests,
                            bool isFiltered,
                            Verbosity verbosity );

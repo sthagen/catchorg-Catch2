@@ -28,51 +28,24 @@ filelocParser = re.compile(r'''
 ''', re.VERBOSE)
 lineNumberParser = re.compile(r' line="[0-9]*"')
 hexParser = re.compile(r'\b(0[xX][0-9a-fA-F]+)\b')
-durationsParser = re.compile(r' time="[0-9]*\.[0-9]*"')
 # Note: junit must serialize time with 3 (or or less) decimal places
 #       before generalizing this parser, make sure that this is checked
 #       in other places too.
 junitDurationsParser = re.compile(r' time="[0-9]+\.[0-9]{3}"')
 durationParser = re.compile(r''' duration=['"][0-9]+['"]''')
 timestampsParser = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}Z')
-versionParser = re.compile(r'Catch v[0-9]+\.[0-9]+\.[0-9]+(-\w*\.[0-9]+)?')
+versionParser = re.compile(r'Catch2 v[0-9]+\.[0-9]+\.[0-9]+(-\w*\.[0-9]+)?')
 nullParser = re.compile(r'\b(__null|nullptr)\b')
 exeNameParser = re.compile(r'''
     \b
-    (CatchSelfTest|SelfTest)  # Expected executable name
+    SelfTest                  # Expected executable name
     (?:.exe)?                 # Executable name contains .exe on Windows.
     \b
 ''', re.VERBOSE)
 # This is a hack until something more reasonable is figured out
 specialCaseParser = re.compile(r'file\((\d+)\)')
 
-# errno macro expands into various names depending on platform, so we need to fix them up as well
-errnoParser = re.compile(r'''
-    \(\*__errno_location\s*\(\)\)
-    |
-    \(\*__error\(\)\)
-    |
-    \(\*_errno\(\)\)
-''', re.VERBOSE)
 sinceEpochParser = re.compile(r'\d+ .+ since epoch')
-infParser = re.compile(r'''
-    \(\(float\)\(1e\+300\ \*\ 1e\+300\)\) # MSVC INFINITY macro
-    |
-    \(__builtin_inff\(\)\)                # Linux (ubuntu) INFINITY macro
-    |
-    \(__builtin_inff\ \(\)\)              # Fedora INFINITY macro
-    |
-    __builtin_huge_valf\(\)               # OSX macro
-''', re.VERBOSE)
-nanParser = re.compile(r'''
-    \(\(float\)\(\(\(float\)\(1e\+300\ \*\ 1e\+300\)\)\ \*\ 0\.0F\)\) # MSVC NAN macro
-    |
-    \(\(float\)\(INFINITY\ \*\ 0\.0F\)\) # Yet another MSVC NAN macro
-    |
-    \(__builtin_nanf\ \(""\)\)           # Linux (ubuntu) NAN macro
-    |
-    __builtin_nanf\("0x<hex\ digits>"\)  # The weird content of the brackets is there because a different parser has already ran before this one
-''', re.VERBOSE)
 
 # The weird OR is there to always have at least empty string for group 1
 tapTestNumParser = re.compile(r'^((?:not ok)|(?:ok)|(?:warning)|(?:info)) (\d+) -')
@@ -140,7 +113,7 @@ def filterLine(line, isCompact):
     # strip out the test order number in TAP to avoid massive diffs for every change
     line = tapTestNumParser.sub("\g<1> {test-number} -", line)
 
-    # strip Catch version number
+    # strip Catch2 version number
     line = versionParser.sub("<version>", line)
 
     # replace *null* with 0
@@ -157,10 +130,7 @@ def filterLine(line, isCompact):
     line = durationParser.sub(' duration="{duration}"', line)
     line = timestampsParser.sub('{iso8601-timestamp}', line)
     line = specialCaseParser.sub('file:\g<1>', line)
-    line = errnoParser.sub('errno', line)
     line = sinceEpochParser.sub('{since-epoch-report}', line)
-    line = infParser.sub('INFINITY', line)
-    line = nanParser.sub('NAN', line)
     return line
 
 
@@ -250,7 +220,7 @@ common_args = ["~[!nonportable]~[!benchmark]~[approvals] *", "-s", "-w", "NoAsse
 filenames = ['{}.sw.multi'.format(reporter) for reporter in reporters]
 reporter_args = []
 for reporter, filename in zip(reporters, filenames):
-    reporter_args += ['-r', '{}::{}'.format(reporter, get_rawResultsPath(filename))]
+    reporter_args += ['-r', '{}::out={}'.format(reporter, get_rawResultsPath(filename))]
 
 run_test("default.sw.multi", common_args + reporter_args)
 check_outputs("default.sw.multi")

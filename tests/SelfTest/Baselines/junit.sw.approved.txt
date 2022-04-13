@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuitesloose text artifact
 >
-  <testsuite name="<exe-name>" errors="17" failures="126" tests="2226" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
+  <testsuite name="<exe-name>" errors="17" failures="126" tests="2238" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
     <properties>
       <property name="random-seed" value="1"/>
       <property name="filters" value="~[!nonportable]~[!benchmark]~[approvals] *"/>
     </properties>
     <testcase classname="<exe-name>.global" name="# A test name that starts with a #" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="#1005: Comparing pointer to int and long (NULL can be either on various systems)" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="#1027: Bitfields can be captured" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="#1147" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="#1175 - Hidden Test" time="{duration}" status="run"/>
@@ -71,7 +70,7 @@ Exception.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="#748 - captures with unexpected exceptions/inside REQUIRE_THROWS" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="#809" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="#833" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="#835 -- errno should not be touched by Catch" time="{duration}" status="run">
+    <testcase classname="<exe-name>.global" name="#835 -- errno should not be touched by Catch2" time="{duration}" status="run">
       <skipped message="TEST_CASE tagged with !mayfail"/>
       <failure message="f() == 0" type="CHECK">
 FAILED:
@@ -388,6 +387,9 @@ Exception.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Clara::Arg supports single-arg parse the way Opt does" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Clara::Opt supports accept-many lambdas/Parsing fails on multiple options without accept_many" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Clara::Opt supports accept-many lambdas/Parsing succeeds on multiple options with accept_many" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="ColourGuard behaviour/ColourGuard is disengaged by default" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="ColourGuard behaviour/ColourGuard is engaged by op&lt;&lt;" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="ColourGuard behaviour/ColourGuard can be engaged explicitly" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining MatchAllOfGeneric does not nest" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining MatchAnyOfGeneric does not nest" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining MatchNotOfGeneric does not nest" time="{duration}" status="run"/>
@@ -426,6 +428,7 @@ Matchers.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Copy and then generate a range/from var and iterators" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Copy and then generate a range/From a temporary container" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Copy and then generate a range/Final validation" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Cout stream properly declares it writes to stdout" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Custom exceptions can be translated when testing for nothrow" time="{duration}" status="run">
       <error message="throwCustom()" type="REQUIRE_NOTHROW">
 FAILED:
@@ -451,6 +454,7 @@ Exception.tests.cpp:<line number>
     </testcase>
     <testcase classname="<exe-name>.global" name="Default scale is invisible to comparison" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Directly creating an EnumInfo" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Empty stream name opens cout stream" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Empty tag is not allowed" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="EndsWith string matcher" time="{duration}" status="run">
       <failure message="testStringForMatching(), EndsWith( &quot;Substring&quot; )" type="CHECK_THAT">
@@ -724,6 +728,12 @@ Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Generators internals/Range/Negative manual step/Integer/Slightly over end" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Generators internals/Range/Negative manual step/Integer/Slightly under end" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Greater-than inequalities with different epsilons" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Hashers with different seed produce different hash with same test case" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Hashers with same seed produce same hash" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Hashing different test cases produces different result/Different test name" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Hashing different test cases produces different result/Different classname" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Hashing different test cases produces different result/Different tags" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Hashing test case produces same hash across multiple calls" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="INFO and WARN do not abort tests" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="INFO gets logged on failure" time="{duration}" status="run">
       <failure message="a == 1" type="REQUIRE">
@@ -1099,7 +1109,6 @@ Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/must match one of the available ones" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/With output file" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/With Windows-like absolute path as output file" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Output file cannot be empty" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Multiple reporters/All with output files" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Multiple reporters/Mixed output files and default output" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Multiple reporters/cannot have multiple reporters with default output" time="{duration}" status="run"/>
@@ -1166,6 +1175,7 @@ with expansion:
 Matchers.tests.cpp:<line number>
       </failure>
     </testcase>
+    <testcase classname="<exe-name>.global" name="Registering reporter with '::' in name fails" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Regression test #1" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Reporter's write listings to provided stream/Automake reporter lists tags" time="{duration}" status="run"/>
@@ -1783,6 +1793,7 @@ Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="replaceInPlace/replace all chars" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="replaceInPlace/replace no chars" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="replaceInPlace/escape '" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="request an unknown %-starting stream fails" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="resolution" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="run_for_at_least, chronometer" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="run_for_at_least, int" time="{duration}" status="run"/>
@@ -1835,6 +1846,7 @@ Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="std::set is convertible string/single item" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="std::set is convertible string/several items" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="std::vector&lt;std::pair&lt;std::string,int> > -> toString" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="stdout and stderr streams have %-starting name" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="stringify ranges" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="stringify( has_maker )" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="stringify( has_maker_and_operator )" time="{duration}" status="run"/>
@@ -1865,7 +1877,6 @@ Exception.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="tuple&lt;>" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="tuple&lt;float,int>" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="tuple&lt;int>" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="tuple&lt;0,int,const char *>" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="tuple&lt;string,string>" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="tuple&lt;tuple&lt;int>,tuple&lt;>,float>" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="uniform samples" time="{duration}" status="run"/>

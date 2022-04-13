@@ -82,6 +82,7 @@
 #include <catch2/internal/catch_random_number_generator.hpp>
 #include <catch2/internal/catch_random_seed_generation.hpp>
 #include <catch2/internal/catch_reporter_registry.hpp>
+#include <catch2/internal/catch_reporter_spec_parser.hpp>
 #include <catch2/internal/catch_result_type.hpp>
 #include <catch2/internal/catch_run_context.hpp>
 #include <catch2/internal/catch_section.hpp>
@@ -95,6 +96,7 @@
 #include <catch2/internal/catch_stringref.hpp>
 #include <catch2/internal/catch_tag_alias_registry.hpp>
 #include <catch2/internal/catch_template_test_registry.hpp>
+#include <catch2/internal/catch_test_case_info_hasher.hpp>
 #include <catch2/internal/catch_test_case_registry_impl.hpp>
 #include <catch2/internal/catch_test_case_tracker.hpp>
 #include <catch2/internal/catch_test_failure_exception.hpp>

@@ -55,19 +55,9 @@
 This also means that to get all of Catch2's functionality in a test file,
 you have to include multiple headers.**
 
-For quick'n'dirty migration, you can replace the old `#include <catch2/catch.hpp>`
-with `#include <catch2/catch_all.hpp>`. This is a (one of) convenience
-header(s) that brings in _all_ of headers in Catch2. By doing this,
-you should be able to migrate instantly, but at the cost of (significantly)
-increased compilation times. You should prefer piecemeal including
-headers that are actually required by your test code.
-
-The basic set of functionality (`TEST_CASE`, `SECTION`, `REQUIRE`) is in
-`catch2/catch_test_macros.hpp`. Matchers are in `matchers` subfolder,
-generators in `generators` subfolder, and so on.
-
-Note that documentation has not yet been updated to account for the
-new design.
+You probably want to look into the [migration docs](migrate-v2-to-v3.md#top),
+which were written to help people coming from v2.x.x versions to the
+v3 releases.
 
 
 ### FAQ
@@ -132,11 +122,14 @@ new design.
   * With the exception of the XmlReporter, the outputs of first party reporters should remain the same
   * New pair of events were added
   * One obsolete event was removed
+  * The base class has been renamed
+  * The built-in reporter class hierarchy has been redone
 * Catch2 generates a random seed if one hasn't been specified by the user
 * The short flag for `--list-tests`, `-l`, has been removed.
   * This is not a commonly used flag and does not need to use up valuable single-letter space.
 * The short flag for `--list-tags`, `-t`, has been removed.
   * This is not a commonly used flag and does not need to use up valuable single-letter space.
+* The `--colour` option has been replaced with `--colour-mode` option
 
 
 ### Improvements
@@ -188,6 +181,16 @@ new design.
 * Multiple reporters can now run at the same time and write to different files (#1712, #2183)
   * To support this, the `-r`, `--reporter` flag now also accepts optional output destination
   * For full overview of the semantics of using multiple reporters, look into the reporter documentation
+  * To enable the new syntax, reporter names can no longer contain `::`.
+* Console colour support has been rewritten and significantly improved
+  * The colour implementation based on ANSI colour codes is always available
+  * Colour implementations respect their associated stream
+    * previously e.g. Win32 impl would change console colour even if Catch2 was writing to a file
+  * The colour API is resilient against changing evaluation order of expressions
+  * The associated CLI flag and compile-time configuration options have changed
+    * For details see the docs for command-line and compile-time Catch2 configuration
+* Added a support for Bazel integration with `XML_OUTPUT_FILE` env var (#2399)
+  * This has to be enabled during compilation.
 
 
 ### Fixes
@@ -200,6 +203,7 @@ new design.
   * Previously it forced lower cased name, which would fail for reporters with upper case characters in name
 * The cumulative reporter base stores benchmark results alongside assertion results
 * Catch2's SE handling should no longer interferes with ASan on Windows (#2334)
+* Fixed Windows console colour handling for tests that redirect stdout (#2345)
 
 
 ### Other changes
@@ -217,7 +221,11 @@ new design.
 * Running 0 tests (e.g. due to empty binary, or test spec not matching anything) returns non-0 exit code
   * Flag `--allow-running-no-tests` overrides this behaviour.
   * `NoTests` warning has been removed because it is fully subsumed by this change.
-
+* Catch2's compile-time configuration options (`CATCH_CONFIG_FOO`) can be set through CMake options of the same name
+  * They use the same semantics as C++ defines, including the `CATCH_CONFIG_NO_FOO` overrides,
+    * `-DCATCH_CONFIG_DEFAULT_REPORTER=compact` changes default reporter to "compact"
+    * `-DCATCH_CONFIG_NO_ANDROID_LOGWRITE=ON` forces android logwrite to off
+    * `-DCATCH_CONFIG_ANDROID_LOGWRITE=OFF` does nothing (the define will not exist)
 
 
 ## 2.13.7

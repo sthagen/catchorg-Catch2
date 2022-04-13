@@ -9,7 +9,7 @@ else()
 endif()
 
 option(CATCH_INSTALL_DOCS "Install documentation alongside library" ON)
-option(CATCH_INSTALL_EXTRAS "Install extras alongside library" ON)
+option(CATCH_INSTALL_EXTRAS "Install extras (CMake scripts, debugger helpers) alongside library" ON)
 option(CATCH_DEVELOPMENT_BUILD "Build tests, enable warnings, enable Werror, etc" OFF)
 
 include(CMakeDependentOption)
@@ -20,6 +20,7 @@ cmake_dependent_option(CATCH_BUILD_FUZZERS "Build fuzzers" OFF "CATCH_DEVELOPMEN
 cmake_dependent_option(CATCH_ENABLE_COVERAGE "Generate coverage for codecov.io" OFF "CATCH_DEVELOPMENT_BUILD" OFF)
 cmake_dependent_option(CATCH_ENABLE_WERROR "Enables Werror during build" ON "CATCH_DEVELOPMENT_BUILD" OFF)
 cmake_dependent_option(CATCH_BUILD_SURROGATES "Enable generating and building surrogate TUs for the main headers" OFF "CATCH_DEVELOPMENT_BUILD" OFF)
+cmake_dependent_option(CATCH_ENABLE_CONFIGURE_TESTS "Enable CMake configuration tests. WARNING: VERY EXPENSIVE" OFF "CATCH_DEVELOPMENT_BUILD" OFF)
 
 
 # Catch2's build breaks if done in-tree. You probably should not build
@@ -41,6 +42,7 @@ project(Catch2 LANGUAGES CXX VERSION 3.0.0)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+include(CatchConfigOptions)
 if(CATCH_DEVELOPMENT_BUILD)
   include(CTest)
 endif()

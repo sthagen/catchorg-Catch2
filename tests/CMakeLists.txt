@@ -1,4 +1,4 @@
-include(MiscFunctions)
+include(CatchMiscFunctions)
 
 if (CATCH_BUILD_SURROGATES)
   message(STATUS "Configuring targets for surrogate TUs")
@@ -79,6 +79,8 @@ set(TEST_SOURCES
         ${SELF_TEST_DIR}/TestRegistrations.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Clara.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/CmdLine.tests.cpp
+        ${SELF_TEST_DIR}/IntrospectiveTests/CmdLineHelpers.tests.cpp
+        ${SELF_TEST_DIR}/IntrospectiveTests/ColourImpl.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Details.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/FloatingPoint.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/GeneratorsImpl.tests.cpp
@@ -87,9 +89,11 @@ set(TEST_SOURCES
         ${SELF_TEST_DIR}/IntrospectiveTests/RandomNumberGeneration.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Reporters.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Tag.tests.cpp
+        ${SELF_TEST_DIR}/IntrospectiveTests/TestCaseInfoHasher.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/TestSpecParser.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/TextFlow.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Sharding.tests.cpp
+        ${SELF_TEST_DIR}/IntrospectiveTests/Stream.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/String.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/StringManip.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Xml.tests.cpp
@@ -304,7 +308,7 @@ add_test(NAME RegressionCheck-1670 COMMAND $<TARGET_FILE:SelfTest> "#1670 regres
 set_tests_properties(RegressionCheck-1670 PROPERTIES PASS_REGULAR_EXPRESSION "Passed 1 test case with 2 assertions.")
 
 add_test(NAME VersionCheck COMMAND $<TARGET_FILE:SelfTest> -h)
-set_tests_properties(VersionCheck PROPERTIES PASS_REGULAR_EXPRESSION "Catch v${PROJECT_VERSION}")
+set_tests_properties(VersionCheck PROPERTIES PASS_REGULAR_EXPRESSION "Catch2 v${PROJECT_VERSION}")
 
 add_test(NAME LibIdentityTest COMMAND $<TARGET_FILE:SelfTest> --libidentify)
 set_tests_properties(LibIdentityTest PROPERTIES PASS_REGULAR_EXPRESSION "description:    A Catch2 test executable")
@@ -431,8 +435,8 @@ if (NOT MEMORYCHECK_COMMAND)
   add_test(NAME "MultiReporter::CapturingReportersDontPropagateStdOut"
     COMMAND
       $<TARGET_FILE:SelfTest> "Sends stuff to stdout and stderr"
-        --reporter xml::${_NullFile}
-        --reporter junit::${_NullFile}
+        --reporter xml::out=${_NullFile}
+        --reporter junit::out=${_NullFile}
   )
   set_tests_properties("MultiReporter::CapturingReportersDontPropagateStdOut"
     PROPERTIES
@@ -443,8 +447,8 @@ endif()
 add_test(NAME "MultiReporter::NonCapturingReportersPropagateStdout"
   COMMAND
     $<TARGET_FILE:SelfTest> "Sends stuff to stdout and stderr"
-      --reporter xml::${_NullFile}
-      --reporter console::${_NullFile}
+      --reporter xml::out=${_NullFile}
+      --reporter console::out=${_NullFile}
 )
 set_tests_properties("MultiReporter::NonCapturingReportersPropagateStdout"
   PROPERTIES
@@ -464,13 +468,60 @@ set_tests_properties("Outputs::DashAsOutLocationSendsOutputToStdout"
 add_test(NAME "Reporters::DashAsLocationInReporterSpecSendsOutputToStdout"
   COMMAND
     $<TARGET_FILE:SelfTest> "Factorials are computed"
-      --reporter console::-
+      --reporter console::out=-
 )
 set_tests_properties("Reporters::DashAsLocationInReporterSpecSendsOutputToStdout"
   PROPERTIES
     PASS_REGULAR_EXPRESSION "All tests passed \\(5 assertions in 1 test case\\)"
 )
 
+add_test(NAME "Reporters::ReporterSpecificColourOverridesDefaultColour"
+  COMMAND
+    $<TARGET_FILE:SelfTest> "Factorials are computed"
+      --reporter console::colour-mode=ansi
+      --colour-mode none
+)
+set_tests_properties("Reporters::ReporterSpecificColourOverridesDefaultColour"
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "\\[1\;32mAll tests passed"
+)
+
+add_test(NAME "Reporters::UnrecognizedOptionInSpecCausesError"
+  COMMAND
+    $<TARGET_FILE:SelfTest> "Factorials are computed"
+      --reporter console::bad-option=ansi
+)
+set_tests_properties("Reporters::UnrecognizedOptionInSpecCausesError"
+  PROPERTIES
+    WILL_FAIL ON
+)
+
+add_test(NAME "Colours::ColourModeCanBeExplicitlySetToAnsi"
+  COMMAND
+    $<TARGET_FILE:SelfTest> "Factorials are computed"
+      --reporter console
+      --colour-mode ansi
+)
+set_tests_properties("Colours::ColourModeCanBeExplicitlySetToAnsi"
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "\\[1\;32mAll tests passed"
+)
+
+if (CATCH_ENABLE_CONFIGURE_TESTS)
+    foreach(testName "DefaultReporter" "Disable" "DisableStringification"
+                     "ExperimentalRedirect")
+
+        add_test(NAME "CMakeConfig::${testName}"
+          COMMAND
+            "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_LIST_DIR}/TestScripts/testConfigure${testName}.py" "${CATCH_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+        )
+        set_tests_properties("CMakeConfig::${testName}"
+          PROPERTIES
+            COST 240
+        )
+
+    endforeach()
+endif()
 
 if (CATCH_USE_VALGRIND)
     add_test(NAME ValgrindRunTests COMMAND valgrind --leak-check=full --error-exitcode=1 $<TARGET_FILE:SelfTest>)

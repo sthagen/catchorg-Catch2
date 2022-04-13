@@ -15,18 +15,27 @@
 namespace Catch {
 
     struct ReporterConfig;
-    struct IStreamingReporter;
-    using IStreamingReporterPtr = Detail::unique_ptr<IStreamingReporter>;
+    class IConfig;
+    class IEventListener;
+    using IEventListenerPtr = Detail::unique_ptr<IEventListener>;
 
 
-    struct IReporterFactory {
+    class IReporterFactory {
+    public:
         virtual ~IReporterFactory(); // = default
 
-        virtual IStreamingReporterPtr
+        virtual IEventListenerPtr
         create( ReporterConfig const& config ) const = 0;
         virtual std::string getDescription() const = 0;
     };
     using IReporterFactoryPtr = Detail::unique_ptr<IReporterFactory>;
+
+    class EventListenerFactory {
+    public:
+        virtual ~EventListenerFactory(); // = default
+        virtual IEventListenerPtr create( IConfig const* config ) const = 0;
+        virtual std::string getDescription() const = 0;
+    };
 } // namespace Catch
 
 #endif // CATCH_INTERFACES_REPORTER_FACTORY_HPP_INCLUDED

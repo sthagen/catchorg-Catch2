@@ -1,9 +1,5 @@
 # # A test name that starts with a #
 ok {test-number} - with 1 message: 'yay'
-# #1005: Comparing pointer to int and long (NULL can be either on various systems)
-ok {test-number} - fptr == 0 for: 0 == 0
-# #1005: Comparing pointer to int and long (NULL can be either on various systems)
-ok {test-number} - fptr == 0l for: 0 == 0
 # #1027: Bitfields can be captured
 ok {test-number} - y.v == 0 for: 0 == 0
 # #1027: Bitfields can be captured
@@ -188,10 +184,10 @@ ok {test-number} - throws_int(false)
 ok {test-number} - "aaa", Catch::Matchers::EndsWith("aaa") for: "aaa" ends with: "aaa"
 # #833
 ok {test-number} - templated_tests<int>(3) for: true
-# #835 -- errno should not be touched by Catch
+# #835 -- errno should not be touched by Catch2
 not ok {test-number} - f() == 0 for: 1 == 0
-# #835 -- errno should not be touched by Catch
-ok {test-number} - errno == 1 for: 1 == 1
+# #835 -- errno should not be touched by Catch2
+ok {test-number} - errno_after == 1 for: 1 == 1
 # #872
 ok {test-number} - x == 4 for: {?} == 4 with 1 message: 'dummy := 0'
 # #961 -- Dynamically created sections should all be reported
@@ -734,6 +730,12 @@ ok {test-number} - !(parse_result) for: !{?}
 ok {test-number} - parse_result for: {?}
 # Clara::Opt supports accept-many lambdas
 ok {test-number} - res == std::vector<std::string>{ "aaa", "bbb" } for: { "aaa", "bbb" } == { "aaa", "bbb" }
+# ColourGuard behaviour
+ok {test-number} - streamWrapper.str().empty() for: true
+# ColourGuard behaviour
+ok {test-number} - streamWrapper.str() == "1\nUsing code: 2\n2\nUsing code: 0\n3\n" for: "1 Using code: 2 2 Using code: 0 3 " == "1 Using code: 2 2 Using code: 0 3 "
+# ColourGuard behaviour
+ok {test-number} - streamWrapper.str() == "Using code: 2\nA\nB\nUsing code: 0\nC\n" for: "Using code: 2 A B Using code: 0 C " == "Using code: 2 A B Using code: 0 C "
 # Combining MatchAllOfGeneric does not nest
 ok {test-number} - with 1 message: 'std::is_same< decltype( ( MatcherA() && MatcherB() ) && MatcherC() ), Catch::Matchers::Detail:: MatchAllOfGeneric<MatcherA, MatcherB, MatcherC>>::value'
 # Combining MatchAllOfGeneric does not nest
@@ -960,6 +962,8 @@ ok {test-number} - elem % 2 == 1 for: 1 == 1
 ok {test-number} - call_count == 1 for: 1 == 1
 # Copy and then generate a range
 ok {test-number} - make_data().size() == test_count for: 6 == 6
+# Cout stream properly declares it writes to stdout
+ok {test-number} - Catch::makeStream( "-" )->isConsole() for: true
 # Custom exceptions can be translated when testing for nothrow
 not ok {test-number} - unexpected exception with message: 'custom exception - not std'; expression was: throwCustom()
 # Custom exceptions can be translated when testing for throwing as something else
@@ -976,6 +980,8 @@ ok {test-number} - enumInfo->lookup(0) == "Value1" for: Value1 == "Value1"
 ok {test-number} - enumInfo->lookup(1) == "Value2" for: Value2 == "Value2"
 # Directly creating an EnumInfo
 ok {test-number} - enumInfo->lookup(3) == "{** unexpected enum value **}" for: {** unexpected enum value **} == "{** unexpected enum value **}"
+# Empty stream name opens cout stream
+ok {test-number} - Catch::makeStream( "" )->isConsole() for: true
 # Empty tag is not allowed
 ok {test-number} - Catch::TestCaseInfo( "", { "fake test name", "[]" }, dummySourceLineInfo )
 # EndsWith string matcher
@@ -1760,6 +1766,18 @@ ok {test-number} - d >= Approx( 1.23 ) for: 1.23 >= Approx( 1.23 )
 ok {test-number} - !(d >= Approx( 1.24 )) for: !(1.23 >= Approx( 1.24 ))
 # Greater-than inequalities with different epsilons
 ok {test-number} - d >= Approx( 1.24 ).epsilon(0.1) for: 1.23 >= Approx( 1.24 )
+# Hashers with different seed produce different hash with same test case
+ok {test-number} - h1( dummy ) != h2( dummy ) for: 3422778688 (0x<hex digits>) != 130711275 (0x<hex digits>)
+# Hashers with same seed produce same hash
+ok {test-number} - h1( dummy ) == h2( dummy ) for: 3422778688 (0x<hex digits>) == 3422778688 (0x<hex digits>)
+# Hashing different test cases produces different result
+ok {test-number} - h( dummy1 ) != h( dummy2 ) for: 2903002874 (0x<hex digits>) != 2668622104 (0x<hex digits>)
+# Hashing different test cases produces different result
+ok {test-number} - h( dummy1 ) != h( dummy2 ) for: 2673152918 (0x<hex digits>) != 3916075712 (0x<hex digits>)
+# Hashing different test cases produces different result
+ok {test-number} - h( dummy1 ) != h( dummy2 ) for: 2074929312 (0x<hex digits>) != 3429949824 (0x<hex digits>)
+# Hashing test case produces same hash across multiple calls
+ok {test-number} - h( dummy ) == h( dummy ) for: 3422778688 (0x<hex digits>) == 3422778688 (0x<hex digits>)
 # INFO and WARN do not abort tests
 warning {test-number} - 'this is a message' with 1 message: 'this is a warning'
 # INFO gets logged on failure
@@ -2457,9 +2475,13 @@ ok {test-number} - config.abortAfter == -1 for: -1 == -1
 # Process can be configured on command line
 ok {test-number} - config.noThrow == false for: false == false
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == std::vector<Catch::ConfigData::ReporterAndFile>{ {"console", {}} } for: { { console, <default-output> } } == { { console, <default-output> } }
+ok {test-number} - config.reporterSpecifications.empty() for: true
 # Process can be configured on command line
 ok {test-number} - !(cfg.hasTestFilters()) for: !false
+# Process can be configured on command line
+ok {test-number} - cfg.getReporterSpecs().size() == 1 for: 1 == 1
+# Process can be configured on command line
+ok {test-number} - cfg.getReporterSpecs()[0] == Catch::ReporterSpec{ expectedReporter, {}, {}, {} } for: {?} == {?}
 # Process can be configured on command line
 ok {test-number} - result for: {?}
 # Process can be configured on command line
@@ -2487,15 +2509,15 @@ ok {test-number} - cfg.testSpec().matches(*fakeTestCase("alwaysIncluded")) for: 
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_ReporterAndFile{ {"console", {}} } for: { { console, <default-output> } } == { { console, <default-output> } } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "console", {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_ReporterAndFile{ {"xml", {}} } for: { { xml, <default-output> } } == { { xml, <default-output> } } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "xml", {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_ReporterAndFile{ {"junit", {}} } for: { { junit, <default-output> } } == { { junit, <default-output> } } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "junit", {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
 ok {test-number} - !result for: true
 # Process can be configured on command line
@@ -2503,23 +2525,19 @@ ok {test-number} - result.errorMessage(), ContainsSubstring("Unrecognized report
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_ReporterAndFile{ {"console", "out.txt"s} } for: { { console, out.txt } } == { { console, out.txt } } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "console", "out.txt"s, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_ReporterAndFile{ {"console", "C:\\Temp\\out.txt"s} } for: { { console, C:\Temp\out.txt } } == { { console, C:\Temp\out.txt } } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - !result for: true
+ok {test-number} - cli.parse({ "test", "-r", "xml::out=output.xml", "-r", "junit::out=output-junit.xml" }) for: {?}
 # Process can be configured on command line
-ok {test-number} - result.errorMessage(), ContainsSubstring("empty filename") for: "Reporter 'console' has empty filename specified as its output. Supply a filename or remove the colons to use the default output." contains: "empty filename"
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {} }, { "junit", "output-junit.xml"s, {}, {} } } for: { {?}, {?} } == { {?}, {?} }
 # Process can be configured on command line
-ok {test-number} - cli.parse({ "test", "-r", "xml::output.xml", "-r", "junit::output-junit.xml" }) for: {?}
+ok {test-number} - cli.parse({ "test", "-r", "xml::out=output.xml", "-r", "console" }) for: {?}
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"junit", "output-junit.xml"s} } for: { { xml, output.xml }, { junit, output-junit.xml } } == { { xml, output.xml }, { junit, output-junit.xml } }
-# Process can be configured on command line
-ok {test-number} - cli.parse({ "test", "-r", "xml::output.xml", "-r", "console" }) for: {?}
-# Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"console", {}} } for: { { xml, output.xml }, { console, <default-output> } } == { { xml, output.xml }, { console, <default-output> } }
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {} }, { "console", {}, {}, {} } } for: { {?}, {?} } == { {?}, {?} }
 # Process can be configured on command line
 ok {test-number} - !result for: true
 # Process can be configured on command line
@@ -2591,23 +2609,23 @@ ok {test-number} - config.noThrow == true for: true == true
 # Process can be configured on command line
 ok {test-number} - cli.parse({"test"}) for: {?}
 # Process can be configured on command line
-ok {test-number} - config.useColour == UseColour::Auto for: 0 == 0
+ok {test-number} - config.defaultColourMode == ColourMode::PlatformDefault for: 0 == 0
 # Process can be configured on command line
-ok {test-number} - cli.parse({"test", "--use-colour", "auto"}) for: {?}
+ok {test-number} - cli.parse( { "test", "--colour-mode", "default" } ) for: {?}
 # Process can be configured on command line
-ok {test-number} - config.useColour == UseColour::Auto for: 0 == 0
+ok {test-number} - config.defaultColourMode == ColourMode::PlatformDefault for: 0 == 0
 # Process can be configured on command line
-ok {test-number} - cli.parse({"test", "--use-colour", "yes"}) for: {?}
+ok {test-number} - cli.parse({"test", "--colour-mode", "ansi"}) for: {?}
 # Process can be configured on command line
-ok {test-number} - config.useColour == UseColour::Yes for: 1 == 1
+ok {test-number} - config.defaultColourMode == ColourMode::ANSI for: 1 == 1
 # Process can be configured on command line
-ok {test-number} - cli.parse({"test", "--use-colour", "no"}) for: {?}
+ok {test-number} - cli.parse({"test", "--colour-mode", "none"}) for: {?}
 # Process can be configured on command line
-ok {test-number} - config.useColour == UseColour::No for: 2 == 2
+ok {test-number} - config.defaultColourMode == ColourMode::None for: 3 == 3
 # Process can be configured on command line
 ok {test-number} - !result for: true
 # Process can be configured on command line
-ok {test-number} - result.errorMessage(), ContainsSubstring( "colour mode must be one of" ) for: "colour mode must be one of: auto, yes or no. 'wrong' not recognised" contains: "colour mode must be one of"
+ok {test-number} - result.errorMessage(), ContainsSubstring( "colour mode must be one of" ) for: "colour mode must be one of: default, ansi, win32, or none. 'wrong' is not recognised" contains: "colour mode must be one of"
 # Process can be configured on command line
 ok {test-number} - cli.parse({ "test", "--benchmark-samples=200" }) for: {?}
 # Process can be configured on command line
@@ -2652,6 +2670,8 @@ not ok {test-number} - testStringForMatching(), Matches( "this STRING contains '
 not ok {test-number} - testStringForMatching(), Matches( "contains 'abc' as a substring" ) for: "this string contains 'abc' as a substring" matches "contains 'abc' as a substring" case sensitively
 # Regex string matcher
 not ok {test-number} - testStringForMatching(), Matches( "this string contains 'abc' as a" ) for: "this string contains 'abc' as a substring" matches "this string contains 'abc' as a" case sensitively
+# Registering reporter with '::' in name fails
+ok {test-number} - registry.registerReporter( "with::doublecolons", Catch::Detail::make_unique<TestReporterFactory>() ), "'::' is not allowed in reporter name: 'with::doublecolons'" for: "'::' is not allowed in reporter name: 'with::doublecolons'" equals: "'::' is not allowed in reporter name: 'with::doublecolons'"
 # Regression test #1
 ok {test-number} - actual, !UnorderedEquals( expected ) for: { 'a', 'b' } not UnorderedEquals: { 'c', 'b' }
 # Reporter's write listings to provided stream
@@ -3482,27 +3502,27 @@ ok {test-number} - needs_adl, AllMatch( Predicate<int>( []( int elem ) { return 
 # Usage of AllMatch range matcher
 ok {test-number} - mocked, allMatch for: { 1, 2, 3, 4, 5 } all match matches undescribed predicate
 # Usage of AllMatch range matcher
-ok {test-number} - mocked.derefed[0] for: true
+ok {test-number} - mocked.m_derefed[0] for: true
 # Usage of AllMatch range matcher
-ok {test-number} - mocked.derefed[1] for: true
+ok {test-number} - mocked.m_derefed[1] for: true
 # Usage of AllMatch range matcher
-ok {test-number} - mocked.derefed[2] for: true
+ok {test-number} - mocked.m_derefed[2] for: true
 # Usage of AllMatch range matcher
-ok {test-number} - mocked.derefed[3] for: true
+ok {test-number} - mocked.m_derefed[3] for: true
 # Usage of AllMatch range matcher
-ok {test-number} - mocked.derefed[4] for: true
+ok {test-number} - mocked.m_derefed[4] for: true
 # Usage of AllMatch range matcher
 ok {test-number} - mocked, !allMatch for: { 1, 2, 3, 4, 5 } not all match matches undescribed predicate
 # Usage of AllMatch range matcher
-ok {test-number} - mocked.derefed[0] for: true
+ok {test-number} - mocked.m_derefed[0] for: true
 # Usage of AllMatch range matcher
-ok {test-number} - mocked.derefed[1] for: true
+ok {test-number} - mocked.m_derefed[1] for: true
 # Usage of AllMatch range matcher
-ok {test-number} - mocked.derefed[2] for: true
+ok {test-number} - mocked.m_derefed[2] for: true
 # Usage of AllMatch range matcher
-ok {test-number} - !(mocked.derefed[3]) for: !false
+ok {test-number} - !(mocked.m_derefed[3]) for: !false
 # Usage of AllMatch range matcher
-ok {test-number} - !(mocked.derefed[4]) for: !false
+ok {test-number} - !(mocked.m_derefed[4]) for: !false
 # Usage of AnyMatch range matcher
 ok {test-number} - data, AnyMatch(SizeIs(5)) for: { { 0, 1, 2, 3, 5 }, { 4, -3, -2, 5, 0 }, { 0, 0, 0, 5, 0 }, { 0, -5, 0, 5, 0 }, { 1, 0, 0, -1, 5 } } any match has size == 5
 # Usage of AnyMatch range matcher
@@ -3512,27 +3532,27 @@ ok {test-number} - needs_adl, AnyMatch( Predicate<int>( []( int elem ) { return 
 # Usage of AnyMatch range matcher
 ok {test-number} - mocked, !anyMatch for: { 1, 2, 3, 4, 5 } not any match matches undescribed predicate
 # Usage of AnyMatch range matcher
-ok {test-number} - mocked.derefed[0] for: true
+ok {test-number} - mocked.m_derefed[0] for: true
 # Usage of AnyMatch range matcher
-ok {test-number} - mocked.derefed[1] for: true
+ok {test-number} - mocked.m_derefed[1] for: true
 # Usage of AnyMatch range matcher
-ok {test-number} - mocked.derefed[2] for: true
+ok {test-number} - mocked.m_derefed[2] for: true
 # Usage of AnyMatch range matcher
-ok {test-number} - mocked.derefed[3] for: true
+ok {test-number} - mocked.m_derefed[3] for: true
 # Usage of AnyMatch range matcher
-ok {test-number} - mocked.derefed[4] for: true
+ok {test-number} - mocked.m_derefed[4] for: true
 # Usage of AnyMatch range matcher
 ok {test-number} - mocked, anyMatch for: { 1, 2, 3, 4, 5 } any match matches undescribed predicate
 # Usage of AnyMatch range matcher
-ok {test-number} - mocked.derefed[0] for: true
+ok {test-number} - mocked.m_derefed[0] for: true
 # Usage of AnyMatch range matcher
-ok {test-number} - !(mocked.derefed[1]) for: !false
+ok {test-number} - !(mocked.m_derefed[1]) for: !false
 # Usage of AnyMatch range matcher
-ok {test-number} - !(mocked.derefed[2]) for: !false
+ok {test-number} - !(mocked.m_derefed[2]) for: !false
 # Usage of AnyMatch range matcher
-ok {test-number} - !(mocked.derefed[3]) for: !false
+ok {test-number} - !(mocked.m_derefed[3]) for: !false
 # Usage of AnyMatch range matcher
-ok {test-number} - !(mocked.derefed[4]) for: !false
+ok {test-number} - !(mocked.m_derefed[4]) for: !false
 # Usage of NoneMatch range matcher
 ok {test-number} - data, NoneMatch(SizeIs(6)) for: { { 0, 1, 2, 3, 5 }, { 4, -3, -2, 5, 0 }, { 0, 0, 0, 5, 0 }, { 0, -5, 0, 5, 0 }, { 1, 0, 0, -1, 5 } } none match has size == 6
 # Usage of NoneMatch range matcher
@@ -3542,27 +3562,27 @@ ok {test-number} - needs_adl, NoneMatch( Predicate<int>( []( int elem ) { return
 # Usage of NoneMatch range matcher
 ok {test-number} - mocked, noneMatch for: { 1, 2, 3, 4, 5 } none match matches undescribed predicate
 # Usage of NoneMatch range matcher
-ok {test-number} - mocked.derefed[0] for: true
+ok {test-number} - mocked.m_derefed[0] for: true
 # Usage of NoneMatch range matcher
-ok {test-number} - mocked.derefed[1] for: true
+ok {test-number} - mocked.m_derefed[1] for: true
 # Usage of NoneMatch range matcher
-ok {test-number} - mocked.derefed[2] for: true
+ok {test-number} - mocked.m_derefed[2] for: true
 # Usage of NoneMatch range matcher
-ok {test-number} - mocked.derefed[3] for: true
+ok {test-number} - mocked.m_derefed[3] for: true
 # Usage of NoneMatch range matcher
-ok {test-number} - mocked.derefed[4] for: true
+ok {test-number} - mocked.m_derefed[4] for: true
 # Usage of NoneMatch range matcher
 ok {test-number} - mocked, !noneMatch for: { 1, 2, 3, 4, 5 } not none match matches undescribed predicate
 # Usage of NoneMatch range matcher
-ok {test-number} - mocked.derefed[0] for: true
+ok {test-number} - mocked.m_derefed[0] for: true
 # Usage of NoneMatch range matcher
-ok {test-number} - !(mocked.derefed[1]) for: !false
+ok {test-number} - !(mocked.m_derefed[1]) for: !false
 # Usage of NoneMatch range matcher
-ok {test-number} - !(mocked.derefed[2]) for: !false
+ok {test-number} - !(mocked.m_derefed[2]) for: !false
 # Usage of NoneMatch range matcher
-ok {test-number} - !(mocked.derefed[3]) for: !false
+ok {test-number} - !(mocked.m_derefed[3]) for: !false
 # Usage of NoneMatch range matcher
-ok {test-number} - !(mocked.derefed[4]) for: !false
+ok {test-number} - !(mocked.m_derefed[4]) for: !false
 # Usage of the SizeIs range matcher
 ok {test-number} - empty_vec, SizeIs(0) for: {  } has size == 0
 # Usage of the SizeIs range matcher
@@ -4132,6 +4152,8 @@ ok {test-number} - letters == letters for: "abcdefcg" == "abcdefcg"
 ok {test-number} - Catch::replaceInPlace(s, "'", "|'") for: true
 # replaceInPlace
 ok {test-number} - s == "didn|'t" for: "didn|'t" == "didn|'t"
+# request an unknown %-starting stream fails
+ok {test-number} - Catch::makeStream( "%somestream" )
 # resolution
 ok {test-number} - res.size() == count for: 10 == 10
 # resolution
@@ -4236,6 +4258,10 @@ ok {test-number} - Catch::Detail::stringify( set ) == "{ \"one\" }" for: "{ "one
 ok {test-number} - Catch::Detail::stringify( set ) == "{ \"abc\", \"def\", \"ghi\" }" for: "{ "abc", "def", "ghi" }" == "{ "abc", "def", "ghi" }"
 # std::vector<std::pair<std::string,int> > -> toString
 ok {test-number} - ::Catch::Detail::stringify( pr ) == "{ { \"green\", 55 } }" for: "{ { "green", 55 } }" == "{ { "green", 55 } }"
+# stdout and stderr streams have %-starting name
+ok {test-number} - Catch::makeStream( "%stderr" )->isConsole() for: true
+# stdout and stderr streams have %-starting name
+ok {test-number} - Catch::makeStream( "%stdout" )->isConsole() for: true
 # stringify ranges
 ok {test-number} - ::Catch::Detail::stringify(streamable_range{}) == "op<<(streamable_range)" for: "op<<(streamable_range)" == "op<<(streamable_range)"
 # stringify ranges
@@ -4318,8 +4344,6 @@ ok {test-number} - "1.2f" == ::Catch::Detail::stringify(float(1.2)) for: "1.2f" 
 ok {test-number} - "{ 1.2f, 0 }" == ::Catch::Detail::stringify(type{1.2f,0}) for: "{ 1.2f, 0 }" == "{ 1.2f, 0 }"
 # tuple<int>
 ok {test-number} - "{ 0 }" == ::Catch::Detail::stringify(type{0}) for: "{ 0 }" == "{ 0 }"
-# tuple<0,int,const char *>
-ok {test-number} - "{ 0, 42, \"Catch me\" }" == ::Catch::Detail::stringify(value) for: "{ 0, 42, "Catch me" }" == "{ 0, 42, "Catch me" }"
 # tuple<string,string>
 ok {test-number} - "{ \"hello\", \"world\" }" == ::Catch::Detail::stringify(type{"hello","world"}) for: "{ "hello", "world" }" == "{ "hello", "world" }"
 # tuple<tuple<int>,tuple<>,float>
@@ -4454,5 +4478,5 @@ ok {test-number} - q3 == 23. for: 23.0 == 23.0
 ok {test-number} -
 # xmlentitycheck
 ok {test-number} -
-1..2226
+1..2238
 

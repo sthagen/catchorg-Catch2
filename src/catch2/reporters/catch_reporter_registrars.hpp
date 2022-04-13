@@ -16,13 +16,13 @@
 
 namespace Catch {
 
-    struct IStreamingReporter;
-    using IStreamingReporterPtr = Detail::unique_ptr<IStreamingReporter>;
+    class IEventListener;
+    using IEventListenerPtr = Detail::unique_ptr<IEventListener>;
 
     template <typename T>
     class ReporterFactory : public IReporterFactory {
 
-        IStreamingReporterPtr create( ReporterConfig const& config ) const override {
+        IEventListenerPtr create( ReporterConfig const& config ) const override {
             return Detail::make_unique<T>( config );
         }
 
@@ -43,9 +43,10 @@ namespace Catch {
     template<typename T>
     class ListenerRegistrar {
 
-        class ListenerFactory : public IReporterFactory {
+        class TypedListenerFactory : public EventListenerFactory {
 
-            IStreamingReporterPtr create( ReporterConfig const& config ) const override {
+            IEventListenerPtr
+            create( IConfig const* config ) const override {
                 return Detail::make_unique<T>(config);
             }
             std::string getDescription() const override {
@@ -56,7 +57,7 @@ namespace Catch {
     public:
 
         ListenerRegistrar() {
-            getMutableRegistryHub().registerListener( Detail::make_unique<ListenerFactory>() );
+            getMutableRegistryHub().registerListener( Detail::make_unique<TypedListenerFactory>() );
         }
     };
 }
