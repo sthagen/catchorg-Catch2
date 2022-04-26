@@ -19,7 +19,7 @@
 [Specify a seed for the Random Number Generator](#specify-a-seed-for-the-random-number-generator)<br>
 [Identify framework and version according to the libIdentify standard](#identify-framework-and-version-according-to-the-libidentify-standard)<br>
 [Wait for key before continuing](#wait-for-key-before-continuing)<br>
-[Skip benchmarks](#skip-benchmarks)<br>
+[Skip all benchmarks](#skip-all-benchmarks)<br>
 [Specify the number of benchmark samples to collect](#specify-the-number-of-benchmark-samples-to-collect)<br>
 [Specify the number of resamples for bootstrapping](#specify-the-number-of-resamples-for-bootstrapping)<br>
 [Specify the confidence-interval for bootstrapping](#specify-the-confidence-interval-for-bootstrapping)<br>
@@ -334,12 +334,18 @@ Lexicographic order. Tests are sorted by their name, their tags are ignored.
 
 ### rand
 
-Randomly sorted. The order is dependent on Catch2's random seed (see
+Randomly ordered. The order is dependent on Catch2's random seed (see
 [`--rng-seed`](#rng-seed)), and is subset invariant. What this means
 is that as long as the random seed is fixed, running only some tests
 (e.g. via tag) does not change their relative order.
 
 > The subset stability was introduced in Catch2 v2.12.0
+
+Since the random order was made subset stable, we promise that given
+the same random seed, the order of test cases will be the same across
+different platforms, as long as the tests were compiled against identical
+version of Catch2. We reserve the right to change the relative order
+of tests cases between Catch2 versions, but it is unlikely to happen often.
 
 
 <a id="rng-seed"></a>
