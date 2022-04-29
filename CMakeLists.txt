@@ -38,8 +38,16 @@ endif()
 
 project(Catch2 LANGUAGES CXX VERSION 3.0.0)
 
-# Provide path for scripts
+# Provide path for scripts. We first add path to the scripts we don't use,
+# but projects including us might, and set the path up to parent scope.
+# Then we also add path that we use to configure the project, but is of
+# no use to top level projects.
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/extras")
+if (NOT NOT_SUBPROJECT)
+  set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
+endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
+
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 include(CatchConfigOptions)
@@ -95,13 +103,6 @@ if (CATCH_DEVELOPMENT_BUILD)
     add_warnings_to_targets("${CATCH_WARNING_TARGETS}")
 endif()
 
-
-#set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-#
-#
-#
-#
-#
 # Only perform the installation steps when Catch is not being used as
 # a subproject via `add_subdirectory`, or the destinations will break,
 # see https://github.com/catchorg/Catch2/issues/1373
@@ -134,6 +135,7 @@ if (NOT_SUBPROJECT)
           docs/
         DESTINATION
           "${CMAKE_INSTALL_DOCDIR}"
+        PATTERN "doxygen" EXCLUDE
       )
     endif()
 
