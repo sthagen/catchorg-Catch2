@@ -66,7 +66,9 @@ TEST_CASE( "The default listing implementation write to provided stream",
         Catch::defaultListReporters(sstream.stream(), reporters, Catch::Verbosity::Normal);
 
         auto listingString = sstream.str();
-        REQUIRE_THAT(listingString, ContainsSubstring("fake reporter"s));
+        REQUIRE_THAT( listingString,
+                      ContainsSubstring( "fake reporter"s ) &&
+                          ContainsSubstring( "fake description"s ) );
     }
     SECTION( "Listing tests" ) {
         Catch::TestCaseInfo fakeInfo{
@@ -81,6 +83,16 @@ TEST_CASE( "The default listing implementation write to provided stream",
         REQUIRE_THAT( listingString,
                       ContainsSubstring( "fake test name"s ) &&
                           ContainsSubstring( "fakeTestTag"s ) );
+    }
+    SECTION( "Listing listeners" ) {
+        std::vector<Catch::ListenerDescription> listeners(
+            { { "fakeListener"_catch_sr, "fake description" } } );
+
+        Catch::defaultListListeners( sstream.stream(), listeners );
+        auto listingString = sstream.str();
+        REQUIRE_THAT( listingString,
+                      ContainsSubstring( "fakeListener"s ) &&
+                          ContainsSubstring( "fake description"s ) );
     }
 }
 
