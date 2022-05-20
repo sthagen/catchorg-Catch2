@@ -184,6 +184,7 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/internal/catch_istream.cpp
     ${SOURCES_DIR}/generators/internal/catch_generators_combined_tu.cpp
     ${SOURCES_DIR}/interfaces/catch_interfaces_combined_tu.cpp
+    ${SOURCES_DIR}/interfaces/catch_interfaces_generatortracker.cpp
     ${SOURCES_DIR}/interfaces/catch_interfaces_reporter.cpp
     ${SOURCES_DIR}/internal/catch_list.cpp
     ${SOURCES_DIR}/matchers/catch_matchers_floating_point.cpp
@@ -221,6 +222,7 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/internal/catch_wildcard_pattern.cpp
     ${SOURCES_DIR}/internal/catch_xmlwriter.cpp
     ${SOURCES_DIR}/internal/catch_test_case_info_hasher.cpp
+    ${SOURCES_DIR}/generators/catch_generators_random.cpp
 )
 set(INTERNAL_FILES ${IMPL_SOURCES} ${INTERNAL_HEADERS})
 

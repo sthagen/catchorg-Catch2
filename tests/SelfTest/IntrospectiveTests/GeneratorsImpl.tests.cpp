@@ -413,3 +413,124 @@ TEST_CASE("GENERATE decays arrays", "[generators][compilation][approvals]") {
     auto str = GENERATE("abc", "def", "gh");
     STATIC_REQUIRE(std::is_same<decltype(str), const char*>::value);
 }
+
+TEST_CASE("Generators count returned elements", "[generators][approvals]") {
+    auto generator = Catch::Generators::FixedValuesGenerator<int>( { 1, 2, 3 } );
+    REQUIRE( generator.currentElementIndex() == 0 );
+    REQUIRE( generator.countedNext() );
+    REQUIRE( generator.currentElementIndex() == 1 );
+    REQUIRE( generator.countedNext() );
+    REQUIRE( generator.currentElementIndex() == 2 );
+    REQUIRE_FALSE( generator.countedNext() );
+    REQUIRE( generator.currentElementIndex() == 2 );
+}
+
+TEST_CASE( "Generators can stringify their elements",
+           "[generators][approvals]" ) {
+    auto generator =
+        Catch::Generators::FixedValuesGenerator<int>( { 1, 2, 3 } );
+
+    REQUIRE( generator.currentElementAsString() == "1"_catch_sr );
+    REQUIRE( generator.countedNext() );
+    REQUIRE( generator.currentElementAsString() == "2"_catch_sr );
+    REQUIRE( generator.countedNext() );
+    REQUIRE( generator.currentElementAsString() == "3"_catch_sr );
+}
+
+namespace {
+    class CustomStringifyGenerator
+        : public Catch::Generators::IGenerator<bool> {
+        bool m_first = true;
+
+        std::string stringifyImpl() const override {
+            return m_first ? "first" : "second";
+        }
+
+        bool next() override {
+            if ( m_first ) {
+                m_first = false;
+                return true;
+            }
+            return false;
+        }
+
+    public:
+        bool const& get() const override;
+    };
+
+    // Avoids -Wweak-vtables
+    bool const& CustomStringifyGenerator::get() const { return m_first; }
+} // namespace
+
+TEST_CASE( "Generators can override element stringification",
+           "[generators][approvals]" ) {
+    CustomStringifyGenerator generator;
+    REQUIRE( generator.currentElementAsString() == "first"_catch_sr );
+    REQUIRE( generator.countedNext() );
+    REQUIRE( generator.currentElementAsString() == "second"_catch_sr );
+}
+
+namespace {
+    class StringifyCountingGenerator
+        : public Catch::Generators::IGenerator<bool> {
+        bool m_first = true;
+        mutable size_t m_stringificationCalls = 0;
+
+        std::string stringifyImpl() const override {
+            ++m_stringificationCalls;
+            return m_first ? "first" : "second";
+        }
+
+        bool next() override {
+            if ( m_first ) {
+                m_first = false;
+                return true;
+            }
+            return false;
+        }
+
+    public:
+
+        bool const& get() const override;
+        size_t stringificationCalls() const { return m_stringificationCalls; }
+    };
+
+    // Avoids -Wweak-vtables
+    bool const& StringifyCountingGenerator::get() const { return m_first; }
+
+} // namespace
+
+TEST_CASE( "Generator element stringification is cached",
+           "[generators][approvals]" ) {
+    StringifyCountingGenerator generator;
+    REQUIRE( generator.currentElementAsString() == "first"_catch_sr );
+    REQUIRE( generator.currentElementAsString() == "first"_catch_sr );
+    REQUIRE( generator.currentElementAsString() == "first"_catch_sr );
+    REQUIRE( generator.currentElementAsString() == "first"_catch_sr );
+    REQUIRE( generator.currentElementAsString() == "first"_catch_sr );
+
+    REQUIRE( generator.stringificationCalls() == 1 );
+}
+
+TEST_CASE( "Random generators can be seeded", "[generators][approvals]" ) {
+    SECTION( "Integer generator" ) {
+        using Catch::Generators::RandomIntegerGenerator;
+        RandomIntegerGenerator<int> rng1( 0, 100, 0x1234 ),
+                                    rng2( 0, 100, 0x1234 );
+
+        for ( size_t i = 0; i < 10; ++i ) {
+            REQUIRE( rng1.get() == rng2.get() );
+            rng1.next(); rng2.next();
+        }
+    }
+    SECTION("Float generator") {
+        using Catch::Generators::RandomFloatingGenerator;
+        RandomFloatingGenerator<double> rng1( 0., 100., 0x1234 ),
+                                        rng2( 0., 100., 0x1234 );
+        for ( size_t i = 0; i < 10; ++i ) {
+            REQUIRE( rng1.get() == rng2.get() );
+            rng1.next();
+            rng2.next();
+        }
+    }
+}
