@@ -31,7 +31,9 @@ set(BENCHMARK_HEADERS
     ${SOURCES_DIR}/benchmark/detail/catch_timing.hpp
 )
 set(BENCHMARK_SOURCES
-    ${SOURCES_DIR}/benchmark/internal/catch_benchmark_combined_tu.cpp
+    ${SOURCES_DIR}/benchmark/catch_chronometer.cpp
+    ${SOURCES_DIR}/benchmark/detail/catch_benchmark_function.cpp
+    ${SOURCES_DIR}/benchmark/detail/catch_run_for_at_least.cpp
     ${SOURCES_DIR}/benchmark/detail/catch_stats.cpp
 )
 
@@ -166,7 +168,6 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/catch_approx.cpp
     ${SOURCES_DIR}/internal/catch_assertion_handler.cpp
     ${SOURCES_DIR}/catch_assertion_result.cpp
-    ${SOURCES_DIR}/matchers/internal/catch_matchers_combined_tu.cpp
     ${SOURCES_DIR}/internal/catch_clara.cpp
     ${SOURCES_DIR}/internal/catch_commandline.cpp
     ${SOURCES_DIR}/internal/catch_source_line_info.cpp
@@ -182,8 +183,6 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/internal/catch_fatal_condition_handler.cpp
     ${SOURCES_DIR}/internal/catch_floating_point_helpers.cpp
     ${SOURCES_DIR}/internal/catch_istream.cpp
-    ${SOURCES_DIR}/generators/internal/catch_generators_combined_tu.cpp
-    ${SOURCES_DIR}/interfaces/catch_interfaces_combined_tu.cpp
     ${SOURCES_DIR}/interfaces/catch_interfaces_generatortracker.cpp
     ${SOURCES_DIR}/interfaces/catch_interfaces_reporter.cpp
     ${SOURCES_DIR}/internal/catch_list.cpp
@@ -193,7 +192,6 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/catch_message.cpp
     ${SOURCES_DIR}/internal/catch_output_redirect.cpp
     ${SOURCES_DIR}/catch_registry_hub.cpp
-    ${SOURCES_DIR}/internal/catch_combined_tu.cpp
     ${SOURCES_DIR}/internal/catch_random_number_generator.cpp
     ${SOURCES_DIR}/internal/catch_random_seed_generation.cpp
     ${SOURCES_DIR}/internal/catch_reporter_registry.cpp
@@ -223,6 +221,29 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/internal/catch_xmlwriter.cpp
     ${SOURCES_DIR}/internal/catch_test_case_info_hasher.cpp
     ${SOURCES_DIR}/generators/catch_generators_random.cpp
+    ${SOURCES_DIR}/generators/catch_generator_exception.cpp
+    ${SOURCES_DIR}/generators/catch_generators.cpp
+    ${SOURCES_DIR}/matchers/catch_matchers.cpp
+    ${SOURCES_DIR}/matchers/catch_matchers_container_properties.cpp
+    ${SOURCES_DIR}/matchers/catch_matchers_exception.cpp
+    ${SOURCES_DIR}/matchers/catch_matchers_predicate.cpp
+    ${SOURCES_DIR}/matchers/internal/catch_matchers_impl.cpp
+    ${SOURCES_DIR}/catch_tag_alias_autoregistrar.cpp
+    ${SOURCES_DIR}/internal/catch_decomposer.cpp
+    ${SOURCES_DIR}/internal/catch_errno_guard.cpp
+    ${SOURCES_DIR}/internal/catch_lazy_expr.cpp
+    ${SOURCES_DIR}/internal/catch_leak_detector.cpp
+    ${SOURCES_DIR}/internal/catch_message_info.cpp
+    ${SOURCES_DIR}/internal/catch_polyfills.cpp
+    ${SOURCES_DIR}/internal/catch_startup_exception_registry.cpp
+    ${SOURCES_DIR}/internal/catch_uncaught_exceptions.cpp
+    ${SOURCES_DIR}/interfaces/catch_interfaces_capture.cpp
+    ${SOURCES_DIR}/interfaces/catch_interfaces_config.cpp
+    ${SOURCES_DIR}/interfaces/catch_interfaces_exception.cpp
+    ${SOURCES_DIR}/interfaces/catch_interfaces_registry_hub.cpp
+    ${SOURCES_DIR}/interfaces/catch_interfaces_reporter_factory.cpp
+    ${SOURCES_DIR}/interfaces/catch_interfaces_reporter_registry.cpp
+    ${SOURCES_DIR}/interfaces/catch_interfaces_testcase.cpp
 )
 set(INTERNAL_FILES ${IMPL_SOURCES} ${INTERNAL_HEADERS})
 
@@ -247,11 +268,12 @@ set(REPORTER_HEADERS
 )
 set(REPORTER_SOURCES
     ${SOURCES_DIR}/reporters/catch_reporter_automake.cpp
-    ${SOURCES_DIR}/reporters/catch_reporter_combined_tu.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_common_base.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_compact.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_console.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_cumulative_base.cpp
+    ${SOURCES_DIR}/reporters/catch_reporter_event_listener.cpp
+    ${SOURCES_DIR}/reporters/catch_reporter_helpers.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_junit.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_multi.cpp
     ${SOURCES_DIR}/reporters/catch_reporter_registrars.cpp
@@ -263,9 +285,7 @@ set(REPORTER_SOURCES
 )
 set(REPORTER_FILES ${REPORTER_HEADERS} ${REPORTER_SOURCES})
 
-# Fixme: STATIC because for dynamic, we would need to handle visibility
-# and I don't want to do the annotations right now
-add_library(Catch2 STATIC
+add_library(Catch2
   ${REPORTER_FILES}
   ${INTERNAL_FILES}
   ${BENCHMARK_HEADERS}
@@ -318,7 +338,7 @@ target_include_directories(Catch2
 )
 
 
-add_library(Catch2WithMain STATIC
+add_library(Catch2WithMain
     ${SOURCES_DIR}/internal/catch_main.cpp
 )
 add_build_reproducibility_settings(Catch2WithMain)
@@ -409,3 +429,20 @@ endif()
 
 list(APPEND CATCH_WARNING_TARGETS Catch2 Catch2WithMain)
 set(CATCH_WARNING_TARGETS ${CATCH_WARNING_TARGETS} PARENT_SCOPE)
+
+
+# We still do not support building dynamic library with hidden visibility
+# so we want to check & warn users if they do this. However, we won't abort
+# the configuration step so that we don't have to also provide an override.
+if (BUILD_SHARED_LIBS)
+    get_target_property(_VisPreset Catch2 CXX_VISIBILITY_PRESET)
+    get_target_property(_ExportAll Catch2 WINDOWS_EXPORT_ALL_SYMBOLS)
+    if (MSVC AND NOT _ExportAll
+        OR _VisPreset STREQUAL "hidden")
+
+        message(WARNING
+          "Catch2 does not support being built as a dynamic library with hidden"
+          " visibility. You have to ensure that visibility is handled yourself."
+        )
+    endif()
+endif()
