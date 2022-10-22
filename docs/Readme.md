@@ -29,9 +29,9 @@ Once you're up and running consider the following reference material.
 * [Frequently Asked Questions (FAQ)](faq.md#top)
 * [Best practices and other tips](usage-tips.md#top)
 * [CMake integration](cmake-integration.md#top)
-* [CI and other miscellaneous pieces](ci-and-misc.md#top)
+* [Tooling integration (CI, test runners, other)](ci-and-misc.md#top)
 * [Known limitations](limitations.md#top)
- 
+
 **Other:**
 * [Why Catch2?](why-catch.md#top)
 * [Migrating from v2 to v3](migrate-v2-to-v3.md#top)

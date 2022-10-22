@@ -3,6 +3,7 @@
 
 **Contents**<br>
 [Natural Expressions](#natural-expressions)<br>
+[Floating point comparisons](#floating-point-comparisons)<br>
 [Exceptions](#exceptions)<br>
 [Matcher expressions](#matcher-expressions)<br>
 [Thread Safety](#thread-safety)<br>
@@ -19,7 +20,7 @@ Most of these macros come in two forms:
 The ```REQUIRE``` family of macros tests an expression and aborts the test case if it fails.
 The ```CHECK``` family are equivalent but execution continues in the same test case even if the assertion fails. This is useful if you have a series of essentially orthogonal assertions and it is useful to see all the results rather than stopping at the first failure.
 
-* **REQUIRE(** _expression_ **)** and  
+* **REQUIRE(** _expression_ **)** and
 * **CHECK(** _expression_ **)**
 
 Evaluates the expression and records the result. If an exception is thrown, it is caught, reported, and counted as a failure. These are the macros you will use most of the time.
@@ -31,27 +32,55 @@ CHECK( thisReturnsTrue() );
 REQUIRE( i == 42 );
 ```
 
-* **REQUIRE_FALSE(** _expression_ **)** and  
+Expressions prefixed with `!` cannot be decomposed. If you have a type
+that is convertible to bool and you want to assert that it evaluates to
+false, use the two forms below:
+
+
+* **REQUIRE_FALSE(** _expression_ **)** and
 * **CHECK_FALSE(** _expression_ **)**
 
-Evaluates the expression and records the _logical NOT_ of the result. If an exception is thrown it is caught, reported, and counted as a failure.
-(these forms exist as a workaround for the fact that ! prefixed expressions cannot be decomposed).
+Note that there is no reason to use these forms for plain bool variables,
+because there is no added value in decomposing them.
 
 Example:
+```cpp
+Status ret = someFunction();
+REQUIRE_FALSE(ret); // ret must evaluate to false, and Catch2 will print
+                    // out the value of ret if possibly
 ```
-REQUIRE_FALSE( thisReturnsFalse() );
-```
-
-Do note that "overly complex" expressions cannot be decomposed and thus will not compile. This is done partly for practical reasons (to keep the underlying expression template machinery to minimum) and partly for philosophical reasons (assertions should be simple and deterministic).
-
-Examples:
-* `CHECK(a == 1 && b == 2);`
-This expression is too complex because of the `&&` operator. If you want to check that 2 or more properties hold, you can either put the expression into parenthesis, which stops decomposition from working, or you need to decompose the expression into two assertions: `CHECK( a == 1 ); CHECK( b == 2);`
-* `CHECK( a == 2 || b == 1 );`
-This expression is too complex because of the `||` operator. If you want to check that one of several properties hold, you can put the expression into parenthesis (unlike with `&&`, expression decomposition into several `CHECK`s is not possible).
 
 
-### Floating point comparisons
+### Other limitations
+
+Note that expressions containing either of the binary logical operators,
+`&&` or `||`, cannot be decomposed and will not compile. The reason behind
+this is that it is impossible to overload `&&` and `||` in a way that
+keeps their short-circuiting semantics, and expression decomposition
+relies on overloaded operators to work.
+
+Simple example of an issue with overloading binary logical operators
+is a common pointer idiom, `p && p->foo == 2`. Using the built-in `&&`
+operator, `p` is only dereferenced if it is not null. With overloaded
+`&&`, `p` is always dereferenced, thus causing a segfault if
+`p == nullptr`.
+
+If you want to test expression that contains `&&` or `||`, you have two
+options.
+
+1) Enclose it in parentheses. Parentheses force evaluation of the expression
+   before the expression decomposition can touch it, and thus it cannot
+   be used.
+
+2) Rewrite the expression. `REQUIRE(a == 1 && b == 2)` can always be split
+   into `REQUIRE(a == 1); REQUIRE(b == 2);`. Alternatively, if this is a
+   common pattern in your tests, think about using [Matchers](#matcher-expressions).
+   instead. There is no simple rewrite rule for `||`, but I generally
+   believe that if you have `||` in your test expression, you should rethink
+   your tests.
+
+
+## Floating point comparisons
 
 Comparing floating point numbers is complex, and [so it has its own
 documentation page](comparing-floating-point-numbers.md#top).
@@ -59,22 +88,22 @@ documentation page](comparing-floating-point-numbers.md#top).
 
 ## Exceptions
 
-* **REQUIRE_NOTHROW(** _expression_ **)** and  
+* **REQUIRE_NOTHROW(** _expression_ **)** and
 * **CHECK_NOTHROW(** _expression_ **)**
 
 Expects that no exception is thrown during evaluation of the expression.
 
-* **REQUIRE_THROWS(** _expression_ **)** and  
+* **REQUIRE_THROWS(** _expression_ **)** and
 * **CHECK_THROWS(** _expression_ **)**
 
 Expects that an exception (of any type) is be thrown during evaluation of the expression.
 
-* **REQUIRE_THROWS_AS(** _expression_, _exception type_ **)** and  
+* **REQUIRE_THROWS_AS(** _expression_, _exception type_ **)** and
 * **CHECK_THROWS_AS(** _expression_, _exception type_ **)**
 
 Expects that an exception of the _specified type_ is thrown during evaluation of the expression. Note that the _exception type_ is extended with `const&` and you should not include it yourself.
 
-* **REQUIRE_THROWS_WITH(** _expression_, _string or string matcher_ **)** and  
+* **REQUIRE_THROWS_WITH(** _expression_, _string or string matcher_ **)** and
 * **CHECK_THROWS_WITH(** _expression_, _string or string matcher_ **)**
 
 Expects that an exception is thrown that, when converted to a string, matches the _string_ or _string matcher_ provided (see next section for Matchers).
@@ -110,8 +139,8 @@ REQUIRE_NOTHROW([&](){
 
 To support Matchers a slightly different form is used. Matchers have [their own documentation](matchers.md#top).
 
-* **REQUIRE_THAT(** _lhs_, _matcher expression_ **)** and  
-* **CHECK_THAT(** _lhs_, _matcher expression_ **)**  
+* **REQUIRE_THAT(** _lhs_, _matcher expression_ **)** and
+* **CHECK_THAT(** _lhs_, _matcher expression_ **)**
 
 Matchers can be composed using `&&`, `||` and `!` operators.
 
