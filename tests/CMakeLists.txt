@@ -91,6 +91,7 @@ set(TEST_SOURCES
         ${SELF_TEST_DIR}/IntrospectiveTests/Reporters.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Tag.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/TestCaseInfoHasher.tests.cpp
+        ${SELF_TEST_DIR}/IntrospectiveTests/TestSpec.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/TestSpecParser.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/TextFlow.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Sharding.tests.cpp
@@ -100,6 +101,7 @@ set(TEST_SOURCES
         ${SELF_TEST_DIR}/IntrospectiveTests/Xml.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/ToString.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/UniquePtr.tests.cpp
+        ${SELF_TEST_DIR}/helpers/parse_test_spec.cpp
         ${SELF_TEST_DIR}/TimingTests/Sleep.tests.cpp
         ${SELF_TEST_DIR}/UsageTests/Approx.tests.cpp
         ${SELF_TEST_DIR}/UsageTests/BDD.tests.cpp
@@ -128,6 +130,10 @@ set(TEST_SOURCES
         ${SELF_TEST_DIR}/UsageTests/Matchers.tests.cpp
         )
 
+set(TEST_HEADERS
+  ${SELF_TEST_DIR}/helpers/parse_test_spec.hpp
+)
+
 
 # Specify the headers, too, so CLion recognises them as project files
 set(HEADERS
@@ -145,7 +151,8 @@ set(HEADERS
 
 include(CTest)
 
-add_executable(SelfTest ${TEST_SOURCES})
+add_executable(SelfTest ${TEST_SOURCES} ${TEST_HEADERS})
+target_include_directories(SelfTest PRIVATE ${SELF_TEST_DIR})
 target_link_libraries(SelfTest PRIVATE Catch2WithMain)
 if (BUILD_SHARED_LIBS AND WIN32)
     add_custom_command(TARGET SelfTest PRE_LINK
@@ -248,7 +255,7 @@ add_test(NAME TestSpecs::CombiningMatchingAndNonMatchingIsOk-1 COMMAND $<TARGET_
 
 add_test(NAME TestSpecs::CombiningMatchingAndNonMatchingIsOk-2 COMMAND $<TARGET_FILE:SelfTest> Tracker, "___nonexistent_test___")
 set_tests_properties(TestSpecs::CombiningMatchingAndNonMatchingIsOk-2 PROPERTIES
-    PASS_REGULAR_EXPRESSION "No test cases matched '___nonexistent_test___'"
+    PASS_REGULAR_EXPRESSION "No test cases matched '\"___nonexistent_test___\"'"
     FAIL_REGULAR_EXPRESSION "No tests ran"
 )
 
@@ -261,6 +268,14 @@ set_tests_properties(TestSpecs::NoMatchedTestsFail
 )
 add_test(NAME TestSpecs::OverrideFailureWithNoMatchedTests
   COMMAND $<TARGET_FILE:SelfTest> "___nonexistent_test___" --allow-running-no-tests
+)
+
+add_test(NAME TestSpecs::NonMatchingTestSpecIsRoundTrippable
+    COMMAND $<TARGET_FILE:SelfTest> Tracker, "this test does not exist" "[nor does this tag]"
+)
+set_tests_properties(TestSpecs::NonMatchingTestSpecIsRoundTrippable
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "No test cases matched '\"this test does not exist\" \\[nor does this tag\\]'"
 )
 
 add_test(NAME Warnings::UnmatchedTestSpecIsAccepted
@@ -336,7 +351,7 @@ set_tests_properties(ApprovalTests
 )
 
 add_test(NAME RegressionCheck-1670 COMMAND $<TARGET_FILE:SelfTest> "#1670 regression check" -c A -r compact)
-set_tests_properties(RegressionCheck-1670 PROPERTIES PASS_REGULAR_EXPRESSION "Passed 1 test case with 2 assertions.")
+set_tests_properties(RegressionCheck-1670 PROPERTIES PASS_REGULAR_EXPRESSION "All tests passed \\(2 assertions in 1 test case\\)")
 
 add_test(NAME VersionCheck COMMAND $<TARGET_FILE:SelfTest> -h)
 set_tests_properties(VersionCheck PROPERTIES PASS_REGULAR_EXPRESSION "Catch2 v${PROJECT_VERSION}")
@@ -596,6 +611,23 @@ foreach (reporterName # "Automake" - the simple .trs format does not support any
                       "TAP"
                       # "TeamCity" - does not seem to support test suite-level metadata/comments
                       "XML")
+
+    add_test(NAME "Reporters:Filters:${reporterName}"
+      COMMAND
+        $<TARGET_FILE:SelfTest> [comparisons][string-case] "CaseInsensitiveLess is case insensitive"
+          --reporter ${reporterName}
+    )
+    # Different regex for these two reporters, because the commas end up xml-escaped
+    if (reporterName MATCHES "JUnit|XML")
+      set(testCaseNameFormat "&quot;CaseInsensitiveLess is case insensitive&quot;")
+    else()
+      set(testCaseNameFormat "\"CaseInsensitiveLess is case insensitive\"")
+    endif()
+    set_tests_properties("Reporters:Filters:${reporterName}"
+      PROPERTIES
+        PASS_REGULAR_EXPRESSION "[fF]ilters.+\\[comparisons\\] \\[string-case\\] ${testCaseNameFormat}"
+    )
+
     add_test(NAME "Reporters:RngSeed:${reporterName}"
       COMMAND
         $<TARGET_FILE:SelfTest> "Factorials are computed"

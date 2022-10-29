@@ -1,6 +1,6 @@
 #              Copyright Catch2 Authors
 # Distributed under the Boost Software License, Version 1.0.
-#   (See accompanying file LICENSE_1_0.txt or copy at
+#   (See accompanying file LICENSE.txt or copy at
 #        https://www.boost.org/LICENSE_1_0.txt)
 
 # SPDX-License-Identifier: BSL-1.0
@@ -90,6 +90,7 @@ internal_headers = [
   'internal/catch_exception_translator_registry.hpp',
   'internal/catch_fatal_condition_handler.hpp',
   'internal/catch_floating_point_helpers.hpp',
+  'internal/catch_getenv.hpp',
   'internal/catch_istream.hpp',
   'internal/catch_lazy_expr.hpp',
   'internal/catch_leak_detector.hpp',
@@ -202,6 +203,7 @@ internal_sources = files(
   'internal/catch_exception_translator_registry.cpp',
   'internal/catch_fatal_condition_handler.cpp',
   'internal/catch_floating_point_helpers.cpp',
+  'internal/catch_getenv.cpp',
   'internal/catch_istream.cpp',
   'internal/catch_lazy_expr.cpp',
   'internal/catch_leak_detector.cpp',
