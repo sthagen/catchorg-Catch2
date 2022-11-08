@@ -99,6 +99,7 @@ set(TEST_SOURCES
         ${SELF_TEST_DIR}/IntrospectiveTests/String.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/StringManip.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/Xml.tests.cpp
+        ${SELF_TEST_DIR}/IntrospectiveTests/Traits.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/ToString.tests.cpp
         ${SELF_TEST_DIR}/IntrospectiveTests/UniquePtr.tests.cpp
         ${SELF_TEST_DIR}/helpers/parse_test_spec.cpp
@@ -132,6 +133,7 @@ set(TEST_SOURCES
 
 set(TEST_HEADERS
   ${SELF_TEST_DIR}/helpers/parse_test_spec.hpp
+  ${SELF_TEST_DIR}/helpers/type_with_lit_0_comparisons.hpp
 )
 
 
@@ -173,7 +175,7 @@ endif()
 add_test(NAME RunTests COMMAND $<TARGET_FILE:SelfTest> --order rand --rng-seed time)
 set_tests_properties(RunTests PROPERTIES
     FAIL_REGULAR_EXPRESSION "Filters:"
-    COST 60
+    COST 15
 )
 
 # Because CTest does not allow us to check both return code _and_ expected
@@ -341,12 +343,22 @@ set_tests_properties(FilteredSection::GeneratorsDontCauseInfiniteLoop-2
 )
 
 # AppVeyor has a Python 2.7 in path, but doesn't have .py files as autorunnable
-add_test(NAME ApprovalTests COMMAND ${PYTHON_EXECUTABLE} ${CATCH_DIR}/tools/scripts/approvalTests.py $<TARGET_FILE:SelfTest>)
+add_test(NAME ApprovalTests
+  COMMAND
+    ${PYTHON_EXECUTABLE}
+    ${CATCH_DIR}/tools/scripts/approvalTests.py
+    $<TARGET_FILE:SelfTest>
+    "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
 set_tests_properties(ApprovalTests
   PROPERTIES
     FAIL_REGULAR_EXPRESSION "Results differed"
-    COST 120 # We know that this is either the most, or second most,
-    # expensive test in the test suite, so we give it high estimate for CI runs
+
+    # This is the most expensive test in the basic test suite, so we give
+    # it high cost estimate so that CI runs it as one of the first ones,
+    # for better parallelization.
+    COST 30
     LABELS "uses-python"
 )
 

@@ -61,6 +61,7 @@ set(INTERNAL_HEADERS
     ${SOURCES_DIR}/internal/catch_clara.hpp
     ${SOURCES_DIR}/internal/catch_commandline.hpp
     ${SOURCES_DIR}/internal/catch_source_line_info.hpp
+    ${SOURCES_DIR}/internal/catch_compare_traits.hpp
     ${SOURCES_DIR}/internal/catch_compiler_capabilities.hpp
     ${SOURCES_DIR}/catch_config.hpp
     ${SOURCES_DIR}/internal/catch_config_android_logwrite.hpp
@@ -175,6 +176,7 @@ set(IMPL_SOURCES
     ${SOURCES_DIR}/internal/catch_commandline.cpp
     ${SOURCES_DIR}/internal/catch_source_line_info.cpp
     ${SOURCES_DIR}/catch_config.cpp
+    ${SOURCES_DIR}/internal/catch_test_failure_exception.cpp
     ${SOURCES_DIR}/internal/catch_case_insensitive_comparisons.cpp
     ${SOURCES_DIR}/internal/catch_console_colour.cpp
     ${SOURCES_DIR}/internal/catch_context.cpp
