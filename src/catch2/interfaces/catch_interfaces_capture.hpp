@@ -44,10 +44,11 @@ namespace Catch {
     public:
         virtual ~IResultCapture();
 
-        virtual bool sectionStarted(    SectionInfo const& sectionInfo,
-                                        Counts& assertions ) = 0;
-        virtual void sectionEnded( SectionEndInfo const& endInfo ) = 0;
-        virtual void sectionEndedEarly( SectionEndInfo const& endInfo ) = 0;
+        virtual bool sectionStarted( StringRef sectionName,
+                                     SourceLineInfo const& sectionLineInfo,
+                                     Counts& assertions ) = 0;
+        virtual void sectionEnded( SectionEndInfo&& endInfo ) = 0;
+        virtual void sectionEndedEarly( SectionEndInfo&& endInfo ) = 0;
 
         virtual IGeneratorTracker*
         acquireGeneratorTracker( StringRef generatorName,
@@ -65,7 +66,7 @@ namespace Catch {
         virtual void pushScopedMessage( MessageInfo const& message ) = 0;
         virtual void popScopedMessage( MessageInfo const& message ) = 0;
 
-        virtual void emplaceUnscopedMessage( MessageBuilder const& builder ) = 0;
+        virtual void emplaceUnscopedMessage( MessageBuilder&& builder ) = 0;
 
         virtual void handleFatalErrorCondition( StringRef message ) = 0;
 
