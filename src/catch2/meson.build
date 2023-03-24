@@ -64,8 +64,8 @@ internal_headers = [
   'interfaces/catch_interfaces_registry_hub.hpp',
   'interfaces/catch_interfaces_reporter.hpp',
   'interfaces/catch_interfaces_reporter_factory.hpp',
-  'interfaces/catch_interfaces_reporter_registry.hpp',
   'interfaces/catch_interfaces_tag_alias_registry.hpp',
+  'interfaces/catch_interfaces_test_invoker.hpp',
   'interfaces/catch_interfaces_testcase.hpp',
   'internal/catch_assertion_handler.hpp',
   'internal/catch_case_insensitive_comparisons.hpp',
@@ -189,7 +189,6 @@ internal_sources = files(
   'interfaces/catch_interfaces_registry_hub.cpp',
   'interfaces/catch_interfaces_reporter.cpp',
   'interfaces/catch_interfaces_reporter_factory.cpp',
-  'interfaces/catch_interfaces_reporter_registry.cpp',
   'interfaces/catch_interfaces_testcase.cpp',
   'internal/catch_assertion_handler.cpp',
   'internal/catch_case_insensitive_comparisons.cpp',
@@ -262,6 +261,7 @@ internal_sources = files(
   'catch_timer.cpp',
   'catch_tostring.cpp',
   'catch_totals.cpp',
+  'catch_translate_exception.cpp',
   'catch_version.cpp',
 )
 
