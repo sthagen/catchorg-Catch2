@@ -56,7 +56,7 @@ namespace Catch {
         m_xml.startElement("Catch2TestRun")
              .writeAttribute("name"_sr, m_config->name())
              .writeAttribute("rng-seed"_sr, m_config->rngSeed())
-             .writeAttribute("xml-format-version"_sr, 2)
+             .writeAttribute("xml-format-version"_sr, 3)
              .writeAttribute("catch2-version"_sr, libraryVersion());
         if ( m_config->testSpec().hasFilters() ) {
             m_xml.writeAttribute( "filters"_sr, m_config->testSpec() );
@@ -98,11 +98,13 @@ namespace Catch {
             // Print any info messages in <Info> tags.
             for( auto const& msg : assertionStats.infoMessages ) {
                 if( msg.type == ResultWas::Info && includeResults ) {
-                    m_xml.scopedElement( "Info" )
-                            .writeText( msg.message );
+                    auto t = m_xml.scopedElement( "Info" );
+                    writeSourceInfo( msg.lineInfo );
+                    t.writeText( msg.message );
                 } else if ( msg.type == ResultWas::Warning ) {
-                    m_xml.scopedElement( "Warning" )
-                            .writeText( msg.message );
+                    auto t = m_xml.scopedElement( "Warning" );
+                    writeSourceInfo( msg.lineInfo );
+                    t.writeText( msg.message );
                 }
             }
         }
