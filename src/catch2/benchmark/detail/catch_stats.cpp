@@ -11,7 +11,9 @@
 
 #include <catch2/internal/catch_compiler_capabilities.hpp>
 
+#include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <cstddef>
 #include <numeric>
 #include <random>
@@ -30,8 +32,8 @@ namespace Catch {
                 static sample
                 resample( URng& rng,
                           unsigned int resamples,
-                          std::vector<double>::const_iterator first,
-                          std::vector<double>::const_iterator last,
+                          double const* first,
+                          double const* last,
                           Estimator& estimator ) {
                     auto n = static_cast<size_t>( last - first );
                     std::uniform_int_distribution<decltype( n )> dist( 0,
@@ -51,7 +53,7 @@ namespace Catch {
                                     dist( rng ) )] );
                         }
                         const auto estimate =
-                            estimator( resampled.begin(), resampled.end() );
+                            estimator( resampled.data(), resampled.data() + resampled.size() );
                         out.push_back( estimate );
                     }
                     std::sort( out.begin(), out.end() );
@@ -168,8 +170,7 @@ namespace Catch {
                 }
 
                 static double
-                standard_deviation( std::vector<double>::const_iterator first,
-                                    std::vector<double>::const_iterator last ) {
+                standard_deviation( double const* first, double const* last ) {
                     auto m = Catch::Benchmark::Detail::mean( first, last );
                     double variance =
                         std::accumulate( first,
@@ -201,7 +202,10 @@ namespace Catch {
 #    pragma GCC diagnostic pop
 #endif
 
-            double weighted_average_quantile(int k, int q, std::vector<double>::iterator first, std::vector<double>::iterator last) {
+            double weighted_average_quantile( int k,
+                                              int q,
+                                              double* first,
+                                              double* last ) {
                 auto count = last - first;
                 double idx = (count - 1) * k / static_cast<double>(q);
                 int j = static_cast<int>(idx);
@@ -217,12 +221,11 @@ namespace Catch {
             }
 
             OutlierClassification
-            classify_outliers( std::vector<double>::const_iterator first,
-                               std::vector<double>::const_iterator last ) {
+            classify_outliers( double const* first, double const* last ) {
                 std::vector<double> copy( first, last );
 
-                auto q1 = weighted_average_quantile( 1, 4, copy.begin(), copy.end() );
-                auto q3 = weighted_average_quantile( 3, 4, copy.begin(), copy.end() );
+                auto q1 = weighted_average_quantile( 1, 4, copy.data(), copy.data() + copy.size() );
+                auto q3 = weighted_average_quantile( 3, 4, copy.data(), copy.data() + copy.size() );
                 auto iqr = q3 - q1;
                 auto los = q1 - ( iqr * 3. );
                 auto lom = q1 - ( iqr * 1.5 );
@@ -246,8 +249,7 @@ namespace Catch {
                 return o;
             }
 
-            double mean( std::vector<double>::const_iterator first,
-                         std::vector<double>::const_iterator last ) {
+            double mean( double const* first, double const* last ) {
                 auto count = last - first;
                 double sum = 0.;
                 while (first != last) {
@@ -257,6 +259,27 @@ namespace Catch {
                 return sum / static_cast<double>(count);
             }
 
+            sample jackknife( double ( *estimator )( double const*,
+                                                     double const* ),
+                              double* first,
+                              double* last ) {
+                auto n = static_cast<size_t>( last - first );
+                auto second = first;
+                ++second;
+                sample results;
+                results.reserve( n );
+
+                for ( auto it = first; it != last; ++it ) {
+                    std::iter_swap( it, first );
+                    results.push_back( estimator( second, last ) );
+                }
+
+                return results;
+            }
+
+            double normal_cdf( double x ) {
+                return std::erfc( -x / std::sqrt( 2.0 ) ) / 2.0;
+            }
 
             double erfc_inv(double x) {
                 return erf_inv(1.0 - x);
@@ -278,10 +301,68 @@ namespace Catch {
                 return result;
             }
 
+            Estimate<double>
+            bootstrap( double confidence_level,
+                       double* first,
+                       double* last,
+                       sample const& resample,
+                       double ( *estimator )( double const*, double const* ) ) {
+                auto n_samples = last - first;
+
+                double point = estimator( first, last );
+                // Degenerate case with a single sample
+                if ( n_samples == 1 )
+                    return { point, point, point, confidence_level };
+
+                sample jack = jackknife( estimator, first, last );
+                double jack_mean =
+                    mean( jack.data(), jack.data() + jack.size() );
+                double sum_squares = 0, sum_cubes = 0;
+                for ( double x : jack ) {
+                    auto difference = jack_mean - x;
+                    auto square = difference * difference;
+                    auto cube = square * difference;
+                    sum_squares += square;
+                    sum_cubes += cube;
+                }
+
+                double accel = sum_cubes / ( 6 * std::pow( sum_squares, 1.5 ) );
+                long n = static_cast<long>( resample.size() );
+                double prob_n =
+                    std::count_if( resample.begin(),
+                                   resample.end(),
+                                   [point]( double x ) { return x < point; } ) /
+                    static_cast<double>( n );
+                // degenerate case with uniform samples
+                if ( directCompare( prob_n, 0. ) ) {
+                    return { point, point, point, confidence_level };
+                }
+
+                double bias = normal_quantile( prob_n );
+                double z1 = normal_quantile( ( 1. - confidence_level ) / 2. );
+
+                auto cumn = [n]( double x ) -> long {
+                    return std::lround( normal_cdf( x ) *
+                                        static_cast<double>( n ) );
+                };
+                auto a = [bias, accel]( double b ) {
+                    return bias + b / ( 1. - accel * b );
+                };
+                double b1 = bias + z1;
+                double b2 = bias - z1;
+                double a1 = a( b1 );
+                double a2 = a( b2 );
+                auto lo = static_cast<size_t>( (std::max)( cumn( a1 ), 0l ) );
+                auto hi =
+                    static_cast<size_t>( (std::min)( cumn( a2 ), n - 1 ) );
+
+                return { point, resample[lo], resample[hi], confidence_level };
+            }
+
             bootstrap_analysis analyse_samples(double confidence_level,
                                                unsigned int n_resamples,
-                                               std::vector<double>::iterator first,
-                                               std::vector<double>::iterator last) {
+                                               double* first,
+                                               double* last) {
                 CATCH_INTERNAL_START_WARNINGS_SUPPRESSION
                 CATCH_INTERNAL_SUPPRESS_GLOBALS_WARNINGS
                 static std::random_device entropy;
@@ -293,8 +374,7 @@ namespace Catch {
                 auto stddev = &standard_deviation;
 
 #if defined(CATCH_CONFIG_USE_ASYNC)
-                auto Estimate = [=](double(*f)(std::vector<double>::const_iterator,
-                                               std::vector<double>::const_iterator)) {
+                auto Estimate = [=](double(*f)(double const*, double const*)) {
                     auto seed = entropy();
                     return std::async(std::launch::async, [=] {
                         std::mt19937 rng(seed);
@@ -309,8 +389,7 @@ namespace Catch {
                 auto mean_estimate = mean_future.get();
                 auto stddev_estimate = stddev_future.get();
 #else
-                auto Estimate = [=](double(*f)(std::vector<double>::const_iterator,
-                                               std::vector<double>::const_iterator)) {
+                auto Estimate = [=](double(*f)(double const* , double const*)) {
                     auto seed = entropy();
                     std::mt19937 rng(seed);
                     auto resampled = resample(rng, n_resamples, first, last, f);
