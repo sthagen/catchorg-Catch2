@@ -20,10 +20,6 @@ namespace Catch {
         namespace Detail {
             using sample = std::vector<double>;
 
-            // Used when we know we want == comparison of two doubles
-            // to centralize warning suppression
-            bool directCompare( double lhs, double rhs );
-
             double weighted_average_quantile( int k,
                                               int q,
                                               double* first,
@@ -33,11 +29,6 @@ namespace Catch {
             classify_outliers( double const* first, double const* last );
 
             double mean( double const* first, double const* last );
-
-            sample jackknife( double ( *estimator )( double const*,
-                                                     double const* ),
-                              double* first,
-                              double* last );
 
             double normal_cdf( double x );
 

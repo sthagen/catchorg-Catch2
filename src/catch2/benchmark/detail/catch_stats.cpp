@@ -184,6 +184,37 @@ namespace Catch {
                     return std::sqrt( variance );
                 }
 
+#if defined( __GNUC__ ) || defined( __clang__ )
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+                // Used when we know we want == comparison of two doubles
+                // to centralize warning suppression
+                static bool directCompare( double lhs, double rhs ) {
+                    return lhs == rhs;
+                }
+#if defined( __GNUC__ ) || defined( __clang__ )
+#    pragma GCC diagnostic pop
+#endif
+
+
+                static sample jackknife( double ( *estimator )( double const*,
+                                                                double const* ),
+                                         double* first,
+                                         double* last ) {
+                    const auto second = first + 1;
+                    sample results;
+                    results.reserve( static_cast<size_t>( last - first ) );
+
+                    for ( auto it = first; it != last; ++it ) {
+                        std::iter_swap( it, first );
+                        results.push_back( estimator( second, last ) );
+                    }
+
+                    return results;
+                }
+
+
             } // namespace
         }     // namespace Detail
     }         // namespace Benchmark
@@ -192,15 +223,6 @@ namespace Catch {
 namespace Catch {
     namespace Benchmark {
         namespace Detail {
-
-#if defined( __GNUC__ ) || defined( __clang__ )
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wfloat-equal"
-#endif
-            bool directCompare( double lhs, double rhs ) { return lhs == rhs; }
-#if defined( __GNUC__ ) || defined( __clang__ )
-#    pragma GCC diagnostic pop
-#endif
 
             double weighted_average_quantile( int k,
                                               int q,
@@ -257,24 +279,6 @@ namespace Catch {
                     ++first;
                 }
                 return sum / static_cast<double>(count);
-            }
-
-            sample jackknife( double ( *estimator )( double const*,
-                                                     double const* ),
-                              double* first,
-                              double* last ) {
-                auto n = static_cast<size_t>( last - first );
-                auto second = first;
-                ++second;
-                sample results;
-                results.reserve( n );
-
-                for ( auto it = first; it != last; ++it ) {
-                    std::iter_swap( it, first );
-                    results.push_back( estimator( second, last ) );
-                }
-
-                return results;
             }
 
             double normal_cdf( double x ) {
