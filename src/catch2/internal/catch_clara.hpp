@@ -29,6 +29,7 @@
 #    endif
 #endif
 
+#include <catch2/internal/catch_stringref.hpp>
 #include <catch2/internal/catch_move_and_forward.hpp>
 #include <catch2/internal/catch_noncopyable.hpp>
 #include <catch2/internal/catch_void_type.hpp>
@@ -163,7 +164,8 @@ namespace Catch {
                 ResultType m_type;
             };
 
-            template <typename T> class ResultValueBase : public ResultBase {
+            template <typename T>
+            class ResultValueBase : public ResultBase {
             public:
                 auto value() const -> T const& {
                     enforceOk();
@@ -285,7 +287,7 @@ namespace Catch {
 
             struct HelpColumns {
                 std::string left;
-                std::string right;
+                StringRef descriptions;
             };
 
             template <typename T>
@@ -465,8 +467,8 @@ namespace Catch {
             protected:
                 Optionality m_optionality = Optionality::Optional;
                 std::shared_ptr<BoundRef> m_ref;
-                std::string m_hint;
-                std::string m_description;
+                StringRef m_hint;
+                StringRef m_description;
 
                 explicit ParserRefImpl( std::shared_ptr<BoundRef> const& ref ):
                     m_ref( ref ) {}
@@ -475,27 +477,31 @@ namespace Catch {
                 template <typename LambdaT>
                 ParserRefImpl( accept_many_t,
                                LambdaT const& ref,
-                               std::string const& hint ):
+                               StringRef hint ):
                     m_ref( std::make_shared<BoundManyLambda<LambdaT>>( ref ) ),
                     m_hint( hint ) {}
 
                 template <typename T,
                           typename = typename std::enable_if_t<
                               !Detail::is_unary_function<T>::value>>
-                ParserRefImpl( T& ref, std::string const& hint ):
+                ParserRefImpl( T& ref, StringRef hint ):
                     m_ref( std::make_shared<BoundValueRef<T>>( ref ) ),
                     m_hint( hint ) {}
 
                 template <typename LambdaT,
                           typename = typename std::enable_if_t<
                               Detail::is_unary_function<LambdaT>::value>>
-                ParserRefImpl( LambdaT const& ref, std::string const& hint ):
+                ParserRefImpl( LambdaT const& ref, StringRef hint ):
                     m_ref( std::make_shared<BoundLambda<LambdaT>>( ref ) ),
                     m_hint( hint ) {}
 
-                auto operator()( std::string const& description ) -> DerivedT& {
+                DerivedT& operator()( StringRef description ) & {
                     m_description = description;
                     return static_cast<DerivedT&>( *this );
+                }
+                DerivedT&& operator()( StringRef description ) && {
+                    m_description = description;
+                    return static_cast<DerivedT&&>( *this );
                 }
 
                 auto optional() -> DerivedT& {
@@ -519,7 +525,7 @@ namespace Catch {
                         return 1;
                 }
 
-                std::string const& hint() const { return m_hint; }
+                StringRef hint() const { return m_hint; }
             };
 
         } // namespace detail
@@ -539,7 +545,7 @@ namespace Catch {
         // A parser for options
         class Opt : public Detail::ParserRefImpl<Opt> {
         protected:
-            std::vector<std::string> m_optNames;
+            std::vector<StringRef> m_optNames;
 
         public:
             template <typename LambdaT>
@@ -552,25 +558,29 @@ namespace Catch {
             template <typename LambdaT,
                       typename = typename std::enable_if_t<
                           Detail::is_unary_function<LambdaT>::value>>
-            Opt( LambdaT const& ref, std::string const& hint ):
+            Opt( LambdaT const& ref, StringRef hint ):
                 ParserRefImpl( ref, hint ) {}
 
             template <typename LambdaT>
-            Opt( accept_many_t, LambdaT const& ref, std::string const& hint ):
+            Opt( accept_many_t, LambdaT const& ref, StringRef hint ):
                 ParserRefImpl( accept_many, ref, hint ) {}
 
             template <typename T,
                       typename = typename std::enable_if_t<
                           !Detail::is_unary_function<T>::value>>
-            Opt( T& ref, std::string const& hint ):
+            Opt( T& ref, StringRef hint ):
                 ParserRefImpl( ref, hint ) {}
 
-            auto operator[](std::string const& optName) -> Opt& {
+            Opt& operator[]( StringRef optName ) & {
                 m_optNames.push_back(optName);
                 return *this;
             }
+            Opt&& operator[]( StringRef optName ) && {
+                m_optNames.push_back( optName );
+                return CATCH_MOVE(*this);
+            }
 
-            std::vector<Detail::HelpColumns> getHelpColumns() const;
+            Detail::HelpColumns getHelpColumns() const;
 
             bool isMatch(std::string const& optToken) const;
 
@@ -626,16 +636,26 @@ namespace Catch {
                 return *this;
             }
 
-            auto operator|=(Opt const& opt) -> Parser& {
-                m_options.push_back(opt);
-                return *this;
+            friend Parser& operator|=( Parser& p, Opt const& opt ) {
+                p.m_options.push_back( opt );
+                return p;
+            }
+            friend Parser& operator|=( Parser& p, Opt&& opt ) {
+                p.m_options.push_back( CATCH_MOVE(opt) );
+                return p;
             }
 
             Parser& operator|=(Parser const& other);
 
             template <typename T>
-            auto operator|(T const& other) const -> Parser {
-                return Parser(*this) |= other;
+            friend Parser operator|( Parser const& p, T&& rhs ) {
+                return Parser( p ) |= CATCH_FORWARD(rhs);
+            }
+
+            template <typename T>
+            friend Parser operator|( Parser&& p, T&& rhs ) {
+                p |= CATCH_FORWARD(rhs);
+                return CATCH_MOVE(p);
             }
 
             std::vector<Detail::HelpColumns> getHelpColumns() const;
