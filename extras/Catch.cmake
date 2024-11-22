@@ -144,7 +144,7 @@ same as the Catch name; see also ``TEST_PREFIX`` and ``TEST_SUFFIX``.
     ``CMAKE_CATCH_DISCOVER_TESTS_DISCOVERY_MODE`` variable if it is not passed when
     calling ``catch_discover_tests``. This provides a mechanism for globally selecting
     a preferred test discovery behavior without having to modify each call site.
-    
+
   ``SKIP_IS_FAILURE``
     Disables skipped test detection.
 
@@ -267,7 +267,6 @@ function(catch_discover_tests TARGET)
       "      CTEST_FILE"             " [==[" "${ctest_tests_file}"        "]==]"   "\n"
       "      TEST_DL_PATHS"          " [==[" "${_DL_PATHS}"               "]==]"   "\n"
       "      TEST_DL_FRAMEWORK_PATHS" " [==[" "${_DL_FRAMEWORK_PATHS}"     "]==]"   "\n"
-      "      CTEST_FILE"             " [==[" "${CTEST_FILE}"              "]==]"   "\n"
       "    )"                                                                      "\n"
       "  endif()"                                                                  "\n"
       "  include(\"${ctest_tests_file}\")"                                         "\n"
