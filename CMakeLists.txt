@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.20)
 
 # detect if Catch is being bundled,
 # disable testsuite in that case
@@ -37,9 +37,7 @@ endif()
 project(Catch2
   VERSION 3.7.1 # CML version placeholder, don't delete
   LANGUAGES CXX
-  # HOMEPAGE_URL is not supported until CMake version 3.12, which
-  # we do not target yet.
-  # HOMEPAGE_URL "https://github.com/catchorg/Catch2"
+  HOMEPAGE_URL "https://github.com/catchorg/Catch2"
   DESCRIPTION "A modern, C++-native, unit test framework."
 )
 
@@ -191,12 +189,6 @@ if (NOT_SUBPROJECT)
       DESTINATION
         ${PKGCONFIG_INSTALL_DIR}
     )
-
-    # CPack/CMake started taking the package version from project version 3.12
-    # So we need to set the version manually for older CMake versions
-    if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
-        set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-    endif()
 
     set(CPACK_PACKAGE_CONTACT "https://github.com/catchorg/Catch2/")
 
