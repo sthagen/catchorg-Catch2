@@ -85,7 +85,7 @@ a target. This function works by running the resulting executable with
 
 #### Usage
 ```cmake
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.16)
 
 project(baz LANGUAGES CXX VERSION 0.0.1)
 
@@ -239,7 +239,7 @@ parsed are *silently ignored*.
 #### Usage
 
 ```cmake
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.16)
 
 project(baz LANGUAGES CXX VERSION 0.0.1)
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.16)
 
 # detect if Catch is being bundled,
 # disable testsuite in that case
@@ -35,7 +35,7 @@ if (CMAKE_BINARY_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 project(Catch2
-  VERSION 3.7.1 # CML version placeholder, don't delete
+  VERSION 3.8.0 # CML version placeholder, don't delete
   LANGUAGES CXX
   HOMEPAGE_URL "https://github.com/catchorg/Catch2"
   DESCRIPTION "A modern, C++-native, unit test framework."
