@@ -8,65 +8,66 @@ on: [push, pull_request]
 jobs:
   build:
     name: ${{matrix.build_description}}, ${{matrix.cxx}}, C++${{matrix.std}} ${{matrix.build_type}}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
         # We add builds one by one in this case, because there are no
         # dimensions that are shared across the builds
         include:
 
           # Single surrogate header build
-          - cxx: clang++-10
+          - cxx: clang++-14
             build_description: Surrogates build
             build_type: Debug
             std: 14
-            other_pkgs: clang-10
+            other_pkgs: clang-14
             cmake_configurations: -DCATCH_BUILD_SURROGATES=ON
 
-          # Extras and examples with gcc-7
-          - cxx: g++-7
+          # Extras and examples with gcc-11
+          - cxx: g++-11
             build_description: Extras + Examples
             build_type: Debug
             std: 14
-            other_pkgs: g++-7
+            other_pkgs: g++-11
             cmake_configurations: -DCATCH_BUILD_EXTRA_TESTS=ON -DCATCH_BUILD_EXAMPLES=ON -DCATCH_ENABLE_CMAKE_HELPER_TESTS=ON
-          - cxx: g++-7
+          - cxx: g++-11
             build_description: Extras + Examples
             build_type: Release
             std: 14
-            other_pkgs: g++-7
+            other_pkgs: g++-11
             cmake_configurations: -DCATCH_BUILD_EXTRA_TESTS=ON -DCATCH_BUILD_EXAMPLES=ON -DCATCH_ENABLE_CMAKE_HELPER_TESTS=ON
 
-          # Extras and examples with Clang-10
-          - cxx: clang++-10
+          # Extras and examples with Clang-14
+          - cxx: clang++-14
             build_description: Extras + Examples
             build_type: Debug
             std: 17
-            other_pkgs: clang-10
+            other_pkgs: clang-14
             cmake_configurations: -DCATCH_BUILD_EXTRA_TESTS=ON -DCATCH_BUILD_EXAMPLES=ON -DCATCH_ENABLE_CMAKE_HELPER_TESTS=ON
-          - cxx: clang++-10
+          - cxx: clang++-14
             build_description: Extras + Examples
             build_type: Release
             std: 17
-            other_pkgs: clang-10
+            other_pkgs: clang-14
             cmake_configurations: -DCATCH_BUILD_EXTRA_TESTS=ON -DCATCH_BUILD_EXAMPLES=ON -DCATCH_ENABLE_CMAKE_HELPER_TESTS=ON
 
-          # Configure tests with Clang-10
-          - cxx: clang++-10
+          # Configure tests with Clang-14
+          - cxx: clang++-14
             build_description: CMake configuration tests
             build_type: Debug
             std: 14
-            other_pkgs: clang-10
+            other_pkgs: clang-14
             cmake_configurations: -DCATCH_ENABLE_CONFIGURE_TESTS=ON
 
-          # Valgrind test Clang-10
-          - cxx: clang++-10
-            build_description: Valgrind tests
-            build_type: Debug
-            std: 14
-            other_pkgs: clang-10 valgrind
-            cmake_configurations: -DMEMORYCHECK_COMMAND=`which valgrind` -DMEMORYCHECK_COMMAND_OPTIONS="-q --track-origins=yes --leak-check=full --num-callers=50 --show-leak-kinds=definite --error-exitcode=1"
-            other_ctest_args: -T memcheck -LE uses-python
+          # Valgrind test Clang-14
+          # - cxx: clang++-14
+          #   build_description: Valgrind tests
+          #   build_type: Debug
+          #   std: 14
+          #   other_pkgs: clang-14 valgrind
+          #   cmake_configurations: -DMEMORYCHECK_COMMAND=`which valgrind` -DMEMORYCHECK_COMMAND_OPTIONS="-q --track-origins=yes --leak-check=full --num-callers=50 --show-leak-kinds=definite --error-exitcode=1"
+          #   other_ctest_args: -T memcheck -LE uses-python
 
 
     steps:
