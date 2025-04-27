@@ -86,7 +86,7 @@ jobs:
       # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.
       #       This is important
       run: |
-        cmake -Bbuild -H$GITHUB_WORKSPACE \
+        cmake -Bbuild -S$GITHUB_WORKSPACE \
               -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
               -DCMAKE_CXX_STANDARD=${{matrix.std}} \
               -DCMAKE_CXX_STANDARD_REQUIRED=ON \
@@ -100,10 +100,8 @@ jobs:
       run: ninja
 
     - name: Run tests
-      env:
-          CTEST_OUTPUT_ON_FAILURE: 1
       working-directory: ${{runner.workspace}}/build
-      run: ctest -C ${{matrix.build_type}} -j `nproc` ${{matrix.other_ctest_args}}
+      run: ctest -C ${{matrix.build_type}} -j `nproc` ${{matrix.other_ctest_args}} --output-on-failure
   clang-tidy:
     name: clang-tidy ${{matrix.version}}, ${{matrix.build_description}}, C++${{matrix.std}} ${{matrix.build_type}}
     runs-on: ubuntu-22.04
@@ -135,7 +133,7 @@ jobs:
         clangtidy="clang-tidy-${{matrix.version}};-use-color"
         # Use a dummy compiler/linker/ar/ranlib to effectively disable the
         # compilation and only run clang-tidy.
-        cmake -Bbuild -H$GITHUB_WORKSPACE \
+        cmake -Bbuild -S$GITHUB_WORKSPACE \
               -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
               -DCMAKE_CXX_STANDARD=${{matrix.std}} \
               -DCMAKE_CXX_STANDARD_REQUIRED=ON \

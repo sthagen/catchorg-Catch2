@@ -7,6 +7,7 @@ jobs:
     name: ${{matrix.os}}, ${{matrix.std}}, ${{matrix.build_type}}, ${{matrix.platform}}
     runs-on: ${{matrix.os}}
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-2019, windows-2022]
         platform: [Win32, x64]
@@ -31,7 +32,5 @@ jobs:
 
       - name: Run tests
         working-directory: ${{runner.workspace}}/build
-        env:
-            CTEST_OUTPUT_ON_FAILURE: 1
-        run: ctest -C ${{matrix.build_type}} -j %NUMBER_OF_PROCESSORS%
+        run: ctest -C ${{matrix.build_type}} -j %NUMBER_OF_PROCESSORS% --output-on-failure
         shell: cmd

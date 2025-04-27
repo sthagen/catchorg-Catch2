@@ -6,6 +6,7 @@
             "displayName": "Basic development build",
             "description": "Enables development build with basic tests that are cheap to build and run",
             "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "CATCH_DEVELOPMENT_BUILD": "ON"
             }
         },

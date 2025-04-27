@@ -105,7 +105,7 @@ jobs:
       # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.
       #       This is important
       run: |
-        cmake -Bbuild -H$GITHUB_WORKSPACE \
+        cmake -Bbuild -S$GITHUB_WORKSPACE \
               -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
               -DCMAKE_CXX_STANDARD=${{matrix.std}} \
               -DCMAKE_CXX_STANDARD_REQUIRED=ON \
@@ -118,7 +118,5 @@ jobs:
       run: ninja
 
     - name: Run tests
-      env:
-          CTEST_OUTPUT_ON_FAILURE: 1
       working-directory: ${{runner.workspace}}/build
-      run: ctest -C ${{matrix.build_type}} -j `nproc`
+      run: ctest -C ${{matrix.build_type}} -j `nproc` --output-on-failure

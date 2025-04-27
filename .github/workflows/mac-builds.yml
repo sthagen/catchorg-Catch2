@@ -10,6 +10,7 @@ jobs:
     # the Intel based images for free to OSS projects.
     runs-on: macos-13
     strategy:
+      fail-fast: false
       matrix:
         cxx:
           - clang++
@@ -29,7 +30,7 @@ jobs:
         CXX: ${{matrix.cxx}}
         CXXFLAGS: ${{matrix.cxxflags}}
       run: |
-        cmake -Bbuild -H$GITHUB_WORKSPACE \
+        cmake -Bbuild -S$GITHUB_WORKSPACE \
               -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
               -DCMAKE_CXX_STANDARD=${{matrix.std}} \
               -DCMAKE_CXX_STANDARD_REQUIRED=ON \
@@ -42,7 +43,5 @@ jobs:
       run: make -j `sysctl -n hw.ncpu`
 
     - name: Run tests
-      env:
-          CTEST_OUTPUT_ON_FAILURE: 1
       working-directory: ${{runner.workspace}}/build
-      run: ctest -C ${{matrix.build_type}} -j `sysctl -n hw.ncpu`
+      run: ctest -C ${{matrix.build_type}} -j `sysctl -n hw.ncpu` --output-on-failure

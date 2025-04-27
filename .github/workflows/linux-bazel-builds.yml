@@ -7,6 +7,7 @@ jobs:
     name: Linux Ubuntu 22.04 Bazel build <GCC 11.2.0>
     runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
         compilation_mode: [fastbuild, dbg, opt]
 
