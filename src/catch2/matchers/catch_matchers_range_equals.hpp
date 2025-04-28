@@ -11,9 +11,6 @@
 #include <catch2/internal/catch_is_permutation.hpp>
 #include <catch2/matchers/catch_matchers_templated.hpp>
 
-#include <algorithm>
-#include <utility>
-
 namespace Catch {
     namespace Matchers {
 

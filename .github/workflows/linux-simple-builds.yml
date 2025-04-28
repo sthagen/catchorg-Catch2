@@ -1,4 +1,4 @@
-name: Linux builds (basic)
+name: Linux Builds (Basic)
 
 on: [push, pull_request]
 
@@ -97,26 +97,17 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y ninja-build ${{matrix.other_pkgs}}
 
-    - name: Configure build
-      working-directory: ${{runner.workspace}}
-      env:
-        CXX: ${{matrix.cxx}}
-        CXXFLAGS: ${{matrix.cxxflags}}
+    - name: Configure
       # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.
       #       This is important
       run: |
-        cmake -Bbuild -S$GITHUB_WORKSPACE \
+        cmake --preset basic-tests -GNinja \
               -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
-              -DCMAKE_CXX_STANDARD=${{matrix.std}} \
-              -DCMAKE_CXX_STANDARD_REQUIRED=ON \
-              -DCMAKE_CXX_EXTENSIONS=OFF \
-              -DCATCH_DEVELOPMENT_BUILD=ON \
-              -G Ninja
+              -DCMAKE_CXX_COMPILER=${{matrix.cxx}} \
+              -DCMAKE_CXX_STANDARD=${{matrix.std}}
 
-    - name: Build tests + lib
-      working-directory: ${{runner.workspace}}/build
-      run: ninja
+    - name: Build
+      run: cmake --build build
 
-    - name: Run tests
-      working-directory: ${{runner.workspace}}/build
-      run: ctest -C ${{matrix.build_type}} -j `nproc` --output-on-failure
+    - name: Test
+      run: ctest --test-dir build -j --output-on-failure

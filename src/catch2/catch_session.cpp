@@ -25,7 +25,6 @@
 #include <catch2/internal/catch_stdstreams.hpp>
 #include <catch2/internal/catch_istream.hpp>
 
-#include <algorithm>
 #include <cassert>
 #include <exception>
 #include <iomanip>

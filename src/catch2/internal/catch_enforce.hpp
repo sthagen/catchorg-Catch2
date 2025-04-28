@@ -12,8 +12,6 @@
 #include <catch2/internal/catch_compiler_capabilities.hpp>
 #include <catch2/internal/catch_reusable_string_stream.hpp>
 
-#include <exception>
-
 namespace Catch {
 #if !defined(CATCH_CONFIG_DISABLE_EXCEPTIONS)
     template <typename Ex>

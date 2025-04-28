@@ -1,7 +1,7 @@
 # The builds in this file are more complex (e.g. they need custom CMake
 # configuration) and thus are unsuitable to the simple build matrix
 # approach used in simple-builds
-name: Linux builds (complex)
+name: Linux Builds (Complex)
 
 on: [push, pull_request]
 
@@ -79,75 +79,51 @@ jobs:
         sudo apt-get install -y ninja-build ${{matrix.other_pkgs}}
 
     - name: Configure build
-      working-directory: ${{runner.workspace}}
-      env:
-        CXX: ${{matrix.cxx}}
-        CXXFLAGS: ${{matrix.cxxflags}}
       # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.
       #       This is important
       run: |
-        cmake -Bbuild -S$GITHUB_WORKSPACE \
+        cmake --preset basic-tests -GNinja \
               -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
+              -DCMAKE_CXX_COMPILER=${{matrix.cxx}} \
               -DCMAKE_CXX_STANDARD=${{matrix.std}} \
-              -DCMAKE_CXX_STANDARD_REQUIRED=ON \
-              -DCMAKE_CXX_EXTENSIONS=OFF \
-              -DCATCH_DEVELOPMENT_BUILD=ON \
-              ${{matrix.cmake_configurations}} \
-              -G Ninja
+              ${{matrix.cmake_configurations}}
 
-    - name: Build tests + lib
-      working-directory: ${{runner.workspace}}/build
-      run: ninja
+    - name: Build
+      run: cmake --build build
 
-    - name: Run tests
-      working-directory: ${{runner.workspace}}/build
-      run: ctest -C ${{matrix.build_type}} -j `nproc` ${{matrix.other_ctest_args}} --output-on-failure
+    - name: Test
+      run: ctest --test-dir build -j --output-on-failure
+
   clang-tidy:
-    name: clang-tidy ${{matrix.version}}, ${{matrix.build_description}}, C++${{matrix.std}} ${{matrix.build_type}}
+    name: clang-tidy
     runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        include:
-          - version: "15"
-            build_description: all
-            build_type: Debug
-            std: 17
-            other_pkgs: ''
-            cmake_configurations: -DCATCH_BUILD_EXAMPLES=ON -DCATCH_ENABLE_CMAKE_HELPER_TESTS=ON
     steps:
     - uses: actions/checkout@v4
 
     - name: Prepare environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y ninja-build clang-${{matrix.version}} clang-tidy-${{matrix.version}} ${{matrix.other_pkgs}}
+        sudo apt-get install -y ninja-build clang-15 clang-tidy-15
 
-    - name: Configure build
-      working-directory: ${{runner.workspace}}
-      env:
-        CXX: clang++-${{matrix.version}}
-        CXXFLAGS: ${{matrix.cxxflags}}
+    - name: Configure
       # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.
       #       This is important
       run: |
-        clangtidy="clang-tidy-${{matrix.version}};-use-color"
+        clangtidy="clang-tidy-15;-use-color"
         # Use a dummy compiler/linker/ar/ranlib to effectively disable the
         # compilation and only run clang-tidy.
-        cmake -Bbuild -S$GITHUB_WORKSPACE \
-              -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
-              -DCMAKE_CXX_STANDARD=${{matrix.std}} \
-              -DCMAKE_CXX_STANDARD_REQUIRED=ON \
-              -DCMAKE_CXX_EXTENSIONS=OFF \
-              -DCATCH_DEVELOPMENT_BUILD=ON \
-              -DCMAKE_CXX_CLANG_TIDY="$clangtidy" \
-              -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/true \
+        cmake --preset basic-tests -GNinja \
               -DCMAKE_AR=/usr/bin/true \
+              -DCMAKE_BUILD_TYPE=Debug \
+              -DCMAKE_CXX_CLANG_TIDY="$clangtidy" \
               -DCMAKE_CXX_COMPILER_AR=/usr/bin/true \
-              -DCMAKE_RANLIB=/usr/bin/true \
+              -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/true \
+              -DCMAKE_CXX_COMPILER=clang++-15 \
               -DCMAKE_CXX_LINK_EXECUTABLE=/usr/bin/true \
-              ${{matrix.cmake_configurations}} \
-              -G Ninja
+              -DCMAKE_CXX_STANDARD=17 \
+              -DCMAKE_RANLIB=/usr/bin/true \
+              -DCATCH_BUILD_EXAMPLES=ON \
+              -DCATCH_ENABLE_CMAKE_HELPER_TESTS=ON
 
     - name: Run clang-tidy
-      working-directory: ${{runner.workspace}}/build
-      run: ninja
+      run: cmake --build build
