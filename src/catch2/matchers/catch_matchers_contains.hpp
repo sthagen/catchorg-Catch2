@@ -12,6 +12,7 @@
 #include <catch2/internal/catch_move_and_forward.hpp>
 
 #include <functional>
+#include <type_traits>
 
 namespace Catch {
     namespace Matchers {

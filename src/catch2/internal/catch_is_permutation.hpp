@@ -9,6 +9,7 @@
 #define CATCH_IS_PERMUTATION_HPP_INCLUDED
 
 #include <iterator>
+#include <type_traits>
 
 namespace Catch {
     namespace Detail {
