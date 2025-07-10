@@ -170,23 +170,41 @@ if(NOT_SUBPROJECT)
     "${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig"
     CACHE PATH "Path where catch2.pc is installed"
   )
-  configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/CMake/catch2.pc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/catch2.pc
-    @ONLY
+
+  # Generate the pkg-config files
+  # To understand the script below, you have to understand that it works in two steps.
+  # 1) A CMake script is generated at configuration time
+  # 2) It is executed at install time.
+  # And both of these have access to different parts of the information we need.
+  #
+  # Further, the variables before "[[" are expanded at configuration time,
+  # while the ones inside the [[]] block are expanded at script execution (install) time.
+  string(
+    JOIN "\n"
+      install_script
+       "set(install_pkgconfdir \"${PKGCONFIG_INSTALL_DIR}\")"
+       "set(impl_pc_file \"${CMAKE_CURRENT_SOURCE_DIR}/CMake/catch2.pc.in\")"
+       "set(main_pc_file \"${CMAKE_CURRENT_SOURCE_DIR}/CMake/catch2-with-main.pc.in\")"
+       "set(Catch2_VERSION ${Catch2_VERSION})"
+       "set(include_dir \"${CMAKE_INSTALL_INCLUDEDIR}\")"
+       "set(lib_dir \"${CMAKE_INSTALL_LIBDIR}\")"
+       [[
+         set(lib_name "$<TARGET_FILE_BASE_NAME:Catch2>")
+         configure_file(
+           "${impl_pc_file}"
+           "${CMAKE_INSTALL_PREFIX}/${install_pkgconfdir}/catch2.pc"
+           @ONLY
+         )
+
+         set(lib_name "$<TARGET_FILE_BASE_NAME:Catch2WithMain>")
+         configure_file(
+           "${main_pc_file}"
+           "${CMAKE_INSTALL_PREFIX}/${install_pkgconfdir}/catch2-with-main.pc"
+           @ONLY
+         )
+       ]]
   )
-  configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/CMake/catch2-with-main.pc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/catch2-with-main.pc
-    @ONLY
-  )
-  install(
-    FILES
-      "${CMAKE_CURRENT_BINARY_DIR}/catch2.pc"
-      "${CMAKE_CURRENT_BINARY_DIR}/catch2-with-main.pc"
-    DESTINATION
-      ${PKGCONFIG_INSTALL_DIR}
-  )
+  install(CODE "${install_script}")
 
   set(CPACK_PACKAGE_CONTACT "https://github.com/catchorg/Catch2/")
 
