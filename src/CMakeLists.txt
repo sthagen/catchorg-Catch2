@@ -144,6 +144,7 @@ set(IMPL_HEADERS
   ${SOURCES_DIR}/internal/catch_uniform_integer_distribution.hpp
   ${SOURCES_DIR}/internal/catch_unique_name.hpp
   ${SOURCES_DIR}/internal/catch_unique_ptr.hpp
+  ${SOURCES_DIR}/internal/catch_unreachable.hpp
   ${SOURCES_DIR}/internal/catch_void_type.hpp
   ${SOURCES_DIR}/internal/catch_wildcard_pattern.hpp
   ${SOURCES_DIR}/internal/catch_windows_h_proxy.hpp
@@ -450,8 +451,8 @@ if(CATCH_BUILD_EXAMPLES OR CATCH_BUILD_EXTRA_TESTS)
   target_compile_features(Catch2_buildall_interface INTERFACE cxx_std_14)
 endif()
 
-list(APPEND CATCH_WARNING_TARGETS Catch2 Catch2WithMain)
-set(CATCH_WARNING_TARGETS ${CATCH_WARNING_TARGETS} PARENT_SCOPE)
+list(APPEND CATCH_IMPL_TARGETS Catch2 Catch2WithMain)
+set(CATCH_IMPL_TARGETS ${CATCH_IMPL_TARGETS} PARENT_SCOPE)
 
 # We still do not support building dynamic library with hidden visibility
 # so we want to check & warn users if they do this. However, we won't abort

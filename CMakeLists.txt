@@ -103,7 +103,13 @@ if(CATCH_BUILD_FUZZERS)
 endif()
 
 if(CATCH_DEVELOPMENT_BUILD)
-  add_warnings_to_targets("${CATCH_WARNING_TARGETS}")
+  set(CATCH_ALL_TARGETS ${CATCH_IMPL_TARGETS} ${CATCH_TEST_TARGETS})
+  add_warnings_to_targets("${CATCH_ALL_TARGETS}")
+  # After we added the noreturn hint to FAIL and SKIP, Clang became
+  # extremely good at diagnosing tests that test these macros as being
+  # noreturn, but not marked as such. This made the warning useless for
+  # our test files.
+  add_cxx_flag_if_supported_to_targets("-Wno-missing-noreturn" "${CATCH_TEST_TARGETS}")
 endif()
 
 # Only perform the installation steps when Catch is not being used as

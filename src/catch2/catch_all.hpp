@@ -126,6 +126,7 @@
 #include <catch2/internal/catch_uniform_integer_distribution.hpp>
 #include <catch2/internal/catch_unique_name.hpp>
 #include <catch2/internal/catch_unique_ptr.hpp>
+#include <catch2/internal/catch_unreachable.hpp>
 #include <catch2/internal/catch_void_type.hpp>
 #include <catch2/internal/catch_wildcard_pattern.hpp>
 #include <catch2/internal/catch_xmlwriter.hpp>

@@ -152,6 +152,7 @@ internal_headers = [
   'internal/catch_uniform_integer_distribution.hpp',
   'internal/catch_unique_name.hpp',
   'internal/catch_unique_ptr.hpp',
+  'internal/catch_unreachable.hpp',
   'internal/catch_void_type.hpp',
   'internal/catch_wildcard_pattern.hpp',
   'internal/catch_windows_h_proxy.hpp',
