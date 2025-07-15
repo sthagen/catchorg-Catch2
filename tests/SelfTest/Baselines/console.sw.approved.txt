@@ -16704,51 +16704,51 @@ Clara.tests.cpp:<line number>
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  Catch::Clara::Detail::is_unary_function<decltype(unary1)>::value
+  Catch::Clara::Detail::is_unary_function_v<decltype(unary1)>
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  Catch::Clara::Detail::is_unary_function<decltype(unary2)>::value
+  Catch::Clara::Detail::is_unary_function_v<decltype(unary2)>
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  Catch::Clara::Detail::is_unary_function<decltype(unary3)>::value
+  Catch::Clara::Detail::is_unary_function_v<decltype(unary3)>
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  Catch::Clara::Detail::is_unary_function<decltype(unary4)>::value
+  Catch::Clara::Detail::is_unary_function_v<decltype(unary4)>
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  Catch::Clara::Detail::is_unary_function<decltype(unary5)>::value
+  Catch::Clara::Detail::is_unary_function_v<decltype(unary5)>
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  Catch::Clara::Detail::is_unary_function<decltype(unary6)>::value
+  Catch::Clara::Detail::is_unary_function_v<decltype(unary6)>
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  !(Catch::Clara::Detail::is_unary_function<decltype(binary1)>::value)
+  !(Catch::Clara::Detail::is_unary_function_v<decltype(binary1)>)
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  !(Catch::Clara::Detail::is_unary_function<decltype(binary2)>::value)
+  !(Catch::Clara::Detail::is_unary_function_v<decltype(binary2)>)
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  !(Catch::Clara::Detail::is_unary_function<decltype(nullary1)>::value)
+  !(Catch::Clara::Detail::is_unary_function_v<decltype(nullary1)>)
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  !(Catch::Clara::Detail::is_unary_function<decltype(nullary2)>::value)
+  !(Catch::Clara::Detail::is_unary_function_v<decltype(nullary2)>)
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  !(Catch::Clara::Detail::is_unary_function<int>::value)
+  !(Catch::Clara::Detail::is_unary_function_v<int>)
 
 Clara.tests.cpp:<line number>: PASSED:
 with message:
-  !(Catch::Clara::Detail::is_unary_function<std::string const&>::value)
+  !(Catch::Clara::Detail::is_unary_function_v<std::string const&>)
 
 -------------------------------------------------------------------------------
 just failure

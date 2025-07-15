@@ -56,7 +56,7 @@ namespace {
 
     CATCH_INTERNAL_START_WARNINGS_SUPPRESSION
     CATCH_INTERNAL_SUPPRESS_GLOBALS_WARNINGS
-    static AutoTestReg autoTestReg;
+    static const AutoTestReg autoTestReg;
     CATCH_INTERNAL_STOP_WARNINGS_SUPPRESSION
 
         template<typename T>
