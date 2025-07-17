@@ -668,9 +668,17 @@ Nor would this
     <OverallResult success="true" skips="0"/>
   </TestCase>
   <TestCase name="#2615 - Throwing in constructor generator fails test case but does not abort" tags="[!shouldfail][generators][regression]" filename="tests/<exe-name>/UsageTests/Generators.tests.cpp" >
-    <Exception filename="tests/<exe-name>/UsageTests/Generators.tests.cpp" >
-      failure to init
-    </Exception>
+    <Expression success="false" filename="tests/<exe-name>/UsageTests/Generators.tests.cpp" >
+      <Original>
+        {Unknown expression after the reported line}
+      </Original>
+      <Expanded>
+        {Unknown expression after the reported line}
+      </Expanded>
+      <Exception filename="tests/<exe-name>/UsageTests/Generators.tests.cpp" >
+        failure to init
+      </Exception>
+    </Expression>
     <OverallResult success="true" skips="0"/>
   </TestCase>
   <TestCase name="#748 - captures with unexpected exceptions" tags="[!shouldfail][!throws][.][failing]" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
@@ -678,9 +686,17 @@ Nor would this
       <Info filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
         answer := 42
       </Info>
-      <Exception filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
-        expected exception
-      </Exception>
+      <Expression success="false" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
+        <Original>
+          {Unknown expression after the reported line}
+        </Original>
+        <Expanded>
+          {Unknown expression after the reported line}
+        </Expanded>
+        <Exception filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
+          expected exception
+        </Exception>
+      </Expression>
       <OverallResults successes="0" failures="0" expectedFailures="1" skipped="false"/>
     </Section>
     <Section name="inside REQUIRE_NOTHROW" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
@@ -18349,9 +18365,17 @@ Approx( 1.23999999999999999 )
   </TestCase>
   <TestCase name="When unchecked exceptions are thrown from sections they are always failures" tags="[!throws][.][failing]" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
     <Section name="section name" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
-      <Exception filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
-        unexpected exception
-      </Exception>
+      <Expression success="false" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
+        <Original>
+          {Unknown expression after the reported line}
+        </Original>
+        <Expanded>
+          {Unknown expression after the reported line}
+        </Expanded>
+        <Exception filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
+          unexpected exception
+        </Exception>
+      </Expression>
       <OverallResults successes="0" failures="1" expectedFailures="0" skipped="false"/>
     </Section>
     <OverallResult success="false" skips="0"/>

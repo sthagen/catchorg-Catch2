@@ -163,9 +163,9 @@ ok {test-number} - smallest_non_zero, WithinULP( -smallest_non_zero, 2 ) for: 0.
 # #2152 - ULP checks between differently signed values were wrong - float
 ok {test-number} - smallest_non_zero, !WithinULP( -smallest_non_zero, 1 ) for: 0.0f not is within 1 ULPs of -1.40129846e-45f ([-2.80259693e-45, -0.00000000e+00])
 # #2615 - Throwing in constructor generator fails test case but does not abort
-not ok {test-number} - unexpected exception with message: 'failure to init'
+not ok {test-number} - unexpected exception with message: 'failure to init'; expression was: {Unknown expression after the reported line}
 # #748 - captures with unexpected exceptions
-not ok {test-number} - unexpected exception with message: 'answer := 42' with 1 message: 'expected exception'
+not ok {test-number} - unexpected exception with message: 'answer := 42'; expression was: {Unknown expression after the reported line} with 1 message: 'expected exception'
 # #748 - captures with unexpected exceptions
 not ok {test-number} - unexpected exception with message: 'answer := 42'; expression was: thisThrows() with 1 message: 'expected exception'
 # #748 - captures with unexpected exceptions
@@ -3765,7 +3765,7 @@ not ok {test-number} - unexpected exception with message: 'expected exception'; 
 # When unchecked exceptions are thrown from functions they are always failures
 not ok {test-number} - unexpected exception with message: 'expected exception'; expression was: thisThrows() == 0
 # When unchecked exceptions are thrown from sections they are always failures
-not ok {test-number} - unexpected exception with message: 'unexpected exception'
+not ok {test-number} - unexpected exception with message: 'unexpected exception'; expression was: {Unknown expression after the reported line}
 # X/level/0/a
 ok {test-number} -
 # X/level/0/b

@@ -1007,8 +1007,9 @@ at Decomposition.tests.cpp:<line number>
   <file path="tests/<exe-name>/UsageTests/Exception.tests.cpp">
     <testCase name="#748 - captures with unexpected exceptions" duration="{duration}"/>
     <testCase name="#748 - captures with unexpected exceptions/outside assertions" duration="{duration}">
-      <skipped message="TEST_CASE()">
+      <skipped message="({Unknown expression after the reported line})">
 FAILED:
+	{Unknown expression after the reported line}
 expected exception
 answer := 42
 at Exception.tests.cpp:<line number>
@@ -1141,8 +1142,9 @@ at Exception.tests.cpp:<line number>
       </error>
     </testCase>
     <testCase name="When unchecked exceptions are thrown from sections they are always failures/section name" duration="{duration}">
-      <error message="TEST_CASE()">
+      <error message="({Unknown expression after the reported line})">
 FAILED:
+	{Unknown expression after the reported line}
 unexpected exception
 at Exception.tests.cpp:<line number>
       </error>
@@ -1160,8 +1162,9 @@ at Exception.tests.cpp:<line number>
     <testCase name="#1913 - GENERATE inside a for loop should not keep recreating the generator" duration="{duration}"/>
     <testCase name="#1913 - GENERATEs can share a line" duration="{duration}"/>
     <testCase name="#2615 - Throwing in constructor generator fails test case but does not abort" duration="{duration}">
-      <skipped message="TEST_CASE()">
+      <skipped message="({Unknown expression after the reported line})">
 FAILED:
+	{Unknown expression after the reported line}
 failure to init
 at Generators.tests.cpp:<line number>
       </skipped>

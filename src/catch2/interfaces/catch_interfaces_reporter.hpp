@@ -115,6 +115,11 @@ namespace Catch {
         //! Catch2 should call `Reporter::assertionEnded` even for passing
         //! assertions
         bool shouldReportAllAssertions = false;
+        //! Catch2 should call `Reporter::assertionStarting` for all assertions
+        // Defaults to true for backwards compatibility, but none of our current
+        // reporters actually want this, and it enables a fast path in assertion
+        // handling.
+        bool shouldReportAllAssertionStarts = true;
     };
 
     /**
