@@ -108,7 +108,7 @@ namespace Catch {
 
         bool lastAssertionPassed() override;
 
-        void assertionPassed() override;
+        void assertionPassedFastPath(SourceLineInfo lineInfo);
 
     public:
         // !TBD We need to do this another way!
@@ -148,7 +148,8 @@ namespace Catch {
         Totals m_totals;
         IEventListenerPtr m_reporter;
         std::vector<MessageInfo> m_messages;
-        std::vector<ScopedMessage> m_messageScopes; /* Keeps owners of so-called unscoped messages. */
+        // Owners for the UNSCOPED_X information macro
+        std::vector<ScopedMessage> m_messageScopes;
         SourceLineInfo m_lastKnownLineInfo;
         std::vector<SectionEndInfo> m_unfinishedSections;
         std::vector<ITracker*> m_activeSections;
@@ -158,6 +159,9 @@ namespace Catch {
         // Caches m_config->abortAfter() to avoid vptr calls/allow inlining
         size_t m_abortAfterXFailedAssertions;
         bool m_lastAssertionPassed = false;
+        // Should we clear message scopes before sending off the messages to reporter?
+        // Set in `assertionPassedFastPath` to avoid doing the full clear there.
+        bool m_clearMessageScopes = false;
         bool m_shouldReportUnexpected = true;
         // Caches whether `assertionStarting` events should be sent to the reporter.
         bool m_reportAssertionStarting;

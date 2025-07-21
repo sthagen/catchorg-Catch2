@@ -66,6 +66,7 @@
 #include <catch2/internal/catch_debug_console.hpp>
 #include <catch2/internal/catch_debugger.hpp>
 #include <catch2/internal/catch_decomposer.hpp>
+#include <catch2/internal/catch_deprecation_macro.hpp>
 #include <catch2/internal/catch_enforce.hpp>
 #include <catch2/internal/catch_enum_values_registry.hpp>
 #include <catch2/internal/catch_errno_guard.hpp>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuitesloose text artifact
 >
-  <testsuite name="<exe-name>" errors="17" failures="134" skipped="12" tests="2285" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
+  <testsuite name="<exe-name>" errors="17" failures="140" skipped="12" tests="2293" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
     <properties>
       <property name="random-seed" value="1"/>
       <property name="filters" value="&quot;*&quot; ~[!nonportable] ~[!benchmark] ~[approvals]"/>
@@ -67,7 +67,6 @@ at Generators.tests.cpp:<line number>
 FAILED:
   {Unknown expression after the reported line}
 expected exception
-answer := 42
 at Exception.tests.cpp:<line number>
       </error>
     </testcase>
@@ -412,6 +411,23 @@ at Exception.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Capture and info messages" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Capture and info messages/Capture should stringify like assertions" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Capture and info messages/Info should NOT stringify the way assertions do" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Captures do not leave block with an exception" time="{duration}" status="run">
+      <failure message="false" type="REQUIRE">
+FAILED:
+  REQUIRE( false )
+a := 1
+at Message.tests.cpp:<line number>
+      </failure>
+    </testcase>
+    <testcase classname="<exe-name>.global" name="Captures outlive section end" time="{duration}" status="run">
+      <failure message="false" type="REQUIRE">
+FAILED:
+  REQUIRE( false )
+a := 1
+at Message.tests.cpp:<line number>
+      </failure>
+    </testcase>
+    <testcase classname="<exe-name>.global" name="Captures outlive section end/Dummy section" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="CaseInsensitiveEqualsTo is case insensitive" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="CaseInsensitiveEqualsTo is case insensitive/Degenerate cases" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="CaseInsensitiveEqualsTo is case insensitive/Plain comparisons" time="{duration}" status="run"/>
@@ -1350,6 +1366,37 @@ at Matchers.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Scenario: Vector resizing affects size and capacity/Given: an empty vector/When: it is made larger/Then: the size and capacity go up/And when: it is made smaller again/Then: the size goes down but the capacity stays the same" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Scenario: Vector resizing affects size and capacity/Given: an empty vector/When: we reserve more space" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Scenario: Vector resizing affects size and capacity/Given: an empty vector/When: we reserve more space/Then: The capacity is increased but the size remains the same" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Scoped message applies to all assertions in scope" time="{duration}" status="run">
+      <failure message="false" type="CHECK">
+FAILED:
+  CHECK( false )
+This will be reported multiple times
+at Message.tests.cpp:<line number>
+      </failure>
+      <failure message="false" type="CHECK">
+FAILED:
+  CHECK( false )
+This will be reported multiple times
+at Message.tests.cpp:<line number>
+      </failure>
+    </testcase>
+    <testcase classname="<exe-name>.global" name="Scoped messages do not leave block with an exception" time="{duration}" status="run">
+      <failure message="false" type="REQUIRE">
+FAILED:
+  REQUIRE( false )
+Should be in scope at the end
+at Message.tests.cpp:<line number>
+      </failure>
+    </testcase>
+    <testcase classname="<exe-name>.global" name="Scoped messages outlive section end" time="{duration}" status="run">
+      <failure message="false" type="REQUIRE">
+FAILED:
+  REQUIRE( false )
+Should survive a section end
+at Message.tests.cpp:<line number>
+      </failure>
+    </testcase>
+    <testcase classname="<exe-name>.global" name="Scoped messages outlive section end/Dummy section" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Sends stuff to stdout and stderr" time="{duration}" status="run">
       <system-out>
 A string sent directly to stdout

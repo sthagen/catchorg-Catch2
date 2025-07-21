@@ -779,8 +779,7 @@ Exception.tests.cpp:<line number>
 
 Exception.tests.cpp:<line number>: FAILED:
   {Unknown expression after the reported line}
-due to unexpected exception with messages:
-  answer := 42
+due to unexpected exception with message:
   expected exception
 
 -------------------------------------------------------------------------------
@@ -2864,6 +2863,40 @@ ToStringGeneral.tests.cpp:<line number>: PASSED:
   REQUIRE( true )
 with message:
   3
+
+-------------------------------------------------------------------------------
+Captures do not leave block with an exception
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  REQUIRE( false )
+with message:
+  a := 1
+
+-------------------------------------------------------------------------------
+Captures outlive section end
+  Dummy section
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: PASSED:
+  CHECK( true )
+with message:
+  a := 1
+
+-------------------------------------------------------------------------------
+Captures outlive section end
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  REQUIRE( false )
+with message:
+  a := 1
 
 -------------------------------------------------------------------------------
 CaseInsensitiveEqualsTo is case insensitive
@@ -11025,6 +11058,56 @@ with expansion:
   0 == 0
 
 -------------------------------------------------------------------------------
+Scoped message applies to all assertions in scope
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  CHECK( false )
+with message:
+  This will be reported multiple times
+
+Message.tests.cpp:<line number>: FAILED:
+  CHECK( false )
+with message:
+  This will be reported multiple times
+
+-------------------------------------------------------------------------------
+Scoped messages do not leave block with an exception
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  REQUIRE( false )
+with message:
+  Should be in scope at the end
+
+-------------------------------------------------------------------------------
+Scoped messages outlive section end
+  Dummy section
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: PASSED:
+  CHECK( true )
+with message:
+  Should survive a section end
+
+-------------------------------------------------------------------------------
+Scoped messages outlive section end
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  REQUIRE( false )
+with message:
+  Should survive a section end
+
+-------------------------------------------------------------------------------
 Sends stuff to stdout and stderr
 -------------------------------------------------------------------------------
 Misc.tests.cpp:<line number>
@@ -19040,6 +19123,6 @@ Misc.tests.cpp:<line number>
 Misc.tests.cpp:<line number>: PASSED:
 
 ===============================================================================
-test cases:  423 |  313 passed |  90 failed | 6 skipped | 14 failed as expected
-assertions: 2273 | 2087 passed | 151 failed | 35 failed as expected
+test cases:  428 |  313 passed |  95 failed | 6 skipped | 14 failed as expected
+assertions: 2281 | 2089 passed | 157 failed | 35 failed as expected
 

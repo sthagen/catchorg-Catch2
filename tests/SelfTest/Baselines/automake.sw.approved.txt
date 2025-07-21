@@ -102,6 +102,8 @@ Nor would this
 :test-result: PASS CAPTURE can deal with complex expressions involving commas
 :test-result: PASS CAPTURE parses string and character constants
 :test-result: PASS Capture and info messages
+:test-result: FAIL Captures do not leave block with an exception
+:test-result: FAIL Captures outlive section end
 :test-result: PASS CaseInsensitiveEqualsTo is case insensitive
 :test-result: PASS CaseInsensitiveLess is case insensitive
 :test-result: PASS Character pretty printing
@@ -226,6 +228,9 @@ Nor would this
 :test-result: PASS Scenario: Do that thing with the thing
 :test-result: PASS Scenario: This is a really long scenario name to see how the list command deals with wrapping
 :test-result: PASS Scenario: Vector resizing affects size and capacity
+:test-result: FAIL Scoped message applies to all assertions in scope
+:test-result: FAIL Scoped messages do not leave block with an exception
+:test-result: FAIL Scoped messages outlive section end
 A string sent directly to stdout
 A string sent directly to stderr
 A string sent to stderr via clog

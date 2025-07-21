@@ -44,6 +44,7 @@ set(_OverridableOptions
   "GETENV"
   "EXPERIMENTAL_STATIC_ANALYSIS_SUPPORT"
   "USE_BUILTIN_CONSTANT_P"
+  "DEPRECATION_ANNOTATIONS"
 )
 
 foreach(OptionName ${_OverridableOptions})

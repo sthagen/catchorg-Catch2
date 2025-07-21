@@ -47,8 +47,7 @@ Exception.tests.cpp:<line number>
 
 Exception.tests.cpp:<line number>: FAILED:
   {Unknown expression after the reported line}
-due to unexpected exception with messages:
-  answer := 42
+due to unexpected exception with message:
   expected exception
 
 -------------------------------------------------------------------------------
@@ -347,6 +346,28 @@ Exception.tests.cpp:<line number>: FAILED:
   {Unknown expression after the reported line}
 due to unexpected exception with message:
   unexpected exception
+
+-------------------------------------------------------------------------------
+Captures do not leave block with an exception
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  REQUIRE( false )
+with message:
+  a := 1
+
+-------------------------------------------------------------------------------
+Captures outlive section end
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  REQUIRE( false )
+with message:
+  a := 1
 
 -------------------------------------------------------------------------------
 Contains string matcher
@@ -988,6 +1009,44 @@ with expansion:
   "this string contains 'abc' as a substring" matches "this string contains
   'abc' as a" case sensitively
 
+-------------------------------------------------------------------------------
+Scoped message applies to all assertions in scope
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  CHECK( false )
+with message:
+  This will be reported multiple times
+
+Message.tests.cpp:<line number>: FAILED:
+  CHECK( false )
+with message:
+  This will be reported multiple times
+
+-------------------------------------------------------------------------------
+Scoped messages do not leave block with an exception
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  REQUIRE( false )
+with message:
+  Should be in scope at the end
+
+-------------------------------------------------------------------------------
+Scoped messages outlive section end
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  REQUIRE( false )
+with message:
+  Should survive a section end
+
 A string sent directly to stdout
 A string sent directly to stderr
 A string sent to stderr via clog
@@ -1613,6 +1672,6 @@ due to unexpected exception with message:
   Why would you throw a std::string?
 
 ===============================================================================
-test cases:  423 |  331 passed |  71 failed | 7 skipped | 14 failed as expected
-assertions: 2252 | 2087 passed | 130 failed | 35 failed as expected
+test cases:  428 |  331 passed |  76 failed | 7 skipped | 14 failed as expected
+assertions: 2260 | 2089 passed | 136 failed | 35 failed as expected
 

@@ -296,6 +296,10 @@ namespace Catch {
         }
 
         {
+            if ( m_clearMessageScopes ) {
+                m_messageScopes.clear();
+                m_clearMessageScopes = false;
+            }
             auto _ = scopedDeactivate( *m_outputRedirect );
             m_reporter->assertionEnded( AssertionStats( result, m_messages, m_totals ) );
         }
@@ -402,9 +406,6 @@ namespace Catch {
                               endInfo.durationInSeconds,
                               missingAssertions ) );
         }
-
-        m_messages.clear();
-        m_messageScopes.clear();
     }
 
     void RunContext::sectionEndedEarly(SectionEndInfo&& endInfo) {
@@ -439,8 +440,18 @@ namespace Catch {
         m_messages.push_back(message);
     }
 
-    void RunContext::popScopedMessage(MessageInfo const & message) {
-        m_messages.erase(std::remove(m_messages.begin(), m_messages.end(), message), m_messages.end());
+    void RunContext::popScopedMessage( MessageInfo const& message ) {
+        // Note: On average, it would probably be better to look for the message
+        //       backwards. However, we do not expect to have to deal with more
+        //       messages than low single digits, so the optimization is tiny,
+        //       and we would have to hand-write the loop to avoid terrible
+        //       codegen of reverse iterators in debug mode.
+        m_messages.erase(
+            std::find_if( m_messages.begin(),
+                          m_messages.end(),
+                          [id = message.sequence]( MessageInfo const& msg ) {
+                              return msg.sequence == id;
+                          } ) );
     }
 
     void RunContext::emplaceUnscopedMessage( MessageBuilder&& builder ) {
@@ -515,10 +526,11 @@ namespace Catch {
          return m_lastAssertionPassed;
     }
 
-    void RunContext::assertionPassed() {
-        m_lastAssertionPassed = true;
+    void RunContext::assertionPassedFastPath(SourceLineInfo lineInfo) {
+        m_lastKnownLineInfo = lineInfo;
         ++m_totals.assertions.passed;
-        m_messageScopes.clear();
+        m_lastAssertionPassed = true;
+        m_clearMessageScopes = true;
     }
 
     bool RunContext::aborting() const {
@@ -561,8 +573,10 @@ namespace Catch {
 
         m_testCaseTracker->close();
         handleUnfinishedSections();
-        m_messages.clear();
         m_messageScopes.clear();
+        // TBD: At this point, m_messages should be empty. Do we want to
+        //      assert that this is true, or keep the defensive clear call?
+        m_messages.clear();
 
         SectionStats testCaseSectionStats(CATCH_MOVE(testCaseSection), assertions, duration, missingAssertions);
         m_reporter->sectionEnded(testCaseSectionStats);
@@ -603,7 +617,8 @@ namespace Catch {
 
         if( result ) {
             if (!m_includeSuccessfulResults) {
-                assertionPassed();
+                // Fast path if neither user nor reporter asked for passing assertions
+                assertionPassedFastPath(info.lineInfo);
             }
             else {
                 reportExpr(info, ResultWas::Ok, &expr, negated);
@@ -718,6 +733,11 @@ namespace Catch {
         AssertionResult assertionResult{ info, CATCH_MOVE( data ) };
 
         const auto isOk = assertionResult.isOk();
+        if ( isOk && !m_includeSuccessfulResults ) {
+            assertionPassedFastPath( info.lineInfo );
+            return;
+        }
+
         assertionEnded( CATCH_MOVE(assertionResult) );
         if ( !isOk ) {
             populateReaction(

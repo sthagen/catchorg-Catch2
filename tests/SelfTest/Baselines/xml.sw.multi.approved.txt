@@ -683,9 +683,6 @@ Nor would this
   </TestCase>
   <TestCase name="#748 - captures with unexpected exceptions" tags="[!shouldfail][!throws][.][failing]" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
     <Section name="outside assertions" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
-      <Info filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
-        answer := 42
-      </Info>
       <Expression success="false" filename="tests/<exe-name>/UsageTests/Exception.tests.cpp" >
         <Original>
           {Unknown expression after the reported line}
@@ -3089,6 +3086,48 @@ Approx( 1.23399996757507324 )
       <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
     </Section>
     <OverallResult success="true" skips="0"/>
+  </TestCase>
+  <TestCase name="Captures do not leave block with an exception" tags="[.][capture][failing][messages]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+    <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      a := 1
+    </Info>
+    <Expression success="false" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <Original>
+        false
+      </Original>
+      <Expanded>
+        false
+      </Expanded>
+    </Expression>
+    <OverallResult success="false" skips="0"/>
+  </TestCase>
+  <TestCase name="Captures outlive section end" tags="[.][failing][info][messages]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+    <Section name="Dummy section" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+        a := 1
+      </Info>
+      <Expression success="true" type="CHECK" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+        <Original>
+          true
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      a := 1
+    </Info>
+    <Expression success="false" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <Original>
+        false
+      </Original>
+      <Expanded>
+        false
+      </Expanded>
+    </Expression>
+    <OverallResult success="false" skips="0"/>
   </TestCase>
   <TestCase name="CaseInsensitiveEqualsTo is case insensitive" tags="[comparisons][string-case]" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
     <Section name="Degenerate cases" filename="tests/<exe-name>/IntrospectiveTests/Details.tests.cpp" >
@@ -12893,6 +12932,73 @@ All available test cases:
     </Section>
     <OverallResult success="true" skips="0"/>
   </TestCase>
+  <TestCase name="Scoped message applies to all assertions in scope" tags="[.][failing][info][messages]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+    <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      This will be reported multiple times
+    </Info>
+    <Expression success="false" type="CHECK" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <Original>
+        false
+      </Original>
+      <Expanded>
+        false
+      </Expanded>
+    </Expression>
+    <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      This will be reported multiple times
+    </Info>
+    <Expression success="false" type="CHECK" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <Original>
+        false
+      </Original>
+      <Expanded>
+        false
+      </Expanded>
+    </Expression>
+    <OverallResult success="false" skips="0"/>
+  </TestCase>
+  <TestCase name="Scoped messages do not leave block with an exception" tags="[.][failing][info][messages]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+    <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      Should be in scope at the end
+    </Info>
+    <Expression success="false" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <Original>
+        false
+      </Original>
+      <Expanded>
+        false
+      </Expanded>
+    </Expression>
+    <OverallResult success="false" skips="0"/>
+  </TestCase>
+  <TestCase name="Scoped messages outlive section end" tags="[.][failing][info][messages]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+    <Section name="Dummy section" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+        Should survive a section end
+      </Info>
+      <Expression success="true" type="CHECK" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+        <Original>
+          true
+        </Original>
+        <Expanded>
+          true
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      Should survive a section end
+    </Info>
+    <Expression success="false" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <Original>
+        false
+      </Original>
+      <Expanded>
+        false
+      </Expanded>
+    </Expression>
+    <OverallResult success="false" skips="0"/>
+  </TestCase>
   <TestCase name="Sends stuff to stdout and stderr" tags="[.]" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
     <OverallResult success="false" skips="0">
       <StdOut>
@@ -22006,6 +22112,6 @@ Approx( -1.95996398454005449 )
     </Section>
     <OverallResult success="true" skips="0"/>
   </TestCase>
-  <OverallResults successes="2087" failures="151" expectedFailures="35" skips="12"/>
-  <OverallResultsCases successes="313" failures="90" expectedFailures="14" skips="6"/>
+  <OverallResults successes="2089" failures="157" expectedFailures="35" skips="12"/>
+  <OverallResultsCases successes="313" failures="95" expectedFailures="14" skips="6"/>
 </Catch2TestRun>

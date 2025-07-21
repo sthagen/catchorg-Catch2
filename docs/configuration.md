@@ -263,6 +263,21 @@ namespace Catch {
 }
 ```
 
+
+## Disabling deprecation warnings
+
+> Introduced in Catch2 X.Y.Z
+
+Catch2 has started using the C++ macro `[[deprecated]]` to mark things
+that are deprecated and should not be used any more. If you need to
+temporarily disable these warnings, use
+
+    CATCH_CONFIG_NO_DEPRECATION_ANNOTATIONS
+
+Catch2 currently does not support more fine-grained deprecation warning
+control, nor do we plan to.
+
+
 ## Overriding Catch's debug break (`-b`)
 
 > [Introduced](https://github.com/catchorg/Catch2/pull/1846) in Catch2 2.11.2.

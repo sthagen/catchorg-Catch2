@@ -85,6 +85,7 @@ set(IMPL_HEADERS
   ${SOURCES_DIR}/internal/catch_debug_console.hpp
   ${SOURCES_DIR}/internal/catch_debugger.hpp
   ${SOURCES_DIR}/internal/catch_decomposer.hpp
+  ${SOURCES_DIR}/internal/catch_deprecation_macro.hpp
   ${SOURCES_DIR}/internal/catch_enforce.hpp
   ${SOURCES_DIR}/internal/catch_enum_values_registry.hpp
   ${SOURCES_DIR}/internal/catch_errno_guard.hpp

@@ -92,6 +92,7 @@ internal_headers = [
   'internal/catch_debug_console.hpp',
   'internal/catch_debugger.hpp',
   'internal/catch_decomposer.hpp',
+  'internal/catch_deprecation_macro.hpp',
   'internal/catch_enforce.hpp',
   'internal/catch_enum_values_registry.hpp',
   'internal/catch_errno_guard.hpp',

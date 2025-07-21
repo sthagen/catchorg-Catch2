@@ -1012,7 +1012,6 @@ at Decomposition.tests.cpp:<line number>
 FAILED:
 	{Unknown expression after the reported line}
 expected exception
-answer := 42
 at Exception.tests.cpp:<line number>
       </skipped>
     </testCase>
@@ -1637,6 +1636,23 @@ at Matchers.tests.cpp:<line number>
     <testCase name="CAPTURE can deal with complex expressions" duration="{duration}"/>
     <testCase name="CAPTURE can deal with complex expressions involving commas" duration="{duration}"/>
     <testCase name="CAPTURE parses string and character constants" duration="{duration}"/>
+    <testCase name="Captures do not leave block with an exception" duration="{duration}">
+      <failure message="REQUIRE(false)">
+FAILED:
+	REQUIRE( false )
+a := 1
+at Message.tests.cpp:<line number>
+      </failure>
+    </testCase>
+    <testCase name="Captures outlive section end" duration="{duration}">
+      <failure message="REQUIRE(false)">
+FAILED:
+	REQUIRE( false )
+a := 1
+at Message.tests.cpp:<line number>
+      </failure>
+    </testCase>
+    <testCase name="Captures outlive section end/Dummy section" duration="{duration}"/>
     <testCase name="FAIL aborts the test" duration="{duration}">
       <failure message="FAIL()">
 FAILED:
@@ -1726,6 +1742,37 @@ at Message.tests.cpp:<line number>
     </testCase>
     <testCase name="SUCCEED counts as a test pass" duration="{duration}"/>
     <testCase name="SUCCEED does not require an argument" duration="{duration}"/>
+    <testCase name="Scoped message applies to all assertions in scope" duration="{duration}">
+      <failure message="CHECK(false)">
+FAILED:
+	CHECK( false )
+This will be reported multiple times
+at Message.tests.cpp:<line number>
+      </failure>
+      <failure message="CHECK(false)">
+FAILED:
+	CHECK( false )
+This will be reported multiple times
+at Message.tests.cpp:<line number>
+      </failure>
+    </testCase>
+    <testCase name="Scoped messages do not leave block with an exception" duration="{duration}">
+      <failure message="REQUIRE(false)">
+FAILED:
+	REQUIRE( false )
+Should be in scope at the end
+at Message.tests.cpp:<line number>
+      </failure>
+    </testCase>
+    <testCase name="Scoped messages outlive section end" duration="{duration}">
+      <failure message="REQUIRE(false)">
+FAILED:
+	REQUIRE( false )
+Should survive a section end
+at Message.tests.cpp:<line number>
+      </failure>
+    </testCase>
+    <testCase name="Scoped messages outlive section end/Dummy section" duration="{duration}"/>
     <testCase name="Standard output from all sections is reported" duration="{duration}"/>
     <testCase name="Standard output from all sections is reported/one" duration="{duration}"/>
     <testCase name="Standard output from all sections is reported/two" duration="{duration}"/>
