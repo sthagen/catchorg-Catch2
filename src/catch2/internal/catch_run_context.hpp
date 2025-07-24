@@ -20,6 +20,7 @@
 #include <catch2/catch_assertion_result.hpp>
 #include <catch2/internal/catch_optional.hpp>
 #include <catch2/internal/catch_move_and_forward.hpp>
+#include <catch2/internal/catch_thread_support.hpp>
 
 #include <string>
 
@@ -108,13 +109,14 @@ namespace Catch {
 
         bool lastAssertionPassed() override;
 
-        void assertionPassedFastPath(SourceLineInfo lineInfo);
-
     public:
         // !TBD We need to do this another way!
         bool aborting() const;
 
     private:
+        void assertionPassedFastPath( SourceLineInfo lineInfo );
+        // Update the non-thread-safe m_totals from the atomic assertion counts.
+        void updateTotalsFromAtomics();
 
         void runCurrentTest();
         void invokeActiveTestCase();
@@ -138,19 +140,18 @@ namespace Catch {
     private:
 
         void handleUnfinishedSections();
-
+        mutable Detail::Mutex m_assertionMutex;
         TestRunInfo m_runInfo;
         TestCaseHandle const* m_activeTestCase = nullptr;
         ITracker* m_testCaseTracker = nullptr;
         Optional<AssertionResult> m_lastResult;
-
         IConfig const* m_config;
         Totals m_totals;
+        Detail::AtomicCounts m_atomicAssertionCount;
         IEventListenerPtr m_reporter;
         std::vector<MessageInfo> m_messages;
         // Owners for the UNSCOPED_X information macro
         std::vector<ScopedMessage> m_messageScopes;
-        SourceLineInfo m_lastKnownLineInfo;
         std::vector<SectionEndInfo> m_unfinishedSections;
         std::vector<ITracker*> m_activeSections;
         TrackerContext m_trackerContext;
@@ -158,10 +159,6 @@ namespace Catch {
         FatalConditionHandler m_fatalConditionhandler;
         // Caches m_config->abortAfter() to avoid vptr calls/allow inlining
         size_t m_abortAfterXFailedAssertions;
-        bool m_lastAssertionPassed = false;
-        // Should we clear message scopes before sending off the messages to reporter?
-        // Set in `assertionPassedFastPath` to avoid doing the full clear there.
-        bool m_clearMessageScopes = false;
         bool m_shouldReportUnexpected = true;
         // Caches whether `assertionStarting` events should be sent to the reporter.
         bool m_reportAssertionStarting;
