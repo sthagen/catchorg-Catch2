@@ -268,7 +268,7 @@ namespace Catch {
 
 ## Disabling deprecation warnings
 
-> Introduced in Catch2 X.Y.Z
+> Introduced in Catch2 3.9.0
 
 Catch2 has started using the C++ macro `[[deprecated]]` to mark things
 that are deprecated and should not be used any more. If you need to
@@ -318,7 +318,7 @@ are not meant to be runnable, only "scannable".
 
 ## Experimental thread safety
 
-> Introduced in Catch2 X.Y.Z
+> Introduced in Catch2 3.9.0
 
 Catch2 can optionally support thread-safe assertions, that means, multiple
 user-spawned threads can use the assertion macros at the same time. Due

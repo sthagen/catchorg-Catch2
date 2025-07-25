@@ -169,7 +169,7 @@ Currently there are three customization options:
   `assertionStarting` events. Most reporters do not, and opting out
    explicitly enables a fast-path in Catch2's handling of assertions.
 
-> `shouldReportAllAssertionStarts` was introduced in Catch2 X.Y.Z
+> `shouldReportAllAssertionStarts` was introduced in Catch2 3.9.0
 
 
 ### Per-reporter configuration

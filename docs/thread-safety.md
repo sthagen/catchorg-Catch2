@@ -8,7 +8,7 @@
 [Fatal errors and multiple threads](#fatal-errors-and-multiple-threads)<br>
 [Performance overhead](#performance-overhead)<br>
 
-> Thread safe assertions were introduced in Catch2 X.Y.Z
+> Thread safe assertions were introduced in Catch2 3.9.0
 
 Thread safety in Catch2 is currently limited to all the assertion macros.
 Interacting with benchmark macros, message macros (e.g. `INFO` or `CAPTURE`),
