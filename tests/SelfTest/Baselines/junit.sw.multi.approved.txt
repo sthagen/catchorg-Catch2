@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="<exe-name>" errors="17" failures="140" skipped="12" tests="2293" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
+  <testsuite name="<exe-name>" errors="17" failures="140" skipped="12" tests="2300" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
     <properties>
       <property name="random-seed" value="1"/>
       <property name="filters" value="&quot;*&quot; ~[!nonportable] ~[!benchmark] ~[approvals]"/>
@@ -389,6 +389,38 @@ at Exception.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Arbitrary predicate matcher/Function pointer" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Arbitrary predicate matcher/Lambdas + different type" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Assertion macros support bit operators and bool conversions" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Assertions can be nested - CHECK" time="{duration}" status="run">
+      <skipped message="TEST_CASE tagged with !mayfail"/>
+      <failure message="i > 10" type="REQUIRE">
+FAILED:
+  REQUIRE( i > 10 )
+with expansion:
+  2 > 10
+at AssertionHandler.tests.cpp:<line number>
+      </failure>
+      <error message="foo( 2 ) == 2" type="CHECK">
+FAILED:
+  CHECK( foo( 2 ) == 2 )
+{ nested assertion failed }
+at AssertionHandler.tests.cpp:<line number>
+      </error>
+    </testcase>
+    <testcase classname="<exe-name>.global" name="Assertions can be nested - REQUIRE" time="{duration}" status="run">
+      <skipped message="TEST_CASE tagged with !mayfail"/>
+      <failure message="i > 10" type="REQUIRE">
+FAILED:
+  REQUIRE( i > 10 )
+with expansion:
+  2 > 10
+at AssertionHandler.tests.cpp:<line number>
+      </failure>
+      <error message="foo( 2 ) == 2" type="REQUIRE">
+FAILED:
+  REQUIRE( foo( 2 ) == 2 )
+{ nested assertion failed }
+at AssertionHandler.tests.cpp:<line number>
+      </error>
+    </testcase>
     <testcase classname="<exe-name>.global" name="Assertions then sections" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Assertions then sections/A section" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Assertions then sections/A section/Another section" time="{duration}" status="run"/>
@@ -736,6 +768,20 @@ FAILED:
 This is a failure
 at Message.tests.cpp:<line number>
       </failure>
+    </testcase>
+    <testcase classname="<exe-name>.global" name="FAIL can be nested in assertion" time="{duration}" status="run">
+      <skipped message="TEST_CASE tagged with !mayfail"/>
+      <failure type="FAIL">
+FAILED:
+Throw a Catch::TestFailureException
+at AssertionHandler.tests.cpp:<line number>
+      </failure>
+      <error message="do_fail()" type="CHECK_NOTHROW">
+FAILED:
+  CHECK_NOTHROW( do_fail() )
+{ nested assertion failed }
+at AssertionHandler.tests.cpp:<line number>
+      </error>
     </testcase>
     <testcase classname="<exe-name>.global" name="FAIL does not require an argument" time="{duration}" status="run">
       <failure type="FAIL">

@@ -2567,6 +2567,41 @@ with expansion:
   !(Val: 1 ^ Val: 1)
 
 -------------------------------------------------------------------------------
+Assertions can be nested - CHECK
+-------------------------------------------------------------------------------
+AssertionHandler.tests.cpp:<line number>
+...............................................................................
+
+AssertionHandler.tests.cpp:<line number>: FAILED:
+  REQUIRE( i > 10 )
+with expansion:
+  2 > 10
+
+AssertionHandler.tests.cpp:<line number>: FAILED:
+  CHECK( foo( 2 ) == 2 )
+due to unexpected exception with message:
+  { nested assertion failed }
+
+AssertionHandler.tests.cpp:<line number>: PASSED:
+  CHECK( true )
+
+-------------------------------------------------------------------------------
+Assertions can be nested - REQUIRE
+-------------------------------------------------------------------------------
+AssertionHandler.tests.cpp:<line number>
+...............................................................................
+
+AssertionHandler.tests.cpp:<line number>: FAILED:
+  REQUIRE( i > 10 )
+with expansion:
+  2 > 10
+
+AssertionHandler.tests.cpp:<line number>: FAILED:
+  REQUIRE( foo( 2 ) == 2 )
+due to unexpected exception with message:
+  { nested assertion failed }
+
+-------------------------------------------------------------------------------
 Assertions then sections
 -------------------------------------------------------------------------------
 Tricky.tests.cpp:<line number>
@@ -4560,6 +4595,21 @@ Message.tests.cpp:<line number>
 Message.tests.cpp:<line number>: FAILED:
 explicitly with message:
   This is a failure
+
+-------------------------------------------------------------------------------
+FAIL can be nested in assertion
+-------------------------------------------------------------------------------
+AssertionHandler.tests.cpp:<line number>
+...............................................................................
+
+AssertionHandler.tests.cpp:<line number>: FAILED:
+explicitly with message:
+  Throw a Catch::TestFailureException
+
+AssertionHandler.tests.cpp:<line number>: FAILED:
+  CHECK_NOTHROW( do_fail() )
+due to unexpected exception with message:
+  { nested assertion failed }
 
 -------------------------------------------------------------------------------
 FAIL does not require an argument
@@ -19134,6 +19184,6 @@ Misc.tests.cpp:<line number>
 Misc.tests.cpp:<line number>: PASSED:
 
 ===============================================================================
-test cases:  428 |  313 passed |  95 failed | 6 skipped | 14 failed as expected
-assertions: 2281 | 2089 passed | 157 failed | 35 failed as expected
+test cases:  431 |  313 passed |  95 failed | 6 skipped | 17 failed as expected
+assertions: 2288 | 2090 passed | 157 failed | 41 failed as expected
 

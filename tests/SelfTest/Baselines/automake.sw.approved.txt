@@ -95,6 +95,8 @@ Nor would this
 :test-result: PASS Approximate comparisons with mixed numeric types
 :test-result: PASS Arbitrary predicate matcher
 :test-result: PASS Assertion macros support bit operators and bool conversions
+:test-result: XFAIL Assertions can be nested - CHECK
+:test-result: XFAIL Assertions can be nested - REQUIRE
 :test-result: PASS Assertions then sections
 :test-result: PASS Basic use of the Contains range matcher
 :test-result: PASS Basic use of the Empty range matcher
@@ -153,6 +155,7 @@ Nor would this
 :test-result: PASS Exceptions matchers
 :test-result: FAIL Expected exceptions that don't throw or unexpected exceptions fail the test
 :test-result: FAIL FAIL aborts the test
+:test-result: XFAIL FAIL can be nested in assertion
 :test-result: FAIL FAIL does not require an argument
 :test-result: FAIL FAIL_CHECK does not abort the test
 :test-result: PASS Factorials are computed

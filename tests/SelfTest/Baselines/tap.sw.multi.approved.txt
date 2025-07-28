@@ -610,6 +610,16 @@ ok {test-number} - HasBitOperators{ 1 } & HasBitOperators{ 1 } for: Val: 1 & Val
 ok {test-number} - lhs ^ rhs for: Val: 1 ^ Val: 2
 # Assertion macros support bit operators and bool conversions
 ok {test-number} - !(lhs ^ lhs) for: !(Val: 1 ^ Val: 1)
+# Assertions can be nested - CHECK
+not ok {test-number} - i > 10 for: 2 > 10
+# Assertions can be nested - CHECK
+not ok {test-number} - unexpected exception with message: '{ nested assertion failed }'; expression was: foo( 2 ) == 2
+# Assertions can be nested - CHECK
+ok {test-number} - true
+# Assertions can be nested - REQUIRE
+not ok {test-number} - i > 10 for: 2 > 10
+# Assertions can be nested - REQUIRE
+not ok {test-number} - unexpected exception with message: '{ nested assertion failed }'; expression was: foo( 2 ) == 2
 # Assertions then sections
 ok {test-number} - true
 # Assertions then sections
@@ -1130,6 +1140,10 @@ not ok {test-number} - expected exception, got none; expression was: thisDoesntT
 not ok {test-number} - unexpected exception with message: 'expected exception'; expression was: thisThrows()
 # FAIL aborts the test
 not ok {test-number} - explicitly with 1 message: 'This is a failure'
+# FAIL can be nested in assertion
+not ok {test-number} - explicitly with 1 message: 'Throw a Catch::TestFailureException'
+# FAIL can be nested in assertion
+not ok {test-number} - unexpected exception with message: '{ nested assertion failed }'; expression was: do_fail()
 # FAIL does not require an argument
 not ok {test-number} - explicitly
 # FAIL_CHECK does not abort the test
@@ -4572,5 +4586,5 @@ ok {test-number} - q3 == 23. for: 23.0 == 23.0
 ok {test-number} -
 # xmlentitycheck
 ok {test-number} -
-1..2293
+1..2300
 

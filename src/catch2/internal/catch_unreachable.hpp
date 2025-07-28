@@ -39,9 +39,13 @@ namespace Catch {
             __assume( false );
 #        elif defined( __GNUC__ )
             __builtin_unreachable();
-#        endif
-#    endif // ^^ NDEBUG
+#        else // vv platform without known optimization hint
             std::terminate();
+#        endif
+#    else  // ^^ NDEBUG
+            // For non-release builds, we prefer termination on bug over UB
+            std::terminate();
+#    endif //
         }
 
     } // namespace Detail

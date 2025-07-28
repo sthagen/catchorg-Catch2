@@ -332,6 +332,11 @@ Compilation.tests.cpp:<line number>: passed: !(lhs & rhs) for: !(Val: 1 & Val: 2
 Compilation.tests.cpp:<line number>: passed: HasBitOperators{ 1 } & HasBitOperators{ 1 } for: Val: 1 & Val: 1
 Compilation.tests.cpp:<line number>: passed: lhs ^ rhs for: Val: 1 ^ Val: 2
 Compilation.tests.cpp:<line number>: passed: !(lhs ^ lhs) for: !(Val: 1 ^ Val: 1)
+AssertionHandler.tests.cpp:<line number>: failed: i > 10 for: 2 > 10
+AssertionHandler.tests.cpp:<line number>: failed: unexpected exception with message: '{ nested assertion failed }'; expression was: foo( 2 ) == 2
+AssertionHandler.tests.cpp:<line number>: passed: true
+AssertionHandler.tests.cpp:<line number>: failed: i > 10 for: 2 > 10
+AssertionHandler.tests.cpp:<line number>: failed: unexpected exception with message: '{ nested assertion failed }'; expression was: foo( 2 ) == 2
 Tricky.tests.cpp:<line number>: passed: true
 Tricky.tests.cpp:<line number>: passed: true
 Tricky.tests.cpp:<line number>: passed: true
@@ -636,6 +641,8 @@ Exception.tests.cpp:<line number>: failed: unexpected exception with message: 'e
 Exception.tests.cpp:<line number>: failed: expected exception, got none; expression was: thisDoesntThrow(), std::domain_error
 Exception.tests.cpp:<line number>: failed: unexpected exception with message: 'expected exception'; expression was: thisThrows()
 Message.tests.cpp:<line number>: failed: explicitly with 1 message: 'This is a failure'
+AssertionHandler.tests.cpp:<line number>: failed: explicitly with 1 message: 'Throw a Catch::TestFailureException'
+AssertionHandler.tests.cpp:<line number>: failed: unexpected exception with message: '{ nested assertion failed }'; expression was: do_fail()
 Message.tests.cpp:<line number>: failed: explicitly
 Message.tests.cpp:<line number>: failed: explicitly with 1 message: 'This is a failure'
 Message.tests.cpp:<line number>: warning: 'This message appears in the output'
@@ -2862,7 +2869,7 @@ InternalBenchmark.tests.cpp:<line number>: passed: med == 18. for: 18.0 == 18.0
 InternalBenchmark.tests.cpp:<line number>: passed: q3 == 23. for: 23.0 == 23.0
 Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
-test cases:  428 |  313 passed |  95 failed | 6 skipped | 14 failed as expected
-assertions: 2281 | 2089 passed | 157 failed | 35 failed as expected
+test cases:  431 |  313 passed |  95 failed | 6 skipped | 17 failed as expected
+assertions: 2288 | 2090 passed | 157 failed | 41 failed as expected
 
 

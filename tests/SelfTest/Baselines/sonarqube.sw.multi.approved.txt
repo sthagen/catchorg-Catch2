@@ -2,6 +2,49 @@
 <!-- filters='"*" ~[!nonportable] ~[!benchmark] ~[approvals]' rng-seed=1 -->
 <testExecutions version="1">
   <file path="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp">
+    <testCase name="Assertions can be nested - CHECK" duration="{duration}">
+      <skipped message="REQUIRE(i > 10)">
+FAILED:
+	REQUIRE( i > 10 )
+with expansion:
+	2 > 10
+at AssertionHandler.tests.cpp:<line number>
+      </skipped>
+      <skipped message="CHECK(foo( 2 ) == 2)">
+FAILED:
+	CHECK( foo( 2 ) == 2 )
+{ nested assertion failed }
+at AssertionHandler.tests.cpp:<line number>
+      </skipped>
+    </testCase>
+    <testCase name="Assertions can be nested - REQUIRE" duration="{duration}">
+      <skipped message="REQUIRE(i > 10)">
+FAILED:
+	REQUIRE( i > 10 )
+with expansion:
+	2 > 10
+at AssertionHandler.tests.cpp:<line number>
+      </skipped>
+      <skipped message="REQUIRE(foo( 2 ) == 2)">
+FAILED:
+	REQUIRE( foo( 2 ) == 2 )
+{ nested assertion failed }
+at AssertionHandler.tests.cpp:<line number>
+      </skipped>
+    </testCase>
+    <testCase name="FAIL can be nested in assertion" duration="{duration}">
+      <skipped message="FAIL()">
+FAILED:
+Throw a Catch::TestFailureException
+at AssertionHandler.tests.cpp:<line number>
+      </skipped>
+      <skipped message="CHECK_NOTHROW(do_fail())">
+FAILED:
+	CHECK_NOTHROW( do_fail() )
+{ nested assertion failed }
+at AssertionHandler.tests.cpp:<line number>
+      </skipped>
+    </testCase>
     <testCase name="Incomplete AssertionHandler" duration="{duration}">
       <skipped message="REQUIRE(Dummy)">
 FAILED:

@@ -2716,6 +2716,58 @@ Approx( 1.23399996757507324 )
     </Expression>
     <OverallResult success="true" skips="0"/>
   </TestCase>
+  <TestCase name="Assertions can be nested - CHECK" tags="[!shouldfail][assertions]" filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+    <Expression success="false" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+      <Original>
+        i > 10
+      </Original>
+      <Expanded>
+        2 > 10
+      </Expanded>
+    </Expression>
+    <Expression success="false" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+      <Original>
+        foo( 2 ) == 2
+      </Original>
+      <Expanded>
+        foo( 2 ) == 2
+      </Expanded>
+      <Exception filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+        { nested assertion failed }
+      </Exception>
+    </Expression>
+    <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+      <Original>
+        true
+      </Original>
+      <Expanded>
+        true
+      </Expanded>
+    </Expression>
+    <OverallResult success="true" skips="0"/>
+  </TestCase>
+  <TestCase name="Assertions can be nested - REQUIRE" tags="[!shouldfail][assertions]" filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+    <Expression success="false" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+      <Original>
+        i > 10
+      </Original>
+      <Expanded>
+        2 > 10
+      </Expanded>
+    </Expression>
+    <Expression success="false" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+      <Original>
+        foo( 2 ) == 2
+      </Original>
+      <Expanded>
+        foo( 2 ) == 2
+      </Expanded>
+      <Exception filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+        { nested assertion failed }
+      </Exception>
+    </Expression>
+    <OverallResult success="true" skips="0"/>
+  </TestCase>
   <TestCase name="Assertions then sections" tags="[Tricky]" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
     <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
       <Original>
@@ -5123,6 +5175,23 @@ Approx( 1.30000000000000004 )
       This is a failure
     </Failure>
     <OverallResult success="false" skips="0"/>
+  </TestCase>
+  <TestCase name="FAIL can be nested in assertion" tags="[!shouldfail][assertions]" filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+    <Failure filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+      Throw a Catch::TestFailureException
+    </Failure>
+    <Expression success="false" type="CHECK_NOTHROW" filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+      <Original>
+        do_fail()
+      </Original>
+      <Expanded>
+        do_fail()
+      </Expanded>
+      <Exception filename="tests/<exe-name>/IntrospectiveTests/AssertionHandler.tests.cpp" >
+        { nested assertion failed }
+      </Exception>
+    </Expression>
+    <OverallResult success="true" skips="0"/>
   </TestCase>
   <TestCase name="FAIL does not require an argument" tags="[.][failing][messages]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
     <Failure filename="tests/<exe-name>/UsageTests/Message.tests.cpp" />
@@ -22112,6 +22181,6 @@ Approx( -1.95996398454005449 )
     </Section>
     <OverallResult success="true" skips="0"/>
   </TestCase>
-  <OverallResults successes="2089" failures="157" expectedFailures="35" skips="12"/>
-  <OverallResultsCases successes="313" failures="95" expectedFailures="14" skips="6"/>
+  <OverallResults successes="2090" failures="157" expectedFailures="41" skips="12"/>
+  <OverallResultsCases successes="313" failures="95" expectedFailures="17" skips="6"/>
 </Catch2TestRun>
