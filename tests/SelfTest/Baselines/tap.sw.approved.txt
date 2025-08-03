@@ -166,6 +166,10 @@ ok {test-number} - smallest_non_zero, WithinULP( -smallest_non_zero, 2 ) for: 0.
 ok {test-number} - smallest_non_zero, !WithinULP( -smallest_non_zero, 1 ) for: 0.0f not is within 1 ULPs of -1.40129846e-45f ([-2.80259693e-45, -0.00000000e+00])
 # #2615 - Throwing in constructor generator fails test case but does not abort
 not ok {test-number} - unexpected exception with message: 'failure to init'; expression was: {Unknown expression after the reported line}
+# #3001: Enum-based bitfields can be captured
+ok {test-number} - bf.e == 1 for: 1 == 1
+# #3001: Enum-based bitfields can be captured
+ok {test-number} - 1 == bf.e for: 1 == 1
 # #748 - captures with unexpected exceptions
 not ok {test-number} - unexpected exception with message: 'expected exception'; expression was: {Unknown expression after the reported line}
 # #748 - captures with unexpected exceptions
@@ -1126,6 +1130,8 @@ ok {test-number} - thisThrows(), EndsWith( "exception" ) for: "expected exceptio
 ok {test-number} - thisThrows(), ContainsSubstring( "except" ) for: "expected exception" contains: "except"
 # Exception messages can be tested for
 ok {test-number} - thisThrows(), ContainsSubstring( "exCept", Catch::CaseSensitive::No ) for: "expected exception" contains: "except" (case insensitive)
+# Exception thrown inside stringify does not fail the test
+ok {test-number} - tos == tos for: { stringification failed with an exception: "Invalid" } == { stringification failed with an exception: "Invalid" }
 # Exceptions matchers
 ok {test-number} - throwsDerivedException(), DerivedException, Message( "DerivedException::what" ) for: DerivedException::what exception message matches "DerivedException::what"
 # Exceptions matchers
@@ -4407,6 +4413,8 @@ ok {test-number} - data.str.size() == data.len for: 3 == 3
 ok {test-number} - data.str.size() == data.len for: 5 == 5
 # strlen3
 ok {test-number} - data.str.size() == data.len for: 4 == 4
+# system_clock timepoint with non-default duration
+ok {test-number} - tp1 == tp2 for: {iso8601-timestamp} == {iso8601-timestamp}
 # tables
 ok {test-number} - strlen(std::get<0>(data)) == static_cast<size_t>(std::get<1>(data)) for: 5 == 5
 # tables
@@ -4597,5 +4605,5 @@ ok {test-number} - q3 == 23. for: 23.0 == 23.0
 ok {test-number} -
 # xmlentitycheck
 ok {test-number} -
-1..2300
+1..2304
 

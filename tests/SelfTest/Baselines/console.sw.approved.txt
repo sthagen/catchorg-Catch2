@@ -773,6 +773,22 @@ due to unexpected exception with message:
   failure to init
 
 -------------------------------------------------------------------------------
+#3001: Enum-based bitfields can be captured
+-------------------------------------------------------------------------------
+Compilation.tests.cpp:<line number>
+...............................................................................
+
+Compilation.tests.cpp:<line number>: PASSED:
+  REQUIRE( bf.e == 1 )
+with expansion:
+  1 == 1
+
+Compilation.tests.cpp:<line number>: PASSED:
+  REQUIRE( 1 == bf.e )
+with expansion:
+  1 == 1
+
+-------------------------------------------------------------------------------
 #748 - captures with unexpected exceptions
   outside assertions
 -------------------------------------------------------------------------------
@@ -4539,6 +4555,19 @@ Exception.tests.cpp:<line number>: PASSED:
   REQUIRE_THROWS_WITH( thisThrows(), ContainsSubstring( "exCept", Catch::CaseSensitive::No ) )
 with expansion:
   "expected exception" contains: "except" (case insensitive)
+
+-------------------------------------------------------------------------------
+Exception thrown inside stringify does not fail the test
+-------------------------------------------------------------------------------
+ToString.tests.cpp:<line number>
+...............................................................................
+
+ToString.tests.cpp:<line number>: PASSED:
+  CHECK( tos == tos )
+with expansion:
+  { stringification failed with an exception: "Invalid" }
+  ==
+  { stringification failed with an exception: "Invalid" }
 
 -------------------------------------------------------------------------------
 Exceptions matchers
@@ -18394,6 +18423,19 @@ with expansion:
   4 == 4
 
 -------------------------------------------------------------------------------
+system_clock timepoint with non-default duration
+-------------------------------------------------------------------------------
+ToStringChrono.tests.cpp:<line number>
+...............................................................................
+
+ToStringChrono.tests.cpp:<line number>: PASSED:
+  CHECK( tp1 == tp2 )
+with expansion:
+  {iso8601-timestamp}
+  ==
+  {iso8601-timestamp}
+
+-------------------------------------------------------------------------------
 tables
 -------------------------------------------------------------------------------
 Generators.tests.cpp:<line number>
@@ -19184,6 +19226,6 @@ Misc.tests.cpp:<line number>
 Misc.tests.cpp:<line number>: PASSED:
 
 ===============================================================================
-test cases:  431 |  313 passed |  95 failed | 6 skipped | 17 failed as expected
-assertions: 2288 | 2090 passed | 157 failed | 41 failed as expected
+test cases:  434 |  316 passed |  95 failed | 6 skipped | 17 failed as expected
+assertions: 2292 | 2094 passed | 157 failed | 41 failed as expected
 

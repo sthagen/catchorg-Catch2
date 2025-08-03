@@ -387,6 +387,7 @@ at AssertionHandler.tests.cpp:<line number>
   </file>
   <file path="tests/<exe-name>/IntrospectiveTests/ToString.tests.cpp">
     <testCase name="Directly creating an EnumInfo" duration="{duration}"/>
+    <testCase name="Exception thrown inside stringify does not fail the test" duration="{duration}"/>
     <testCase name="Range type with sentinel" duration="{duration}"/>
     <testCase name="Stringifying char arrays with statically known sizes - char" duration="{duration}"/>
     <testCase name="Stringifying char arrays with statically known sizes - signed char" duration="{duration}"/>
@@ -655,6 +656,7 @@ at Class.tests.cpp:<line number>
     <testCase name="#1319: Sections can have description (even if it is not saved/SectionName" duration="{duration}"/>
     <testCase name="#1403" duration="{duration}"/>
     <testCase name="#1548" duration="{duration}"/>
+    <testCase name="#3001: Enum-based bitfields can be captured" duration="{duration}"/>
     <testCase name="#809" duration="{duration}"/>
     <testCase name="#833" duration="{duration}"/>
     <testCase name="#872" duration="{duration}"/>
@@ -2297,6 +2299,7 @@ at Skip.tests.cpp:<line number>
     <testCase name="Stringifying std::chrono::duration helpers" duration="{duration}"/>
     <testCase name="Stringifying std::chrono::duration with weird ratios" duration="{duration}"/>
     <testCase name="Stringifying std::chrono::time_point&lt;system_clock>" duration="{duration}"/>
+    <testCase name="system_clock timepoint with non-default duration" duration="{duration}"/>
   </file>
   <file path="tests/<exe-name>/UsageTests/ToStringGeneral.tests.cpp">
     <testCase name="Capture and info messages" duration="{duration}"/>

@@ -118,3 +118,24 @@ TEST_CASE( "#2944 - Stringifying dates before 1970 should not crash", "[.approva
             Equals( "gmtime from provided timepoint has failed. This "
                     "happens e.g. with pre-1970 dates using Microsoft libc" ) );
 }
+
+namespace {
+    struct ThrowsOnStringification {
+        friend bool operator==( ThrowsOnStringification,
+                                ThrowsOnStringification ) {
+            return true;
+        }
+    };
+}
+
+template <>
+struct Catch::StringMaker<ThrowsOnStringification> {
+    static std::string convert(ThrowsOnStringification) {
+        throw std::runtime_error( "Invalid" );
+    }
+};
+
+TEST_CASE( "Exception thrown inside stringify does not fail the test", "[toString]" ) {
+    ThrowsOnStringification tos;
+    CHECK( tos == tos );
+}
