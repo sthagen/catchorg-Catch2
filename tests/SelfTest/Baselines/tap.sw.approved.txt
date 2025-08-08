@@ -866,6 +866,20 @@ ok {test-number} - std::vector<int>{1, 2} == std::vector<int>{1, 2} for: { 1, 2 
 ok {test-number} - true
 # Commas in various macros are allowed
 ok {test-number} - std::vector<int>{1, 2} == std::vector<int>{1, 2} for: { 1, 2 } == { 1, 2 }
+# Comparing (and stringifying) volatile pointers works
+ok {test-number} - !(ptr) for: !0
+# Comparing (and stringifying) volatile pointers works
+ok {test-number} - ptr == ptr for: 0 == 0
+# Comparing (and stringifying) volatile pointers works
+ok {test-number} - !(ptr != ptr) for: !(0 != 0)
+# Comparing (and stringifying) volatile pointers works
+ok {test-number} - !(ptr < ptr) for: !(0 < 0)
+# Comparing (and stringifying) volatile pointers works
+ok {test-number} - ptr <= ptr for: 0 <= 0
+# Comparing (and stringifying) volatile pointers works
+ok {test-number} - !(ptr > ptr) for: !(0 > 0)
+# Comparing (and stringifying) volatile pointers works
+ok {test-number} - ptr >= ptr for: 0 >= 0
 # Comparing function pointers
 ok {test-number} - a for: 0x<hex digits>
 # Comparing function pointers
@@ -4605,5 +4619,5 @@ ok {test-number} - q3 == 23. for: 23.0 == 23.0
 ok {test-number} -
 # xmlentitycheck
 ok {test-number} -
-1..2304
+1..2311
 

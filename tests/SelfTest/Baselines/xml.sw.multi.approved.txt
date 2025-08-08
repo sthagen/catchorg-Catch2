@@ -3881,6 +3881,65 @@ C
     </Expression>
     <OverallResult success="true" skips="0"/>
   </TestCase>
+  <TestCase name="Comparing (and stringifying) volatile pointers works" tags="[volatile]" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
+    <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
+      <Original>
+        !(ptr)
+      </Original>
+      <Expanded>
+        !0
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
+      <Original>
+        ptr == ptr
+      </Original>
+      <Expanded>
+        0 == 0
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
+      <Original>
+        !(ptr != ptr)
+      </Original>
+      <Expanded>
+        !(0 != 0)
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
+      <Original>
+        !(ptr &lt; ptr)
+      </Original>
+      <Expanded>
+        !(0 &lt; 0)
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
+      <Original>
+        ptr &lt;= ptr
+      </Original>
+      <Expanded>
+        0 &lt;= 0
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
+      <Original>
+        !(ptr > ptr)
+      </Original>
+      <Expanded>
+        !(0 > 0)
+      </Expanded>
+    </Expression>
+    <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Misc.tests.cpp" >
+      <Original>
+        ptr >= ptr
+      </Original>
+      <Expanded>
+        0 >= 0
+      </Expanded>
+    </Expression>
+    <OverallResult success="true" skips="0"/>
+  </TestCase>
   <TestCase name="Comparing function pointers" tags="[function pointer][Tricky]" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
     <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
       <Original>
@@ -22226,6 +22285,6 @@ Approx( -1.95996398454005449 )
     </Section>
     <OverallResult success="true" skips="0"/>
   </TestCase>
-  <OverallResults successes="2094" failures="157" expectedFailures="41" skips="12"/>
-  <OverallResultsCases successes="316" failures="95" expectedFailures="17" skips="6"/>
+  <OverallResults successes="2101" failures="157" expectedFailures="41" skips="12"/>
+  <OverallResultsCases successes="317" failures="95" expectedFailures="17" skips="6"/>
 </Catch2TestRun>

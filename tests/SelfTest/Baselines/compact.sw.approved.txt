@@ -483,6 +483,13 @@ Tricky.tests.cpp:<line number>: passed: std::vector<int>{1, 2} == std::vector<in
 Tricky.tests.cpp:<line number>: passed: std::vector<int>{1, 2} == std::vector<int>{1, 2} for: { 1, 2 } == { 1, 2 }
 Tricky.tests.cpp:<line number>: passed: true
 Tricky.tests.cpp:<line number>: passed: std::vector<int>{1, 2} == std::vector<int>{1, 2} for: { 1, 2 } == { 1, 2 }
+Misc.tests.cpp:<line number>: passed: !(ptr) for: !0
+Misc.tests.cpp:<line number>: passed: ptr == ptr for: 0 == 0
+Misc.tests.cpp:<line number>: passed: !(ptr != ptr) for: !(0 != 0)
+Misc.tests.cpp:<line number>: passed: !(ptr < ptr) for: !(0 < 0)
+Misc.tests.cpp:<line number>: passed: ptr <= ptr for: 0 <= 0
+Misc.tests.cpp:<line number>: passed: !(ptr > ptr) for: !(0 > 0)
+Misc.tests.cpp:<line number>: passed: ptr >= ptr for: 0 >= 0
 Tricky.tests.cpp:<line number>: passed: a for: 0x<hex digits>
 Tricky.tests.cpp:<line number>: passed: a == &foo for: 0x<hex digits> == 0x<hex digits>
 RandomNumberGeneration.tests.cpp:<line number>: passed: SimplePcg32{} == SimplePcg32{} for: {?} == {?}
@@ -2877,7 +2884,7 @@ InternalBenchmark.tests.cpp:<line number>: passed: med == 18. for: 18.0 == 18.0
 InternalBenchmark.tests.cpp:<line number>: passed: q3 == 23. for: 23.0 == 23.0
 Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
-test cases:  434 |  316 passed |  95 failed | 6 skipped | 17 failed as expected
-assertions: 2292 | 2094 passed | 157 failed | 41 failed as expected
+test cases:  435 |  317 passed |  95 failed | 6 skipped | 17 failed as expected
+assertions: 2299 | 2101 passed | 157 failed | 41 failed as expected
 
 

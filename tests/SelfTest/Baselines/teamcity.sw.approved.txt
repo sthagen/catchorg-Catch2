@@ -285,6 +285,8 @@
 ##teamcity[testFinished name='Combining templated matchers' duration="{duration}"]
 ##teamcity[testStarted name='Commas in various macros are allowed']
 ##teamcity[testFinished name='Commas in various macros are allowed' duration="{duration}"]
+##teamcity[testStarted name='Comparing (and stringifying) volatile pointers works']
+##teamcity[testFinished name='Comparing (and stringifying) volatile pointers works' duration="{duration}"]
 ##teamcity[testStarted name='Comparing function pointers']
 ##teamcity[testFinished name='Comparing function pointers' duration="{duration}"]
 ##teamcity[testStarted name='Comparison ops']

@@ -3554,6 +3554,47 @@ with expansion:
   { 1, 2 } == { 1, 2 }
 
 -------------------------------------------------------------------------------
+Comparing (and stringifying) volatile pointers works
+-------------------------------------------------------------------------------
+Misc.tests.cpp:<line number>
+...............................................................................
+
+Misc.tests.cpp:<line number>: PASSED:
+  REQUIRE_FALSE( ptr )
+with expansion:
+  !0
+
+Misc.tests.cpp:<line number>: PASSED:
+  REQUIRE( ptr == ptr )
+with expansion:
+  0 == 0
+
+Misc.tests.cpp:<line number>: PASSED:
+  REQUIRE_FALSE( ptr != ptr )
+with expansion:
+  !(0 != 0)
+
+Misc.tests.cpp:<line number>: PASSED:
+  REQUIRE_FALSE( ptr < ptr )
+with expansion:
+  !(0 < 0)
+
+Misc.tests.cpp:<line number>: PASSED:
+  REQUIRE( ptr <= ptr )
+with expansion:
+  0 <= 0
+
+Misc.tests.cpp:<line number>: PASSED:
+  REQUIRE_FALSE( ptr > ptr )
+with expansion:
+  !(0 > 0)
+
+Misc.tests.cpp:<line number>: PASSED:
+  REQUIRE( ptr >= ptr )
+with expansion:
+  0 >= 0
+
+-------------------------------------------------------------------------------
 Comparing function pointers
 -------------------------------------------------------------------------------
 Tricky.tests.cpp:<line number>
@@ -19215,6 +19256,6 @@ Misc.tests.cpp:<line number>
 Misc.tests.cpp:<line number>: PASSED:
 
 ===============================================================================
-test cases:  434 |  316 passed |  95 failed | 6 skipped | 17 failed as expected
-assertions: 2292 | 2094 passed | 157 failed | 41 failed as expected
+test cases:  435 |  317 passed |  95 failed | 6 skipped | 17 failed as expected
+assertions: 2299 | 2101 passed | 157 failed | 41 failed as expected
 

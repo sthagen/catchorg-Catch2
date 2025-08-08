@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="<exe-name>" errors="17" failures="140" skipped="12" tests="2304" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
+  <testsuite name="<exe-name>" errors="17" failures="140" skipped="12" tests="2311" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
     <properties>
       <property name="random-seed" value="1"/>
       <property name="filters" value="&quot;*&quot; ~[!nonportable] ~[!benchmark] ~[approvals]"/>
@@ -487,6 +487,7 @@ at Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Combining templated and concrete matchers" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining templated matchers" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Commas in various macros are allowed" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Comparing (and stringifying) volatile pointers works" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Comparing function pointers" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Comparison ops" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Comparison with explicitly convertible types" time="{duration}" status="run"/>

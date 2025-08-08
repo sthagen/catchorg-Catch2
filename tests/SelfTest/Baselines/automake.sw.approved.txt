@@ -122,6 +122,7 @@ Nor would this
 :test-result: PASS Combining templated and concrete matchers
 :test-result: PASS Combining templated matchers
 :test-result: PASS Commas in various macros are allowed
+:test-result: PASS Comparing (and stringifying) volatile pointers works
 :test-result: PASS Comparing function pointers
 :test-result: PASS Comparison ops
 :test-result: PASS Comparison with explicitly convertible types

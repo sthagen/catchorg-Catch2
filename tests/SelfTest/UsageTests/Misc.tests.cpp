@@ -562,3 +562,15 @@ TEST_CASE("Validate SEH behavior - no crash for stack unwinding", "[approvals][!
 }
 
 #endif // _MSC_VER
+
+TEST_CASE( "Comparing (and stringifying) volatile pointers works",
+           "[volatile]" ) {
+    volatile int* ptr = nullptr;
+    REQUIRE_FALSE( ptr );
+    REQUIRE( ptr == ptr );
+    REQUIRE_FALSE( ptr != ptr );
+    REQUIRE_FALSE( ptr < ptr );
+    REQUIRE( ptr <= ptr );
+    REQUIRE_FALSE( ptr > ptr );
+    REQUIRE( ptr >= ptr );
+}

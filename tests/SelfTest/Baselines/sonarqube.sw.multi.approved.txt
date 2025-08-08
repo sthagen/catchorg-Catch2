@@ -1933,6 +1933,7 @@ at Misc.tests.cpp:<line number>
     <testCase name="A couple of nested sections followed by a failure/Outer" duration="{duration}"/>
     <testCase name="A couple of nested sections followed by a failure/Outer/Inner" duration="{duration}"/>
     <testCase name="An empty test with no assertions" duration="{duration}"/>
+    <testCase name="Comparing (and stringifying) volatile pointers works" duration="{duration}"/>
     <testCase name="Factorials are computed" duration="{duration}"/>
     <testCase name="ManuallyRegistered" duration="{duration}"/>
     <testCase name="Nice descriptive name" duration="{duration}"/>
