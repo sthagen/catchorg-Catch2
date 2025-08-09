@@ -2,6 +2,7 @@
 
 # Release notes
 **Contents**<br>
+[3.9.1](#391)<br>
 [3.9.0](#390)<br>
 [3.8.1](#381)<br>
 [3.8.0](#380)<br>
@@ -66,6 +67,19 @@
 [2.0.1](#201)<br>
 [Older versions](#older-versions)<br>
 [Even Older versions](#even-older-versions)<br>
+
+
+## 3.9.1
+
+### Fixes
+* Fixed bad error reporting for multiple nested assertions (#1292)
+* Fixed W4702 (unreachable code) in the polyfill for std::unreachable (#3007)
+* Fixed decomposition of assertions comparing enum-backed bitfields (#3001)
+* Fixed StringMaker specialization for `time_point<system_clock>` with non-default duration type (#2685)
+
+### Improvements
+* Exceptions thrown during stringification of decomposed expression no longer fail the assertion (#2980)
+* The selection logic for `CATCH_TRAP` prefers `__builtin_debugtrap` on all platforms when Catch2 is compiled with Clang
 
 
 ## 3.9.0
