@@ -198,14 +198,14 @@ if(NOT_SUBPROJECT)
          set(lib_name "$<TARGET_FILE_BASE_NAME:Catch2>")
          configure_file(
            "${impl_pc_file}"
-           "${CMAKE_INSTALL_PREFIX}/${install_pkgconfdir}/catch2.pc"
+           "$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${install_pkgconfdir}/catch2.pc"
            @ONLY
          )
 
          set(lib_name "$<TARGET_FILE_BASE_NAME:Catch2WithMain>")
          configure_file(
            "${main_pc_file}"
-           "${CMAKE_INSTALL_PREFIX}/${install_pkgconfdir}/catch2-with-main.pc"
+           "$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${install_pkgconfdir}/catch2-with-main.pc"
            @ONLY
          )
        ]]
