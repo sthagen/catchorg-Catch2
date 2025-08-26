@@ -44,6 +44,8 @@ they are assertion macro + an if).
 
 ## Assertion-like message macros and spawned threads
 
+> Assertion-like messages were made thread safe in Catch2 3.10.0
+
 Similarly to assertion macros, not all assertion-like message macros can
 be used from spawned thread.
 
@@ -54,6 +56,8 @@ thus can be used from any thread.
 
 
 ## Message macros and spawned threads
+
+> Message macros were made thread safe in Catch2 3.10.0
 
 Macros that add extra messages to following assertion, such as `INFO`
 or `CAPTURE`, are all thread safe and can be used in any thread. Note
