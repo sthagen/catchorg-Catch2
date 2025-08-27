@@ -26,6 +26,7 @@ namespace Catch {
         std::string message;
         SourceLineInfo lineInfo;
         ResultWas::OfType type;
+        // The "ID" of the message, used to know when to remove it from reporter context.
         unsigned int sequence;
 
         DEPRECATED( "Explicitly use the 'sequence' member instead" )
