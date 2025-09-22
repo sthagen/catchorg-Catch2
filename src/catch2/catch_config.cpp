@@ -119,6 +119,8 @@ namespace Catch {
             m_data.reporterSpecifications.push_back( std::move( *parsed ) );
         }
 
+        // Reading bazel env vars can change some parts of the config data,
+        // so we have to process the bazel env before acting on the config.
         if ( enableBazelEnvSupport() ) {
             readBazelEnvVars();
         }
@@ -183,6 +185,8 @@ namespace Catch {
 
     bool Config::showHelp() const { return m_data.showHelp; }
 
+    std::string const& Config::getExitGuardFilePath() const { return m_data.prematureExitGuardFilePath; }
+
     // IConfig interface
     bool Config::allowThrows() const                   { return !m_data.noThrow; }
     StringRef Config::name() const { return m_data.name.empty() ? m_data.processName : m_data.name; }
@@ -243,6 +247,11 @@ namespace Catch {
                 m_data.shardIndex = bazelShardOptions->shardIndex;
                 m_data.shardCount = bazelShardOptions->shardCount;
             }
+        }
+
+        const auto bazelExitGuardFile = Detail::getEnv( "TEST_PREMATURE_EXIT_FILE" );
+        if (bazelExitGuardFile) {
+            m_data.prematureExitGuardFilePath = bazelExitGuardFile;
         }
     }
 

@@ -66,10 +66,13 @@ test execution. Specifically it understands
  * JUnit output path via `XML_OUTPUT_FILE`
  * Test filtering via `TESTBRIDGE_TEST_ONLY`
  * Test sharding via `TEST_SHARD_INDEX`, `TEST_TOTAL_SHARDS`, and `TEST_SHARD_STATUS_FILE`
+ * Creating a file to signal premature test exit via `TEST_PREMATURE_EXIT_FILE`
 
 > Support for `XML_OUTPUT_FILE` was [introduced](https://github.com/catchorg/Catch2/pull/2399) in Catch2 3.0.1
 
 > Support for `TESTBRIDGE_TEST_ONLY` and sharding was introduced in Catch2 3.2.0
+
+> Support for `TEST_PREMATURE_EXIT_FILE` was introduced in Catch2 X.Y.Z
 
 This integration is enabled via either a [compile time configuration
 option](configuration.md#bazel-support), or via `BAZEL_TEST` environment
