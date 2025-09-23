@@ -62,10 +62,9 @@ namespace Catch {
         virtual void benchmarkEnded( BenchmarkStats<> const& stats ) = 0;
         virtual void benchmarkFailed( StringRef error ) = 0;
 
-        virtual void pushScopedMessage( MessageInfo&& message ) = 0;
-        virtual void popScopedMessage( unsigned int messageId ) = 0;
-
-        virtual void emplaceUnscopedMessage( MessageBuilder&& builder ) = 0;
+        static void pushScopedMessage( MessageInfo&& message );
+        static void popScopedMessage( unsigned int messageId );
+        static void emplaceUnscopedMessage( MessageBuilder&& builder );
 
         virtual void handleFatalErrorCondition( StringRef message ) = 0;
 
@@ -102,6 +101,7 @@ namespace Catch {
     };
 
     IResultCapture& getResultCapture();
+
 }
 
 #endif // CATCH_INTERFACES_CAPTURE_HPP_INCLUDED
