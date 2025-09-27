@@ -809,13 +809,6 @@ namespace Catch {
         }
     }
 
-    IResultCapture& getResultCapture() {
-        if (auto* capture = getCurrentContext().getResultCapture())
-            return *capture;
-        else
-            CATCH_INTERNAL_ERROR("No result capture instance");
-    }
-
     void IResultCapture::pushScopedMessage( MessageInfo&& message ) {
         Detail::g_messages.push_back( CATCH_MOVE( message ) );
     }

@@ -10,6 +10,7 @@
 
 #include <string>
 
+#include <catch2/internal/catch_context.hpp>
 #include <catch2/internal/catch_stringref.hpp>
 #include <catch2/internal/catch_result_type.hpp>
 #include <catch2/internal/catch_unique_ptr.hpp>
@@ -100,7 +101,17 @@ namespace Catch {
         virtual void exceptionEarlyReported() = 0;
     };
 
-    IResultCapture& getResultCapture();
+    namespace Detail {
+        [[noreturn]]
+        void missingCaptureInstance();
+    }
+    inline IResultCapture& getResultCapture() {
+        if (auto* capture = getCurrentContext().getResultCapture()) {
+            return *capture;
+        } else {
+            Detail::missingCaptureInstance();
+        }
+    }
 
 }
 
