@@ -253,6 +253,21 @@ namespace Catch {
         if (bazelExitGuardFile) {
             m_data.prematureExitGuardFilePath = bazelExitGuardFile;
         }
+
+        const auto bazelRandomSeed = Detail::getEnv( "TEST_RANDOM_SEED" );
+        if ( bazelRandomSeed ) {
+            auto parsedSeed = parseUInt( bazelRandomSeed, 0 );
+            if ( !parsedSeed ) {
+                // Currently we handle issues with parsing other Bazel Env
+                // options by warning and ignoring the issue. So we do the
+                // same for random seed option.
+                Catch::cerr()
+                    << "Warning: could not parse 'TEST_RANDOM_SEED' ('"
+                    << bazelRandomSeed << "') as proper seed.\n";
+            } else {
+                m_data.rngSeed = *parsedSeed;
+            }
+        }
     }
 
 } // end namespace Catch

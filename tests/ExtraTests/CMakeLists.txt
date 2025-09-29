@@ -109,18 +109,6 @@ set_tests_properties(CATCH_CONFIG_DISABLE_EXCEPTIONS-1
     FAIL_REGULAR_EXPRESSION "abort;terminate;fatal"
 )
 
-add_executable(BazelReporter ${TESTS_DIR}/X30-BazelReporter.cpp)
-target_compile_definitions(BazelReporter PRIVATE CATCH_CONFIG_BAZEL_SUPPORT)
-target_link_libraries(BazelReporter Catch2_buildall_interface)
-add_test(NAME CATCH_CONFIG_BAZEL_REPORTER-1
-  COMMAND
-  Python3::Interpreter "${CATCH_DIR}/tests/TestScripts/testBazelReporter.py" $<TARGET_FILE:BazelReporter> "${CMAKE_CURRENT_BINARY_DIR}"
-)
-set_tests_properties(CATCH_CONFIG_BAZEL_REPORTER-1
-  PROPERTIES
-    LABELS "uses-python"
-)
-
 # We must now test this works without the build flag.
 add_executable(BazelReporterNoCatchConfig ${TESTS_DIR}/X30-BazelReporter.cpp)
 target_link_libraries(BazelReporterNoCatchConfig Catch2WithMain)
