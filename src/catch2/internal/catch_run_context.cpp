@@ -824,6 +824,14 @@ namespace Catch {
     }
 
     void IResultCapture::emplaceUnscopedMessage( MessageBuilder&& builder ) {
+        // Invalid unscoped messages are lazy cleared. If we have any,
+        // we have to get rid of them before adding new ones, or the
+        // delayed clear in assertion handling will erase the valid ones
+        // as well.
+        if ( Detail::g_clearMessageScopes ) {
+            Detail::g_messageScopes.clear();
+            Detail::g_clearMessageScopes = false;
+        }
         Detail::g_messageScopes.emplace_back( CATCH_MOVE( builder ) );
     }
 

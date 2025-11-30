@@ -177,6 +177,18 @@ set_tests_properties(DeferredStaticChecks
     PASS_REGULAR_EXPRESSION "test cases: 1 \\| 1 failed\nassertions: 3 \\| 3 failed"
 )
 
+add_executable(MixingClearedAndUnclearedMessages ${TESTS_DIR}/X06-MixingClearedAndUnclearedMessages.cpp)
+target_link_libraries(MixingClearedAndUnclearedMessages PRIVATE Catch2WithMain)
+
+add_test(NAME MixingClearedAndUnclearedMessages
+  COMMAND
+    MixingClearedAndUnclearedMessages
+    -r compact)
+set_tests_properties(MixingClearedAndUnclearedMessages
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION ": false with 1 message: 'b'"
+)
+
 add_executable(FallbackStringifier ${TESTS_DIR}/X10-FallbackStringifier.cpp)
 target_compile_definitions(FallbackStringifier PRIVATE CATCH_CONFIG_FALLBACK_STRINGIFIER=fallbackStringifier)
 target_link_libraries(FallbackStringifier Catch2WithMain)
@@ -528,6 +540,7 @@ set(EXTRA_TEST_BINARIES
   DuplicatedTestCases-DuplicatedTestCaseMethods
   NoTests
   ListenersGetEventsBeforeReporters
+  MixingClearedAndUnclearedMessages
 #  DebugBreakMacros
 )
 
