@@ -566,3 +566,17 @@ set_tests_properties(AmalgamatedFileTest
   PROPERTIES
     PASS_REGULAR_EXPRESSION "All tests passed \\(14 assertions in 3 test cases\\)"
 )
+
+add_executable(ThreadSafetyTests
+  ${TESTS_DIR}/X94-ThreadSafetyTests.cpp
+)
+target_link_libraries(ThreadSafetyTests Catch2_buildall_interface)
+target_compile_definitions(ThreadSafetyTests PUBLIC CATCH_CONFIG_EXPERIMENTAL_THREAD_SAFE_ASSERTIONS)
+add_test(NAME ThreadSafetyTests
+  COMMAND ThreadSafetyTests -r compact "Failed REQUIRE in the main thread is fine"
+)
+set_tests_properties(ThreadSafetyTests
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "assertions: 801 | 400 passed | 401 failed"
+    RUN_SERIAL ON
+)
