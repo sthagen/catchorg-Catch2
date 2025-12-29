@@ -571,12 +571,21 @@ add_executable(ThreadSafetyTests
   ${TESTS_DIR}/X94-ThreadSafetyTests.cpp
 )
 target_link_libraries(ThreadSafetyTests Catch2_buildall_interface)
-target_compile_definitions(ThreadSafetyTests PUBLIC CATCH_CONFIG_EXPERIMENTAL_THREAD_SAFE_ASSERTIONS)
-add_test(NAME ThreadSafetyTests
+target_compile_definitions(ThreadSafetyTests PUBLIC CATCH_CONFIG_THREAD_SAFE_ASSERTIONS)
+
+add_test(NAME ThreadSafetyTests::ScopedMessagesAndAssertions
   COMMAND ThreadSafetyTests -r compact "Failed REQUIRE in the main thread is fine"
 )
-set_tests_properties(ThreadSafetyTests
+set_tests_properties(ThreadSafetyTests::ScopedMessagesAndAssertions
   PROPERTIES
-    PASS_REGULAR_EXPRESSION "assertions: 801 | 400 passed | 401 failed"
+    PASS_REGULAR_EXPRESSION "assertions: 801 \\| 400 passed \\| 401 failed as expected"
+    RUN_SERIAL ON
+)
+add_test(NAME ThreadSafetyTests::UnscopedMessagesAndAssertions
+  COMMAND ThreadSafetyTests -r compact "Using unscoped messages in sibling threads"
+)
+set_tests_properties(ThreadSafetyTests::UnscopedMessagesAndAssertions
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "assertions: 401 \\| 401 failed as expected"
     RUN_SERIAL ON
 )
