@@ -3417,6 +3417,8 @@ ok {test-number} - vector_a, RangeEquals( array_a_plus_1, close_enough ) for: { 
 ok {test-number} - vector_a, UnorderedRangeEquals( array_a_plus_1, close_enough ) for: { 1, 2, 3 } unordered elements are { 2, 3, 4 }
 # Unexpected exceptions can be translated
 not ok {test-number} - unexpected exception with message: '3.14000000000000012'
+# Unscoped capture outlives scope
+not ok {test-number} - false with 3 messages: 'i := 1' and 'j := 2' and 'i + j := 3'
 # Upcasting special member functions
 ok {test-number} - bptr->i == 3 for: 3 == 3
 # Upcasting special member functions
@@ -4639,5 +4641,5 @@ ok {test-number} - q3 == 23. for: 23.0 == 23.0
 ok {test-number} -
 # xmlentitycheck
 ok {test-number} -
-1..2321
+1..2323
 

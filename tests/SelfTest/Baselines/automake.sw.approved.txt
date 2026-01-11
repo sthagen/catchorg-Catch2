@@ -299,6 +299,7 @@ Message from section two
 :test-result: PASS Trim strings
 :test-result: PASS Type conversions of RangeEquals and similar
 :test-result: FAIL Unexpected exceptions can be translated
+:test-result: FAIL Unscoped capture outlives scope
 :test-result: PASS Upcasting special member functions
 :test-result: PASS Usage of AllMatch range matcher
 :test-result: PASS Usage of AllTrue range matcher

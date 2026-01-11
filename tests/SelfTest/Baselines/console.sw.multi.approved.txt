@@ -14318,6 +14318,29 @@ due to unexpected exception with message:
   3.14000000000000012
 
 -------------------------------------------------------------------------------
+Unscoped capture outlives scope
+  A
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+
+No assertions in section 'A'
+
+-------------------------------------------------------------------------------
+Unscoped capture outlives scope
+-------------------------------------------------------------------------------
+Message.tests.cpp:<line number>
+...............................................................................
+
+Message.tests.cpp:<line number>: FAILED:
+  REQUIRE( false )
+with messages:
+  i := 1
+  j := 2
+  i + j := 3
+
+-------------------------------------------------------------------------------
 Upcasting special member functions
   Move constructor
 -------------------------------------------------------------------------------
@@ -19338,6 +19361,6 @@ Misc.tests.cpp:<line number>
 Misc.tests.cpp:<line number>: PASSED:
 
 ===============================================================================
-test cases:  436 |  317 passed |  95 failed | 6 skipped | 18 failed as expected
-assertions: 2309 | 2110 passed | 157 failed | 42 failed as expected
+test cases:  437 |  317 passed |  96 failed | 6 skipped | 18 failed as expected
+assertions: 2311 | 2110 passed | 158 failed | 43 failed as expected
 

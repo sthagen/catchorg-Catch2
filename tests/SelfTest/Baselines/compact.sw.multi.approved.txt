@@ -2198,6 +2198,7 @@ MatchersRanges.tests.cpp:<line number>: passed: a, UnorderedRangeEquals( b ) for
 MatchersRanges.tests.cpp:<line number>: passed: vector_a, RangeEquals( array_a_plus_1, close_enough ) for: { 1, 2, 3 } elements are { 2, 3, 4 }
 MatchersRanges.tests.cpp:<line number>: passed: vector_a, UnorderedRangeEquals( array_a_plus_1, close_enough ) for: { 1, 2, 3 } unordered elements are { 2, 3, 4 }
 Exception.tests.cpp:<line number>: failed: unexpected exception with message: '3.14000000000000012'
+Message.tests.cpp:<line number>: failed: false with 3 messages: 'i := 1' and 'j := 2' and 'i + j := 3'
 UniquePtr.tests.cpp:<line number>: passed: bptr->i == 3 for: 3 == 3
 UniquePtr.tests.cpp:<line number>: passed: bptr->i == 3 for: 3 == 3
 MatchersRanges.tests.cpp:<line number>: passed: data, AllMatch(SizeIs(5)) for: { { 0, 1, 2, 3, 5 }, { 4, -3, -2, 5, 0 }, { 0, 0, 0, 5, 0 }, { 0, -5, 0, 5, 0 }, { 1, 0, 0, -1, 5 } } all match has size == 5
@@ -2883,7 +2884,7 @@ InternalBenchmark.tests.cpp:<line number>: passed: med == 18. for: 18.0 == 18.0
 InternalBenchmark.tests.cpp:<line number>: passed: q3 == 23. for: 23.0 == 23.0
 Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
-test cases:  436 |  317 passed |  95 failed | 6 skipped | 18 failed as expected
-assertions: 2309 | 2110 passed | 157 failed | 42 failed as expected
+test cases:  437 |  317 passed |  96 failed | 6 skipped | 18 failed as expected
+assertions: 2311 | 2110 passed | 158 failed | 43 failed as expected
 
 

@@ -16561,6 +16561,29 @@ There is no extra whitespace here
     </Exception>
     <OverallResult success="false" skips="0"/>
   </TestCase>
+  <TestCase name="Unscoped capture outlives scope" tags="[!shouldfail][capture][messages][unscoped]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+    <Section name="A" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <OverallResults successes="0" failures="1" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      i := 1
+    </Info>
+    <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      j := 2
+    </Info>
+    <Info filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      i + j := 3
+    </Info>
+    <Expression success="false" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
+      <Original>
+        false
+      </Original>
+      <Expanded>
+        false
+      </Expanded>
+    </Expression>
+    <OverallResult success="false" skips="0"/>
+  </TestCase>
   <TestCase name="Upcasting special member functions" tags="[internals][unique-ptr]" filename="tests/<exe-name>/IntrospectiveTests/UniquePtr.tests.cpp" >
     <Section name="Move constructor" filename="tests/<exe-name>/IntrospectiveTests/UniquePtr.tests.cpp" >
       <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/UniquePtr.tests.cpp" >
@@ -22392,6 +22415,6 @@ Approx( -1.95996398454005449 )
     </Section>
     <OverallResult success="true" skips="0"/>
   </TestCase>
-  <OverallResults successes="2110" failures="157" expectedFailures="42" skips="12"/>
-  <OverallResultsCases successes="317" failures="95" expectedFailures="18" skips="6"/>
+  <OverallResults successes="2110" failures="158" expectedFailures="43" skips="12"/>
+  <OverallResultsCases successes="317" failures="96" expectedFailures="18" skips="6"/>
 </Catch2TestRun>
