@@ -3910,6 +3910,80 @@ with expansion:
   true
 
 -------------------------------------------------------------------------------
+ConcatGenerator
+  Cat support single-generator construction
+-------------------------------------------------------------------------------
+GeneratorsImpl.tests.cpp:<line number>
+...............................................................................
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.get() == 1 )
+with expansion:
+  1 == 1
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE_FALSE( c.next() )
+with expansion:
+  !false
+
+-------------------------------------------------------------------------------
+ConcatGenerator
+  Iterating over multiple generators
+-------------------------------------------------------------------------------
+GeneratorsImpl.tests.cpp:<line number>
+...............................................................................
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.get() == i + 1 )
+with expansion:
+  1 == 1
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.next() )
+with expansion:
+  true
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.get() == i + 1 )
+with expansion:
+  2 == 2
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.next() )
+with expansion:
+  true
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.get() == i + 1 )
+with expansion:
+  3 == 3
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.next() )
+with expansion:
+  true
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.get() == i + 1 )
+with expansion:
+  4 == 4
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.next() )
+with expansion:
+  true
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE( c.get() == 5 )
+with expansion:
+  5 == 5
+
+GeneratorsImpl.tests.cpp:<line number>: PASSED:
+  REQUIRE_FALSE( c.next() )
+with expansion:
+  !false
+
+-------------------------------------------------------------------------------
 Contains string matcher
 -------------------------------------------------------------------------------
 Matchers.tests.cpp:<line number>
@@ -16434,6 +16508,102 @@ with expansion:
   0x<hex digits> != 0
 
 -------------------------------------------------------------------------------
+cat generator
+  Simple usage
+-------------------------------------------------------------------------------
+Generators.tests.cpp:<line number>
+...............................................................................
+
+Generators.tests.cpp:<line number>: PASSED:
+  REQUIRE( input < 3 )
+with expansion:
+  0 < 3
+
+-------------------------------------------------------------------------------
+cat generator
+  Simple usage
+-------------------------------------------------------------------------------
+Generators.tests.cpp:<line number>
+...............................................................................
+
+Generators.tests.cpp:<line number>: PASSED:
+  REQUIRE( input < 3 )
+with expansion:
+  1 < 3
+
+-------------------------------------------------------------------------------
+cat generator
+  Simple usage
+-------------------------------------------------------------------------------
+Generators.tests.cpp:<line number>
+...............................................................................
+
+Generators.tests.cpp:<line number>: PASSED:
+  REQUIRE( input < 3 )
+with expansion:
+  2 < 3
+
+-------------------------------------------------------------------------------
+cat generator
+  Used in map
+-------------------------------------------------------------------------------
+Generators.tests.cpp:<line number>
+...............................................................................
+
+Generators.tests.cpp:<line number>: PASSED:
+  REQUIRE( input % 2 == 0 )
+with expansion:
+  0 == 0
+
+-------------------------------------------------------------------------------
+cat generator
+  Used in map
+-------------------------------------------------------------------------------
+Generators.tests.cpp:<line number>
+...............................................................................
+
+Generators.tests.cpp:<line number>: PASSED:
+  REQUIRE( input % 2 == 0 )
+with expansion:
+  0 == 0
+
+-------------------------------------------------------------------------------
+cat generator
+  Used in map
+-------------------------------------------------------------------------------
+Generators.tests.cpp:<line number>
+...............................................................................
+
+Generators.tests.cpp:<line number>: PASSED:
+  REQUIRE( input % 2 == 0 )
+with expansion:
+  0 == 0
+
+-------------------------------------------------------------------------------
+cat generator
+  Used in map
+-------------------------------------------------------------------------------
+Generators.tests.cpp:<line number>
+...............................................................................
+
+Generators.tests.cpp:<line number>: PASSED:
+  REQUIRE( input % 2 == 0 )
+with expansion:
+  0 == 0
+
+-------------------------------------------------------------------------------
+cat generator
+  Used in map
+-------------------------------------------------------------------------------
+Generators.tests.cpp:<line number>
+...............................................................................
+
+Generators.tests.cpp:<line number>: PASSED:
+  REQUIRE( input % 2 == 0 )
+with expansion:
+  0 == 0
+
+-------------------------------------------------------------------------------
 checkedElse
 -------------------------------------------------------------------------------
 Misc.tests.cpp:<line number>
@@ -19361,6 +19531,6 @@ Misc.tests.cpp:<line number>
 Misc.tests.cpp:<line number>: PASSED:
 
 ===============================================================================
-test cases:  437 |  317 passed |  96 failed | 6 skipped | 18 failed as expected
-assertions: 2311 | 2110 passed | 158 failed | 43 failed as expected
+test cases:  439 |  319 passed |  96 failed | 6 skipped | 18 failed as expected
+assertions: 2331 | 2130 passed | 158 failed | 43 failed as expected
 

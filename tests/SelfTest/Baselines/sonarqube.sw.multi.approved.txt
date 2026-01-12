@@ -144,6 +144,9 @@ at AssertionHandler.tests.cpp:<line number>
     <testCase name="convertToBits" duration="{duration}"/>
   </file>
   <file path="tests/<exe-name>/IntrospectiveTests/GeneratorsImpl.tests.cpp">
+    <testCase name="ConcatGenerator" duration="{duration}"/>
+    <testCase name="ConcatGenerator/Cat support single-generator construction" duration="{duration}"/>
+    <testCase name="ConcatGenerator/Iterating over multiple generators" duration="{duration}"/>
     <testCase name="Filter generator throws exception for empty generator" duration="{duration}"/>
     <testCase name="Generators internals" duration="{duration}"/>
     <testCase name="Generators internals/Single value" duration="{duration}"/>
@@ -1241,6 +1244,9 @@ at Generators.tests.cpp:<line number>
     <testCase name="Generators -- simple/one" duration="{duration}"/>
     <testCase name="Generators -- simple/two" duration="{duration}"/>
     <testCase name="Nested generators and captured variables" duration="{duration}"/>
+    <testCase name="cat generator" duration="{duration}"/>
+    <testCase name="cat generator/Simple usage" duration="{duration}"/>
+    <testCase name="cat generator/Used in map" duration="{duration}"/>
     <testCase name="strlen3" duration="{duration}"/>
     <testCase name="tables" duration="{duration}"/>
   </file>

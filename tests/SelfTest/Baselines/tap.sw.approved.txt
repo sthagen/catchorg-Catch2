@@ -980,6 +980,30 @@ ok {test-number} - matcher.match( 1 ) for: true
 ok {test-number} - first.matchCalled for: true
 # Composed matchers shortcircuit
 ok {test-number} - !second.matchCalled for: true
+# ConcatGenerator
+ok {test-number} - c.get() == 1 for: 1 == 1
+# ConcatGenerator
+ok {test-number} - !(c.next()) for: !false
+# ConcatGenerator
+ok {test-number} - c.get() == i + 1 for: 1 == 1
+# ConcatGenerator
+ok {test-number} - c.next() for: true
+# ConcatGenerator
+ok {test-number} - c.get() == i + 1 for: 2 == 2
+# ConcatGenerator
+ok {test-number} - c.next() for: true
+# ConcatGenerator
+ok {test-number} - c.get() == i + 1 for: 3 == 3
+# ConcatGenerator
+ok {test-number} - c.next() for: true
+# ConcatGenerator
+ok {test-number} - c.get() == i + 1 for: 4 == 4
+# ConcatGenerator
+ok {test-number} - c.next() for: true
+# ConcatGenerator
+ok {test-number} - c.get() == 5 for: 5 == 5
+# ConcatGenerator
+ok {test-number} - !(c.next()) for: !false
 # Contains string matcher
 not ok {test-number} - testStringForMatching(), ContainsSubstring( "not there", Catch::CaseSensitive::No ) for: "this string contains 'abc' as a substring" contains: "not there" (case insensitive)
 # Contains string matcher
@@ -3933,6 +3957,22 @@ ok {test-number} - model.finished == 0 for: 0 == 0
 ok {test-number} - called == 1 for: 1 == 1
 # boolean member
 ok {test-number} - obj.prop != 0 for: 0x<hex digits> != 0
+# cat generator
+ok {test-number} - input < 3 for: 0 < 3
+# cat generator
+ok {test-number} - input < 3 for: 1 < 3
+# cat generator
+ok {test-number} - input < 3 for: 2 < 3
+# cat generator
+ok {test-number} - input % 2 == 0 for: 0 == 0
+# cat generator
+ok {test-number} - input % 2 == 0 for: 0 == 0
+# cat generator
+ok {test-number} - input % 2 == 0 for: 0 == 0
+# cat generator
+ok {test-number} - input % 2 == 0 for: 0 == 0
+# cat generator
+ok {test-number} - input % 2 == 0 for: 0 == 0
 # checkedElse
 ok {test-number} - flag for: true
 # checkedElse
@@ -4641,5 +4681,5 @@ ok {test-number} - q3 == 23. for: 23.0 == 23.0
 ok {test-number} -
 # xmlentitycheck
 ok {test-number} -
-1..2323
+1..2343
 

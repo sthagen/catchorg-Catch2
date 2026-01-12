@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="<exe-name>" errors="17" failures="141" skipped="12" tests="2323" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
+  <testsuite name="<exe-name>" errors="17" failures="141" skipped="12" tests="2343" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
     <properties>
       <property name="random-seed" value="1"/>
       <property name="filters" value="&quot;*&quot; ~[!nonportable] ~[!benchmark] ~[approvals]"/>
@@ -500,6 +500,9 @@ at Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Composed matchers shortcircuit" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Composed matchers shortcircuit/MatchAllOf" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Composed matchers shortcircuit/MatchAnyOf" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="ConcatGenerator" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="ConcatGenerator/Cat support single-generator construction" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="ConcatGenerator/Iterating over multiple generators" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Contains string matcher" time="{duration}" status="run">
       <failure message="testStringForMatching(), ContainsSubstring( &quot;not there&quot;, Catch::CaseSensitive::No )" type="CHECK_THAT">
 FAILED:
@@ -1992,6 +1995,9 @@ at Skip.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="benchmark function call/without chronometer" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="benchmark function call/with chronometer" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="boolean member" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="cat generator" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="cat generator/Simple usage" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="cat generator/Used in map" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="checkedElse" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="checkedElse, failing" time="{duration}" status="run">
       <failure message="testCheckedElse( false )" type="REQUIRE">

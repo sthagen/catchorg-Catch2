@@ -131,6 +131,7 @@ Nor would this
 :test-result: PASS Comparisons with int literals don't warn when mixing signed/ unsigned
 :test-result: PASS Composed generic matchers shortcircuit
 :test-result: PASS Composed matchers shortcircuit
+:test-result: PASS ConcatGenerator
 :test-result: FAIL Contains string matcher
 :test-result: PASS Copy and then generate a range
 :test-result: PASS Cout stream properly declares it writes to stdout
@@ -334,6 +335,7 @@ Message from section two
 :test-result: PASS array<int, N> -> toString
 :test-result: PASS benchmark function call
 :test-result: PASS boolean member
+:test-result: PASS cat generator
 :test-result: PASS checkedElse
 :test-result: FAIL checkedElse, failing
 :test-result: PASS checkedIf

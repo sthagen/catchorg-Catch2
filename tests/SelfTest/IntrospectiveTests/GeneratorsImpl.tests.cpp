@@ -85,7 +85,7 @@ TEST_CASE("Generators internals", "[generators][internals]") {
                 filter([](int) { return false; }, values({ 1, 2, 3 })),
                 Catch::GeneratorException);
         }
-        
+
         // Non-trivial usage
         SECTION("Out-of-line predicates are copied into the generator") {
             auto evilNumber = Catch::Detail::make_unique<int>(2);
@@ -585,4 +585,22 @@ TEST_CASE("from_range(container) supports ADL begin/end and arrays", "[generator
         REQUIRE_FALSE( gen.next() );
     }
 
+}
+
+TEST_CASE( "ConcatGenerator", "[generators][concat]" ) {
+    using namespace Catch::Generators;
+    SECTION( "Cat support single-generator construction" ) {
+        ConcatGenerator<int> c( value( 1 ) );
+        REQUIRE( c.get() == 1 );
+        REQUIRE_FALSE( c.next() );
+    }
+    SECTION( "Iterating over multiple generators" ) {
+        ConcatGenerator<int> c( value( 1 ), values( { 2, 3, 4 } ), value( 5 ) );
+        for ( int i = 0; i < 4; ++i ) {
+            REQUIRE( c.get() == i + 1 );
+            REQUIRE( c.next() );
+        }
+        REQUIRE( c.get() == 5 );
+        REQUIRE_FALSE( c.next() );
+    }
 }
