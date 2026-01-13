@@ -264,8 +264,22 @@ struct IGenerator : GeneratorUntypedBase {
     // Returns user-friendly string showing the current generator element
     // Does not have to be overridden, IGenerator provides default implementation
     virtual std::string stringifyImpl() const;
+
+    /**
+     * Customization point for `skipToNthElement`
+     *
+     * Does not have to be overridden, there is a default implementation.
+     * Can be overridden for better performance.
+     *
+     * If there are not enough elements, shall throw an error.
+     *
+     * Going backwards is not supported.
+     */
+    virtual void skipToNthElementImpl( std::size_t n );
 };
 ```
+
+> `skipToNthElementImpl` was added in Catch2 vX.Y.Z
 
 However, to be able to use your custom generator inside `GENERATE`, it
 will need to be wrapped inside a `GeneratorWrapper<T>`.

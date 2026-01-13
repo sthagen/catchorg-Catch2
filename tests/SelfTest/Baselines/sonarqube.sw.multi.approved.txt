@@ -148,6 +148,8 @@ at AssertionHandler.tests.cpp:<line number>
     <testCase name="ConcatGenerator/Cat support single-generator construction" duration="{duration}"/>
     <testCase name="ConcatGenerator/Iterating over multiple generators" duration="{duration}"/>
     <testCase name="Filter generator throws exception for empty generator" duration="{duration}"/>
+    <testCase name="FixedValuesGenerator can be skipped forward" duration="{duration}"/>
+    <testCase name="Generators can be skipped forward" duration="{duration}"/>
     <testCase name="Generators internals" duration="{duration}"/>
     <testCase name="Generators internals/Single value" duration="{duration}"/>
     <testCase name="Generators internals/Preset values" duration="{duration}"/>
@@ -185,6 +187,10 @@ at AssertionHandler.tests.cpp:<line number>
     <testCase name="Generators internals/Range/Negative manual step/Integer/Exact" duration="{duration}"/>
     <testCase name="Generators internals/Range/Negative manual step/Integer/Slightly over end" duration="{duration}"/>
     <testCase name="Generators internals/Range/Negative manual step/Integer/Slightly under end" duration="{duration}"/>
+    <testCase name="MapGenerator can be skipped forward efficiently" duration="{duration}"/>
+    <testCase name="TakeGenerator can be skipped forward" duration="{duration}"/>
+    <testCase name="TakeGenerator can be skipped forward/take is shorter than underlying" duration="{duration}"/>
+    <testCase name="TakeGenerator can be skipped forward/take is longer than underlying" duration="{duration}"/>
   </file>
   <file path="tests/<exe-name>/IntrospectiveTests/InternalBenchmark.tests.cpp">
     <testCase name="analyse no analysis" duration="{duration}"/>

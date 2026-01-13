@@ -22,6 +22,22 @@ namespace Generators {
         GeneratorWrapper<T> m_generator;
         size_t m_returned = 0;
         size_t m_target;
+
+        void skipToNthElementImpl( std::size_t n ) override {
+            if ( n >= m_target ) {
+                Detail::throw_generator_exception(
+                    "Coud not jump to Nth element: not enough elements" );
+            }
+
+            for (; m_returned < n; ++m_returned) {
+                const auto success = m_generator.next();
+                if ( !success ) {
+                    Detail::throw_generator_exception(
+                        "Coud not jump to Nth element: not enough elements" );
+                }
+            }
+        }
+
     public:
         TakeGenerator(size_t target, GeneratorWrapper<T>&& generator):
             m_generator(CATCH_MOVE(generator)),
@@ -158,6 +174,21 @@ namespace Generators {
         Func m_function;
         // To avoid returning dangling reference, we have to save the values
         T m_cache;
+
+        void skipToNthElementImpl( std::size_t n ) override {
+            for ( size_t curr = GeneratorUntypedBase::currentElementIndex();
+                  curr < n;
+                  ++curr ) {
+                const auto success = m_generator.next();
+                if (!success) {
+                    Detail::throw_generator_exception(
+                        "Coud not jump to Nth element: not enough elements" );
+                }
+            }
+
+            m_cache = m_function( m_generator.get() );
+        }
+
     public:
         template <typename F2 = Func>
         MapGenerator(F2&& function, GeneratorWrapper<U>&& generator) :
