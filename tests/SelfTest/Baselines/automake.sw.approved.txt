@@ -193,6 +193,7 @@ Nor would this
 :test-result: PASS Less-than inequalities with different epsilons
 :test-result: PASS ManuallyRegistered
 :test-result: PASS MapGenerator can be skipped forward efficiently
+:test-result: PASS MapGenerator can handle not default constructible types
 :test-result: PASS Matchers can be (AllOf) composed with the && operator
 :test-result: PASS Matchers can be (AnyOf) composed with the || operator
 :test-result: PASS Matchers can be composed with both && and ||

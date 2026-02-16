@@ -59,6 +59,7 @@ namespace Generators {
         }
 
         bool isFinite() const { return m_generator->isFinite(); }
+        void skipToNthElement( size_t n ) { m_generator->skipToNthElement(n); }
     };
 
 

@@ -476,6 +476,8 @@
 ##teamcity[testFinished name='ManuallyRegistered' duration="{duration}"]
 ##teamcity[testStarted name='MapGenerator can be skipped forward efficiently']
 ##teamcity[testFinished name='MapGenerator can be skipped forward efficiently' duration="{duration}"]
+##teamcity[testStarted name='MapGenerator can handle not default constructible types']
+##teamcity[testFinished name='MapGenerator can handle not default constructible types' duration="{duration}"]
 ##teamcity[testStarted name='Matchers can be (AllOf) composed with the && operator']
 ##teamcity[testFinished name='Matchers can be (AllOf) composed with the && operator' duration="{duration}"]
 ##teamcity[testStarted name='Matchers can be (AnyOf) composed with the |||| operator']

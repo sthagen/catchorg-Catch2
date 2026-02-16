@@ -50,7 +50,7 @@ want to keep doing so in the future, mark the mutated members as `mutable`.
 
 ### Section-only filtering with `-c/--section`
 
-> Deprecated in Catch2 vX.Y.Z
+> Deprecated in Catch2 3.13.0
 
 Currently, if you use only `-c/--section` parameters to decide which
 sections to enter, the filtering ignores generators completely. In the
@@ -63,7 +63,7 @@ means that generators are taken into account.
 
 #### Defaulted `UntypedGeneratorBase::isFinite()`
 
-> Deprecated in Catch2 vX.Y.Z
+> Deprecated in Catch2 3.13.0
 
 The `UntypedGeneratorBase` currently provides a default implementation
 for `isFinite` that always returns `true`. This was done to keep backwards

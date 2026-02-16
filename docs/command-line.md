@@ -365,7 +365,7 @@ There are currently two warnings implemented:
 
 > `UnmatchedTestSpec` was introduced in Catch2 3.0.1.
 
-> `InfiniteGenerators` was introduced in Catch2 vX.Y.Z
+> `InfiniteGenerators` was introduced in Catch2 3.13.0
 
 
 <a id="reporting-timings"></a>
@@ -540,7 +540,7 @@ Prints the command line arguments to stdout
 <pre>-g, --generator-index &lt;index in generator&gt;</pre>
 <pre>-p, --path-filter &lt;path filter spec&gt;</pre>
 
-> The generator and generic path filtering was added in Catch2 vX.Y.Z
+> The generator and generic path filtering was added in Catch2 3.13.0
 
 These arguments allow you to run specific section(s) in a test case, or
 only get specific element from a generator. All the variants form a shared

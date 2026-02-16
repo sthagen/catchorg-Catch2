@@ -1,7 +1,7 @@
 <a id="top"></a>
 # How to run specific section/generator
 
-> The generator and generic path filtering was added in Catch2 vX.Y.Z
+> The generator and generic path filtering was added in Catch2 3.13.0
 
 Catch2 supports picking specific path through a test case by filtering
 sections and generator indices to run through. This is done by using one
@@ -33,7 +33,7 @@ things:
 
 ## Old behaviour
 
-> The old behaviour was deprecated in Catch2 vX.Y.Z
+> The old behaviour was deprecated in Catch2 3.13.0
 
 ```
 -c, --section           <section name>
@@ -119,7 +119,7 @@ TEST_CASE( "qux" ) {
 
 ## New behaviour
 
-> The new behaviour was introduced in Catch2 vX.Y.Z
+> The new behaviour was introduced in Catch2 3.13.0
 
 ```
 -g, --generator-index   <index in generator>

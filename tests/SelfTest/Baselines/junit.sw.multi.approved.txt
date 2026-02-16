@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="<exe-name>" errors="17" failures="141" skipped="12" tests="2411" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
+  <testsuite name="<exe-name>" errors="17" failures="141" skipped="12" tests="2425" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
     <properties>
       <property name="random-seed" value="1"/>
       <property name="filters" value="&quot;*&quot; ~[!nonportable] ~[!benchmark] ~[approvals]"/>
@@ -1030,6 +1030,9 @@ at Condition.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Less-than inequalities with different epsilons" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="ManuallyRegistered" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="MapGenerator can be skipped forward efficiently" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="MapGenerator can be skipped forward efficiently/via calls to next()" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="MapGenerator can be skipped forward efficiently/via calls to skipToNthElement()" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="MapGenerator can handle not default constructible types" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Matchers can be (AllOf) composed with the &amp;&amp; operator" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Matchers can be (AnyOf) composed with the || operator" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Matchers can be composed with both &amp;&amp; and ||" time="{duration}" status="run"/>
