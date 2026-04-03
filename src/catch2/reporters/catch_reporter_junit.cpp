@@ -284,7 +284,7 @@ namespace Catch {
             if ( result.getResultType() == ResultWas::ExplicitSkip ) {
                 rss << "SKIPPED\n";
             } else {
-                rss << "FAILED" << ":\n";
+                rss << "FAILED:\n";
                 if (result.hasExpression()) {
                     rss << "  ";
                     rss << result.getExpressionInMacro();

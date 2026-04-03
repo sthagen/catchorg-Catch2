@@ -60,9 +60,14 @@ namespace Catch {
                         // can be, so the tracker has to throw for a wrong
                         // filter to stop the execution flow.
                         if (filter.type == PathFilter::For::Section) {
-                            // TBD: Explicit SKIP, or new exception that says
-                            //      "don't continue", but doesn't show in totals?
-                            SKIP();
+                            // We want the semantics of `SKIP()`, but we inline it
+                            // to avoid issues with conditionally prefixed macros
+                            INTERNAL_CATCH_MSG(
+                                "SKIP",
+                                Catch::ResultWas::ExplicitSkip,
+                                Catch::ResultDisposition::Normal,
+                                "" );
+                            Catch::Detail::Unreachable();
                         }
                         // '*' is the wildcard for "all elements in generator"
                         // used for filtering sections below the generator, but
@@ -519,8 +524,12 @@ namespace Catch {
         // TBD: Do we want to avoid the warning if the generator is filtered?
         if ( m_config->warnAboutInfiniteGenerators() &&
              !generator->isFinite() ) {
-            // TBD: Would it be better to expand this macro inline?
-            FAIL( "GENERATE() would run infinitely" );
+            // We want the semantics of `FAIL()`, but we inline it
+            // to avoid issues with conditionally prefixed macros
+            INTERNAL_CATCH_MSG( "FAIL",
+                                Catch::ResultWas::ExplicitFailure,
+                                Catch::ResultDisposition::Normal,
+                                "GENERATE() would run infinitely" );
         }
 
         auto nameAndLoc = TestCaseTracking::NameAndLocation( static_cast<std::string>( generatorName ), lineInfo );
