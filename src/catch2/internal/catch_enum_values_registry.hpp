@@ -20,7 +20,7 @@ namespace Catch {
 
         Catch::Detail::unique_ptr<EnumInfo> makeEnumInfo( StringRef enumName, StringRef allValueNames, std::vector<int> const& values );
 
-        class EnumValuesRegistry : public IMutableEnumValuesRegistry {
+        class EnumValuesRegistry final : public IMutableEnumValuesRegistry {
 
             std::vector<Catch::Detail::unique_ptr<EnumInfo>> m_enumInfos;
 
