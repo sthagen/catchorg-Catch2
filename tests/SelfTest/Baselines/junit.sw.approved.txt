@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuitesloose text artifact
 >
-  <testsuite name="<exe-name>" errors="17" failures="141" skipped="12" tests="2425" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
+  <testsuite name="<exe-name>" errors="17" failures="141" skipped="12" tests="2428" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
     <properties>
       <property name="random-seed" value="1"/>
       <property name="filters" value="&quot;*&quot; ~[!nonportable] ~[!benchmark] ~[approvals]"/>
@@ -506,6 +506,7 @@ with expansion:
 at Matchers.tests.cpp:<line number>
       </failure>
     </testcase>
+    <testcase classname="<exe-name>.global" name="Enum backed by larger underlying type" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Enums can quickly have stringification enabled using CATCH_REGISTER_ENUM" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Enums in namespaces can quickly have stringification enabled using CATCH_REGISTER_ENUM" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Epsilon only applies to Approx's value" time="{duration}" status="run"/>

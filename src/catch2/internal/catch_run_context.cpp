@@ -11,6 +11,7 @@
 #include <catch2/generators/catch_generators_throw.hpp>
 #include <catch2/interfaces/catch_interfaces_config.hpp>
 #include <catch2/interfaces/catch_interfaces_generatortracker.hpp>
+#include <catch2/interfaces/catch_interfaces_registry_hub.hpp>
 #include <catch2/interfaces/catch_interfaces_reporter.hpp>
 #include <catch2/internal/catch_compiler_capabilities.hpp>
 #include <catch2/internal/catch_context.hpp>
@@ -307,6 +308,25 @@ namespace Catch {
             return value;
         }
         CATCH_INTERNAL_STOP_WARNINGS_SUPPRESSION
+
+
+        void pushScopedMessage( MessageInfo&& message ) {
+            Detail::g_messageHolder().addScopedMessage(  CATCH_MOVE( message ) );
+        }
+
+        void popScopedMessage( unsigned int messageId ) {
+            Detail::g_messageHolder().removeMessage( messageId );
+        }
+
+        void emplaceUnscopedMessage( MessageBuilder&& builder ) {
+            Detail::g_messageHolder().addUnscopedMessage( CATCH_MOVE( builder ) );
+        }
+
+        void addUnscopedMessage( MessageInfo&& message ) {
+            Detail::g_messageHolder().addUnscopedMessage( CATCH_MOVE( message ) );
+        }
+
+        bool lastAssertionPassed() { return Detail::g_lastAssertionPassed; }
 
     } // namespace Detail
 
@@ -704,10 +724,6 @@ namespace Catch {
         m_reporter->testRunEnded(TestRunStats(m_runInfo, m_totals, false));
     }
 
-    bool RunContext::lastAssertionPassed() {
-        return Detail::g_lastAssertionPassed;
-    }
-
     void RunContext::assertionPassedFastPath(SourceLineInfo lineInfo) {
         // We want to save the line info for better experience with unexpected assertions
         Detail::g_lastKnownLineInfo = lineInfo;
@@ -935,22 +951,6 @@ namespace Catch {
             populateReaction(
                 reaction, info.resultDisposition & ResultDisposition::Normal );
         }
-    }
-
-    void IResultCapture::pushScopedMessage( MessageInfo&& message ) {
-        Detail::g_messageHolder().addScopedMessage(  CATCH_MOVE( message ) );
-    }
-
-    void IResultCapture::popScopedMessage( unsigned int messageId ) {
-        Detail::g_messageHolder().removeMessage( messageId );
-    }
-
-    void IResultCapture::emplaceUnscopedMessage( MessageBuilder&& builder ) {
-        Detail::g_messageHolder().addUnscopedMessage( CATCH_MOVE( builder ) );
-    }
-
-    void IResultCapture::addUnscopedMessage( MessageInfo&& message ) {
-        Detail::g_messageHolder().addUnscopedMessage( CATCH_MOVE( message ) );
     }
 
     void seedRng(IConfig const& config) {
