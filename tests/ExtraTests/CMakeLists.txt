@@ -526,29 +526,18 @@ set_tests_properties(TestSpecs::SkippingAllTestsFails
     WILL_FAIL ON
 )
 
-set(EXTRA_TEST_BINARIES
-  AllSkipped
-  PrefixedMacros
-  DisabledMacros
-  DisabledExceptions-DefaultHandler
-  DisabledExceptions-CustomHandler
-  FallbackStringifier
-  DisableStringification
-  PartialTestCaseEvents
-  DuplicatedTestCases-SameNameAndTags
-  DuplicatedTestCases-SameNameDifferentTags
-  DuplicatedTestCases-DuplicatedTestCaseMethods
-  NoTests
-  ListenersGetEventsBeforeReporters
-  MixingClearedAndUnclearedMessages
-#  DebugBreakMacros
-)
+add_executable(FastCompileMacros ${TESTS_DIR}/X07-FastCompileMacros.cpp)
+target_link_libraries(FastCompileMacros PRIVATE Catch2_buildall_interface)
+target_compile_definitions(FastCompileMacros PRIVATE CATCH_CONFIG_FAST_COMPILE)
 
-# Notice that we are modifying EXTRA_TEST_BINARIES destructively, do not
-# use it after this point!
-list(FILTER EXTRA_TEST_BINARIES EXCLUDE REGEX "DisabledExceptions.*")
-list(APPEND CATCH_TEST_TARGETS ${EXTRA_TEST_BINARIES})
-set(CATCH_TEST_TARGETS ${CATCH_TEST_TARGETS} PARENT_SCOPE)
+add_test(
+  NAME CompileConfiguration::FastCompile
+  COMMAND $<TARGET_FILE:FastCompileMacros>
+)
+set_tests_properties(CompileConfiguration::FastCompile
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "test cases:  6 \\| 1 passed \\| 1 failed \\| 4 failed as expected\nassertions: 13 \\| 6 passed \\| 2 failed \\| 5 failed as expected"
+)
 
 # This sets up a one-off executable that compiles against the amalgamated
 # files, and then runs it for a super simple check that the amalgamated
@@ -594,12 +583,79 @@ add_executable(InfiniteGenerators ${TESTS_DIR}/X95-InfiniteGenerators.cpp)
 target_link_libraries(InfiniteGenerators PRIVATE Catch2::Catch2WithMain)
 
 add_test(
-  NAME Warnings::InfiniteGenerators
+  NAME Warnings::InfiniteGenerators::NoFilterWarns
   COMMAND $<TARGET_FILE:InfiniteGenerators> --warn InfiniteGenerators
 )
-set_tests_properties(Warnings::InfiniteGenerators
+set_tests_properties(Warnings::InfiniteGenerators::NoFilterWarns
   PROPERTIES
     # One test case fails with infinite generator, but the other one runs
     PASS_REGULAR_EXPRESSION "test cases: 2 \\| 1 passed \\| 1 failed"
     TIMEOUT 5
 )
+
+add_test(
+  NAME Warnings::InfiniteGenerators::MatchAllFilterWarns
+  COMMAND $<TARGET_FILE:InfiniteGenerators>
+    --warn InfiniteGenerators
+    --path-filter g:*
+)
+set_tests_properties(Warnings::InfiniteGenerators::MatchAllFilterWarns
+  PROPERTIES
+    # One test case fails with infinite generator, but the other one runs
+    PASS_REGULAR_EXPRESSION "test cases: 2 \\| 1 passed \\| 1 failed"
+    TIMEOUT 5
+)
+
+add_test(
+  NAME Warnings::InfiniteGenerators::MatchOneFilterDoesntWarn
+  COMMAND $<TARGET_FILE:InfiniteGenerators>
+    --warn InfiniteGenerators
+    --path-filter g:1
+)
+set_tests_properties(Warnings::InfiniteGenerators::MatchOneFilterDoesntWarn
+  PROPERTIES
+    # One test case fails with infinite generator, but the other one runs
+    PASS_REGULAR_EXPRESSION "All tests passed \\(1 assertion in 2 test cases\\)"
+    TIMEOUT 5
+)
+
+add_test(
+  NAME Warnings::InfiniteGenerators::SectionFilterWarns
+  COMMAND $<TARGET_FILE:InfiniteGenerators>
+    --warn InfiniteGenerators
+    --section FooBarBaz
+)
+set_tests_properties(Warnings::InfiniteGenerators::SectionFilterWarns
+  PROPERTIES
+    # One test case fails with infinite generator, but the other one runs
+    PASS_REGULAR_EXPRESSION "test cases: 2 \\| 1 passed \\| 1 failed"
+    TIMEOUT 5
+)
+
+
+set(EXTRA_TEST_BINARIES
+  AllSkipped
+  PrefixedMacros
+  DisabledMacros
+  DisabledExceptions-DefaultHandler
+  DisabledExceptions-CustomHandler
+  FallbackStringifier
+  DisableStringification
+  PartialTestCaseEvents
+  DuplicatedTestCases-SameNameAndTags
+  DuplicatedTestCases-SameNameDifferentTags
+  DuplicatedTestCases-DuplicatedTestCaseMethods
+  NoTests
+  ListenersGetEventsBeforeReporters
+  MixingClearedAndUnclearedMessages
+  FastCompileMacros
+  InfiniteGenerators
+  ThreadSafetyTests
+#  DebugBreakMacros
+)
+
+# Notice that we are modifying EXTRA_TEST_BINARIES destructively, do not
+# use it after this point!
+list(FILTER EXTRA_TEST_BINARIES EXCLUDE REGEX "DisabledExceptions.*")
+list(APPEND CATCH_TEST_TARGETS ${EXTRA_TEST_BINARIES})
+set(CATCH_TEST_TARGETS ${CATCH_TEST_TARGETS} PARENT_SCOPE)

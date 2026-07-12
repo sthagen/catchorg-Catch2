@@ -179,8 +179,7 @@ namespace Generators {
 
         bool isFinite() const override {
             for (auto const& gen : m_generators) {
-                if (!gen.isFinite()) { return false;
-                }
+                if (!gen.isFinite()) { return false; }
             }
             return true;
         }

@@ -2,6 +2,7 @@
 
 # Release notes
 **Contents**<br>
+[3.15.2](#3152)<br>
 [3.15.1](#3151)<br>
 [3.15.0](#3150)<br>
 [3.14.0](#3140)<br>
@@ -74,6 +75,16 @@
 [2.0.1](#201)<br>
 [Older versions](#older-versions)<br>
 [Even Older versions](#even-older-versions)<br>
+
+
+## 3.15.2
+
+### Fixes
+* Fixed `--warn InfiniteGenerators` triggering even if the generator was limited to specific element via path filtering.
+* Fixed `-Wunused-parameter` triggering in `-fnoexceptions` builds.
+
+### Improvements
+* `catch_discover_tests` can handle cases where the binary prints out non-Catch2 output due to global constructors (#3162)
 
 
 ## 3.15.1

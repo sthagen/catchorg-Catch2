@@ -16,6 +16,42 @@ function(add_command NAME)
   set(script "${script}${NAME}(${_args})\n" PARENT_SCOPE)
 endfunction()
 
+# Generates random filename in the temp folder.
+# Temp folder is retrieved by checking env vars from various platforms.
+function(make_temp_file_path OUT_VARIABLE FALLBACK_PATH)
+  set(TEMP_DIR "")
+  set(ENV_VARS
+    # From XDG base dir specification
+    XDG_RUNTIME_DIR
+    # From POSIX standard
+    TMPDIR
+    # From Windows
+    TMP
+    TEMP
+  )
+
+  foreach(var ${ENV_VARS})
+    message(NOTICE "Checking ${var} env var")
+    if(DEFINED ENV{${var}} AND NOT "$ENV{${var}}" STREQUAL "")
+        set(TEMP_DIR "$ENV{${var}}")
+        break()
+    endif()
+  endforeach()
+
+  # If all checks fail, we use the fallback path
+  if(TEMP_DIR STREQUAL "")
+    set(TEMP_DIR "${FALLBACK_PATH}")
+  endif()
+
+  file(TO_CMAKE_PATH "${TEMP_DIR}" TEMP_DIR)
+
+  # Generate the random file name
+  string(RANDOM LENGTH 8 RAND_ID)
+  set(FINAL_TEMP_PATH "${TEMP_DIR}/Catch2-test-listing.${RAND_ID}.json")
+
+  set(${OUT_VARIABLE} "${FINAL_TEMP_PATH}" PARENT_SCOPE)
+endfunction()
+
 function(catch_discover_tests_impl)
 
   cmake_parse_arguments(
@@ -72,8 +108,13 @@ function(catch_discover_tests_impl)
     set(ENV{DYLD_FRAMEWORK_PATH} "${paths}")
   endif()
 
+  make_temp_file_path(listing_output_path "${_TEST_WORKING_DIR}")
+
   execute_process(
-    COMMAND ${_TEST_EXECUTOR} "${_TEST_EXECUTABLE}" ${spec} --list-tests --reporter json
+    COMMAND ${_TEST_EXECUTOR} "${_TEST_EXECUTABLE}" ${spec}
+      --list-tests
+      --reporter json
+      --out "${listing_output_path}"
     OUTPUT_VARIABLE listing_output
     RESULT_VARIABLE result
     WORKING_DIRECTORY "${_TEST_WORKING_DIR}"
@@ -85,6 +126,10 @@ function(catch_discover_tests_impl)
       "  Output: ${listing_output}\n"
     )
   endif()
+
+  # Read the JSON output back from the output file (and then get rid of the file)
+  file(READ ${listing_output_path} listing_output)
+  file(REMOVE ${listing_output_path})
 
   # Prepare reporter
   if(reporter)
@@ -154,9 +199,13 @@ function(catch_discover_tests_impl)
   math(EXPR num_tests "${num_tests} - 1")
 
   foreach(idx RANGE ${num_tests})
-    string(JSON single_test GET ${test_listing} ${idx})
-    string(JSON test_tags GET "${single_test}" "tags")
-    string(JSON plain_name GET "${single_test}" "name")
+    if(add_tags)
+      string(JSON single_test GET "${test_listing}" ${idx})
+      string(JSON test_tags GET "${single_test}" "tags")
+      string(JSON plain_name GET "${single_test}" "name")
+    else()
+      string(JSON plain_name GET "${test_listing}" ${idx} "name")
+    endif()
 
     # Escape characters in test case names that would be parsed by Catch2
     # Note that the \ escaping must happen FIRST! Do not change the order.
