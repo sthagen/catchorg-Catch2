@@ -39,3 +39,5 @@ public:
 };
 
 TEST_CASE_METHOD(TestCaseFixture, "A test case as method", "[tagstagstags]") {}
+
+TEST_CASE( "Newlines\nAnd\rOther\n\tWhitespace", "[whitespace-going-wild]" ) {}
