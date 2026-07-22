@@ -9,6 +9,8 @@
 #include <catch2/internal/catch_jsonwriter.hpp>
 #include <catch2/internal/catch_unreachable.hpp>
 
+#include <locale>
+
 namespace Catch {
 
     namespace {
@@ -126,7 +128,10 @@ namespace Catch {
 
     JsonValueWriter::JsonValueWriter( std::ostream& os,
                                       std::uint64_t indent_level ):
-        m_os{ os }, m_indent_level{ indent_level } {}
+        m_os{ os }, m_indent_level{ indent_level } {
+        // We use C locale so that writing of numerical values is locale-independent.
+        m_sstream.imbue( std::locale::classic() );
+    }
 
     JsonObjectWriter JsonValueWriter::writeObject() && {
         return JsonObjectWriter{ m_os, m_indent_level };
