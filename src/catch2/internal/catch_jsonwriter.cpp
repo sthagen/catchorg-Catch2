@@ -172,21 +172,30 @@ namespace Catch {
     }
 
     void JsonValueWriter::writeImpl( Catch::StringRef value, bool quote ) {
-        if ( quote ) { m_os << '"'; }
-        size_t current_start = 0;
-        for ( size_t i = 0; i < value.size(); ++i ) {
-            if ( needsEscape( value[i] ) ) {
-                if ( current_start < i ) {
-                    m_os << value.substr( current_start, i - current_start );
+        // Escaping only makes sense for actual strings, which are passed
+        // with `quote == true`. Non-quoted values are things like bools
+        // and numbers, which cannot create inputs that need escaping.
+        if ( !quote ) {
+            m_os << value;
+        } else {
+            m_os << '"';
+            size_t current_start = 0;
+            for ( size_t i = 0; i < value.size(); ++i ) {
+                if ( needsEscape( value[i] ) ) {
+                    if ( current_start < i ) {
+                        m_os
+                            << value.substr( current_start, i - current_start );
+                    }
+                    m_os << makeEscapeStringRef( value[i] );
+                    current_start = i + 1;
                 }
-                m_os << makeEscapeStringRef( value[i] );
-                current_start = i + 1;
             }
+            if ( current_start < value.size() ) {
+                m_os << value.substr( current_start,
+                                      value.size() - current_start );
+            }
+            m_os << '"';
         }
-        if ( current_start < value.size() ) {
-            m_os << value.substr( current_start, value.size() - current_start );
-        }
-        if ( quote ) { m_os << '"'; }
     }
 
 } // namespace Catch
