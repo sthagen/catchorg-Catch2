@@ -8218,6 +8218,78 @@ with expansion:
   ""\\/\t\r\n"" == ""\\/\t\r\n""
 
 -------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - double
+  NaN
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "NaN" )
+with expansion:
+  "NaN" == "NaN"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - double
+  Pos nf
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "Infinity" )
+with expansion:
+  "Infinity" == "Infinity"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - double
+  Neg inf
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "-Infinity" )
+with expansion:
+  "-Infinity" == "-Infinity"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - float
+  NaN
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "NaN" )
+with expansion:
+  "NaN" == "NaN"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - float
+  Pos nf
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "Infinity" )
+with expansion:
+  "Infinity" == "Infinity"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - float
+  Neg inf
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "-Infinity" )
+with expansion:
+  "-Infinity" == "-Infinity"
+
+-------------------------------------------------------------------------------
 JsonWriter serializes numbers independently of the global locale
 -------------------------------------------------------------------------------
 Json.tests.cpp:<line number>
@@ -20148,6 +20220,6 @@ Misc.tests.cpp:<line number>
 Misc.tests.cpp:<line number>: PASSED:
 
 ===============================================================================
-test cases:  452 |  332 passed |  96 failed | 6 skipped | 18 failed as expected
-assertions: 2417 | 2216 passed | 158 failed | 43 failed as expected
+test cases:  454 |  334 passed |  96 failed | 6 skipped | 18 failed as expected
+assertions: 2423 | 2222 passed | 158 failed | 43 failed as expected
 

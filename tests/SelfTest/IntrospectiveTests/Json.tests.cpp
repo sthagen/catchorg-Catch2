@@ -7,11 +7,13 @@
 // SPDX-License-Identifier: BSL-1.0
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/internal/catch_jsonwriter.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <limits>
 #include <locale>
 #include <sstream>
 
@@ -197,6 +199,29 @@ TEST_CASE( "JsonWriter serializes numbers independently of the global locale",
                       ContainsSubstring( "\"bool-2\": false," ) &&
                       ContainsSubstring(
                           "\"array\": [\n    2.5,\n    1234567\n  ]\n}" ) );
+}
+
+TEMPLATE_TEST_CASE( "JsonWriter serializes non-finite FP using Python spelling",
+                    "[JsonWriter][floating-point]",
+                    float,
+                    double ) {
+    std::stringstream sstream;
+
+    SECTION( "NaN" ) {
+        Catch::JsonValueWriter{ sstream }.write(
+            std::numeric_limits<TestType>::quiet_NaN() );
+        REQUIRE( sstream.str() == "NaN" );
+    }
+    SECTION( "Pos nf" ) {
+        Catch::JsonValueWriter{ sstream }.write(
+            std::numeric_limits<TestType>::infinity() );
+        REQUIRE( sstream.str() == "Infinity" );
+    }
+    SECTION( "Neg inf" ) {
+        Catch::JsonValueWriter{ sstream }.write(
+            -std::numeric_limits<TestType>::infinity() );
+        REQUIRE( sstream.str() == "-Infinity" );
+    }
 }
 
 TEST_CASE( "JsonWriter benchmarks", "[JsonWriter][!benchmark]" ) {

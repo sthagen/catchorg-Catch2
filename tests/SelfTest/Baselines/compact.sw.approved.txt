@@ -1248,6 +1248,12 @@ Json.tests.cpp:<line number>: passed: sstream.str() == "\"\\n\"" for: ""\n"" == 
 Json.tests.cpp:<line number>: passed: sstream.str() == "\"\\r\"" for: ""\r"" == ""\r""
 Json.tests.cpp:<line number>: passed: sstream.str() == "\"\\t\"" for: ""\t"" == ""\t""
 Json.tests.cpp:<line number>: passed: sstream.str() == "\"\\\\/\\t\\r\\n\"" for: ""\\/\t\r\n"" == ""\\/\t\r\n""
+Json.tests.cpp:<line number>: passed: sstream.str() == "NaN" for: "NaN" == "NaN"
+Json.tests.cpp:<line number>: passed: sstream.str() == "Infinity" for: "Infinity" == "Infinity"
+Json.tests.cpp:<line number>: passed: sstream.str() == "-Infinity" for: "-Infinity" == "-Infinity"
+Json.tests.cpp:<line number>: passed: sstream.str() == "NaN" for: "NaN" == "NaN"
+Json.tests.cpp:<line number>: passed: sstream.str() == "Infinity" for: "Infinity" == "Infinity"
+Json.tests.cpp:<line number>: passed: sstream.str() == "-Infinity" for: "-Infinity" == "-Infinity"
 Json.tests.cpp:<line number>: passed: sstream.str(), ContainsSubstring( "\"double\": 1.5," ) && ContainsSubstring( "\"int\": 1234567," ) && ContainsSubstring( "\"bool-1\": true," ) && ContainsSubstring( "\"bool-2\": false," ) && ContainsSubstring( "\"array\": [\n    2.5,\n    1234567\n  ]\n}" ) for: "{
   "double": 1.5,
   "int": 1234567,
@@ -3014,7 +3020,7 @@ InternalBenchmark.tests.cpp:<line number>: passed: med == 18. for: 18.0 == 18.0
 InternalBenchmark.tests.cpp:<line number>: passed: q3 == 23. for: 23.0 == 23.0
 Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
-test cases:  452 |  332 passed |  96 failed | 6 skipped | 18 failed as expected
-assertions: 2417 | 2216 passed | 158 failed | 43 failed as expected
+test cases:  454 |  334 passed |  96 failed | 6 skipped | 18 failed as expected
+assertions: 2423 | 2222 passed | 158 failed | 43 failed as expected
 
 

@@ -2054,6 +2054,18 @@ ok {test-number} - sstream.str() == "\"\\r\"" for: ""\r"" == ""\r""
 ok {test-number} - sstream.str() == "\"\\t\"" for: ""\t"" == ""\t""
 # JsonWriter escapes characters in strings properly
 ok {test-number} - sstream.str() == "\"\\\\/\\t\\r\\n\"" for: ""\\/\t\r\n"" == ""\\/\t\r\n""
+# JsonWriter serializes non-finite FP using Python spelling - double
+ok {test-number} - sstream.str() == "NaN" for: "NaN" == "NaN"
+# JsonWriter serializes non-finite FP using Python spelling - double
+ok {test-number} - sstream.str() == "Infinity" for: "Infinity" == "Infinity"
+# JsonWriter serializes non-finite FP using Python spelling - double
+ok {test-number} - sstream.str() == "-Infinity" for: "-Infinity" == "-Infinity"
+# JsonWriter serializes non-finite FP using Python spelling - float
+ok {test-number} - sstream.str() == "NaN" for: "NaN" == "NaN"
+# JsonWriter serializes non-finite FP using Python spelling - float
+ok {test-number} - sstream.str() == "Infinity" for: "Infinity" == "Infinity"
+# JsonWriter serializes non-finite FP using Python spelling - float
+ok {test-number} - sstream.str() == "-Infinity" for: "-Infinity" == "-Infinity"
 # JsonWriter serializes numbers independently of the global locale
 ok {test-number} - sstream.str(), ContainsSubstring( "\"double\": 1.5," ) && ContainsSubstring( "\"int\": 1234567," ) && ContainsSubstring( "\"bool-1\": true," ) && ContainsSubstring( "\"bool-2\": false," ) && ContainsSubstring( "\"array\": [\n    2.5,\n    1234567\n  ]\n}" ) for: "{   "double": 1.5,   "int": 1234567,   "bool-1": true,   "bool-2": false,   "array": [     2.5,     1234567   ] }" ( contains: ""double": 1.5," and contains: ""int": 1234567," and contains: ""bool-1": true," and contains: ""bool-2": false," and contains: ""array": [     2.5,     1234567   ] }" )
 # Lambdas in assertions
@@ -4853,5 +4865,5 @@ ok {test-number} - q3 == 23. for: 23.0 == 23.0
 ok {test-number} -
 # xmlentitycheck
 ok {test-number} -
-1..2429
+1..2435
 

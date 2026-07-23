@@ -9894,6 +9894,78 @@ Approx( 3.14150000000000018 )
     </Section>
     <OverallResult success="true" skips="0"/>
   </TestCase>
+  <TestCase name="JsonWriter serializes non-finite FP using Python spelling - double" tags="[floating-point][JsonWriter]" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+    <Section name="NaN" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "NaN"
+        </Original>
+        <Expanded>
+          "NaN" == "NaN"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Section name="Pos nf" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "Infinity"
+        </Original>
+        <Expanded>
+          "Infinity" == "Infinity"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Section name="Neg inf" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "-Infinity"
+        </Original>
+        <Expanded>
+          "-Infinity" == "-Infinity"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <OverallResult success="true" skips="0"/>
+  </TestCase>
+  <TestCase name="JsonWriter serializes non-finite FP using Python spelling - float" tags="[floating-point][JsonWriter]" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+    <Section name="NaN" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "NaN"
+        </Original>
+        <Expanded>
+          "NaN" == "NaN"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Section name="Pos nf" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "Infinity"
+        </Original>
+        <Expanded>
+          "Infinity" == "Infinity"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Section name="Neg inf" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "-Infinity"
+        </Original>
+        <Expanded>
+          "-Infinity" == "-Infinity"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <OverallResult success="true" skips="0"/>
+  </TestCase>
   <TestCase name="JsonWriter serializes numbers independently of the global locale" tags="[JsonWriter]" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
     <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
       <Original>
@@ -23408,6 +23480,6 @@ Approx( -1.95996398454005449 )
     </Section>
     <OverallResult success="true" skips="0"/>
   </TestCase>
-  <OverallResults successes="2216" failures="158" expectedFailures="43" skips="12"/>
-  <OverallResultsCases successes="332" failures="96" expectedFailures="18" skips="6"/>
+  <OverallResults successes="2222" failures="158" expectedFailures="43" skips="12"/>
+  <OverallResultsCases successes="334" failures="96" expectedFailures="18" skips="6"/>
 </Catch2TestRun>

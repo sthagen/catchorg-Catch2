@@ -7,8 +7,10 @@
 // SPDX-License-Identifier: BSL-1.0
 #include <catch2/internal/catch_enforce.hpp>
 #include <catch2/internal/catch_jsonwriter.hpp>
+#include <catch2/internal/catch_polyfills.hpp>
 #include <catch2/internal/catch_unreachable.hpp>
 
+#include <cmath>
 #include <locale>
 
 namespace Catch {
@@ -145,8 +147,28 @@ namespace Catch {
         writeImpl( value, true );
     }
 
+    void JsonValueWriter::write( float value ) && {
+        writeFloatingPoint( value );
+    }
+
+    void JsonValueWriter::write( double value ) && {
+        writeFloatingPoint( value );
+    }
+
     void JsonValueWriter::write( bool value ) && {
         writeImpl( value ? "true"_sr : "false"_sr, false );
+    }
+
+    template <typename T>
+    void JsonValueWriter::writeFloatingPoint( T value ) {
+        if ( Catch::isnan( value ) ) {
+            writeImpl( "NaN"_sr, false );
+        } else if ( std::isinf( value ) ) {
+            writeImpl( value < 0 ? "-Infinity"_sr : "Infinity"_sr, false );
+        } else {
+            m_sstream << value;
+            writeImpl( m_sstream.str(), false );
+        }
     }
 
     void JsonValueWriter::writeImpl( Catch::StringRef value, bool quote ) {
