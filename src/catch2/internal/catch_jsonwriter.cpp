@@ -16,9 +16,22 @@
 namespace Catch {
 
     namespace {
-        static bool needsEscape( char c ) {
-            return c == '"' || c == '\\' || c == '\b' || c == '\f' ||
-                   c == '\n' || c == '\r' || c == '\t';
+        struct EscapeLUT {
+            bool escape[256] = {};
+            constexpr EscapeLUT() {
+                escape[static_cast<unsigned char>( '"' )] = true;
+                escape[static_cast<unsigned char>( '\\' )] = true;
+                escape[static_cast<unsigned char>( '\b' )] = true;
+                escape[static_cast<unsigned char>( '\f' )] = true;
+                escape[static_cast<unsigned char>( '\n' )] = true;
+                escape[static_cast<unsigned char>( '\r' )] = true;
+                escape[static_cast<unsigned char>( '\t' )] = true;
+            }
+        };
+        static constexpr EscapeLUT escapeLUT{};
+
+        static constexpr bool needsEscape( char c ) {
+            return escapeLUT.escape[static_cast<unsigned char>( c )];
         }
 
         static Catch::StringRef makeEscapeStringRef( char c ) {
