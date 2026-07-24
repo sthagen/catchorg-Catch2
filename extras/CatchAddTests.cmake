@@ -114,6 +114,7 @@ function(catch_discover_tests_impl)
       --list-tests
       --reporter json
       --out "${listing_output_path}"
+      --order lex # Make sure the output order, and thus test registration order, is consistent across runs.
     OUTPUT_VARIABLE listing_output
     RESULT_VARIABLE result
     WORKING_DIRECTORY "${_TEST_WORKING_DIR}"
