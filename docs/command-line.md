@@ -26,7 +26,7 @@
 [Disable statistical analysis of collected benchmark samples](#disable-statistical-analysis-of-collected-benchmark-samples)<br>
 [Specify the amount of time in milliseconds spent on warming up each test](#specify-the-amount-of-time-in-milliseconds-spent-on-warming-up-each-test)<br>
 [Usage](#usage)<br>
-[Specify the section to run](#specify-the-section-to-run)<br>
+[Specify the section/generator element to run](#specify-the-sectiongenerator-element-to-run)<br>
 [Filenames as tags](#filenames-as-tags)<br>
 [Override output colouring](#override-output-colouring)<br>
 [Test Sharding](#test-sharding)<br>
