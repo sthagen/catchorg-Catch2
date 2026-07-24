@@ -625,6 +625,13 @@ if(CATCH_ENABLE_CMAKE_HELPER_TESTS)
       COST 240
       LABELS "uses-python"
   )
+
+  add_test(NAME "CMakeHelper::PrepareCommand"
+    COMMAND
+      "${CMAKE_COMMAND}"
+      "-DCATCH_ADD_TESTS_SCRIPT=${CATCH_DIR}/extras/CatchAddTests.cmake"
+      -P "${CMAKE_CURRENT_LIST_DIR}/TestScripts/DiscoverTests/TestPrepareCommand.cmake"
+  )
 endif()
 
 foreach(reporterName # "Automake" - the simple .trs format does not support any kind of comments/metadata

@@ -1,7 +1,21 @@
 # Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
 # file Copyright.txt or https://cmake.org/licensing for details.
 
-function(add_command NAME)
+# TBD: Further possible optimization is that most arguments for per-test
+#      `prepare_command` call are constant across one invocation of
+#      `catch_discover_tests`, and thus need checking and escaping only
+#      once, instead of for each test.
+#      This would provide nice speed-up of the actual command preparation,
+#      but it will make the script much harder to read, and it is utterly
+#      dwarfed by the quadratic scaling of parsing JSON arrays in CMake.
+
+
+# Prepare command with escaped (bracketed) arguments and return it via `_Command` out variable.
+#
+# To avoid quadratic performance when concatenating all commands together,
+# the actual concatenation must be done by the caller, by appending it
+# into a string of all other commands.
+function(prepare_command NAME)
   set(_args "")
   # use ARGV* instead of ARGN, because ARGN splits arrays into multiple arguments
   math(EXPR _last_arg ${ARGC}-1)
@@ -13,7 +27,7 @@ function(add_command NAME)
       set(_args "${_args} ${_arg}")
     endif()
   endforeach()
-  set(script "${script}${NAME}(${_args})\n" PARENT_SCOPE)
+  set(_Command "${NAME}(${_args})\n" PARENT_SCOPE)
 endfunction()
 
 # Generates random filename in the temp folder.
@@ -220,7 +234,7 @@ function(catch_discover_tests_impl)
     endif()
 
     # ...and add to script
-    add_command(add_test
+    prepare_command(add_test
       "${prefix}${plain_name}${suffix}"
       ${_TEST_EXECUTOR}
       "${_TEST_EXECUTABLE}"
@@ -229,12 +243,14 @@ function(catch_discover_tests_impl)
       "${reporter_arg}"
       "${output_dir_arg}"
     )
-    add_command(set_tests_properties
+    string(APPEND script "${_Command}")
+    prepare_command(set_tests_properties
       "${prefix}${plain_name}${suffix}"
       PROPERTIES
       WORKING_DIRECTORY "${_TEST_WORKING_DIR}"
       ${properties}
     )
+    string(APPEND script "${_Command}")
 
     if(add_tags)
       string(JSON num_tags LENGTH "${test_tags}")
@@ -254,19 +270,21 @@ function(catch_discover_tests_impl)
           list(APPEND tag_list "${a_tag}")
         endforeach()
 
-        add_command(set_tests_properties
+        prepare_command(set_tests_properties
           "${prefix}${plain_name}${suffix}"
           PROPERTIES
           LABELS "${tag_list}"
         )
+        string(APPEND script "${_Command}")
       endif()
     endif(add_tags)
 
     if(environment_modifications)
-      add_command(set_tests_properties
+      prepare_command(set_tests_properties
         "${prefix}${plain_name}${suffix}"
         PROPERTIES
         ENVIRONMENT_MODIFICATION "${environment_modifications}")
+      string(APPEND script "${_Command}")
     endif()
 
     list(APPEND tests "${prefix}${plain_name}${suffix}")
@@ -274,13 +292,16 @@ function(catch_discover_tests_impl)
 
   # Create a list of all discovered tests, which users may use to e.g. set
   # properties on the tests
-  add_command(set ${_TEST_LIST} ${tests})
+  prepare_command(set ${_TEST_LIST} ${tests})
+  string(APPEND script "${_Command}")
 
   # Write CTest script
   file(WRITE "${_CTEST_FILE}" "${script}")
 endfunction()
 
-if(CMAKE_SCRIPT_MODE_FILE)
+# To enable `include`ing this file in the unit test scripts, we only run
+# the impl if an actual `TEST_EXECUTABLE` is provided.
+if(CMAKE_SCRIPT_MODE_FILE AND DEFINED TEST_EXECUTABLE)
   catch_discover_tests_impl(
     TEST_EXECUTABLE ${TEST_EXECUTABLE}
     TEST_EXECUTOR ${TEST_EXECUTOR}
