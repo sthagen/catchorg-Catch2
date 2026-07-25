@@ -8220,6 +8220,103 @@ with expansion:
   ""\\/\t\r\n"" == ""\\/\t\r\n""
 
 -------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - double
+  NaN
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "NaN" )
+with expansion:
+  "NaN" == "NaN"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - double
+  Pos nf
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "Infinity" )
+with expansion:
+  "Infinity" == "Infinity"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - double
+  Neg inf
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "-Infinity" )
+with expansion:
+  "-Infinity" == "-Infinity"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - float
+  NaN
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "NaN" )
+with expansion:
+  "NaN" == "NaN"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - float
+  Pos nf
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "Infinity" )
+with expansion:
+  "Infinity" == "Infinity"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes non-finite FP using Python spelling - float
+  Neg inf
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE( sstream.str() == "-Infinity" )
+with expansion:
+  "-Infinity" == "-Infinity"
+
+-------------------------------------------------------------------------------
+JsonWriter serializes numbers independently of the global locale
+-------------------------------------------------------------------------------
+Json.tests.cpp:<line number>
+...............................................................................
+
+Json.tests.cpp:<line number>: PASSED:
+  REQUIRE_THAT( sstream.str(), ContainsSubstring( "\"double\": 1.5," ) && ContainsSubstring( "\"int\": 1234567," ) && ContainsSubstring( "\"bool-1\": true," ) && ContainsSubstring( "\"bool-2\": false," ) && ContainsSubstring( "\"array\": [\n    2.5,\n    1234567\n  ]\n}" ) )
+with expansion:
+  "{
+    "double": 1.5,
+    "int": 1234567,
+    "bool-1": true,
+    "bool-2": false,
+    "array": [
+      2.5,
+      1234567
+    ]
+  }" ( contains: ""double": 1.5," and contains: ""int": 1234567," and contains:
+  ""bool-1": true," and contains: ""bool-2": false," and contains: ""array": [
+      2.5,
+      1234567
+    ]
+  }" )
+
+-------------------------------------------------------------------------------
 Lambdas in assertions
 -------------------------------------------------------------------------------
 Compilation.tests.cpp:<line number>
@@ -20134,6 +20231,6 @@ Misc.tests.cpp:<line number>
 Misc.tests.cpp:<line number>: PASSED:
 
 ===============================================================================
-test cases:  451 |  331 passed |  96 failed | 6 skipped | 18 failed as expected
-assertions: 2416 | 2215 passed | 158 failed | 43 failed as expected
+test cases:  454 |  334 passed |  96 failed | 6 skipped | 18 failed as expected
+assertions: 2423 | 2222 passed | 158 failed | 43 failed as expected
 

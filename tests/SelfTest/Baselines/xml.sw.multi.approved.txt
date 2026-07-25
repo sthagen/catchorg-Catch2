@@ -9894,6 +9894,102 @@ Approx( 3.14150000000000018 )
     </Section>
     <OverallResult success="true" skips="0"/>
   </TestCase>
+  <TestCase name="JsonWriter serializes non-finite FP using Python spelling - double" tags="[floating-point][JsonWriter]" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+    <Section name="NaN" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "NaN"
+        </Original>
+        <Expanded>
+          "NaN" == "NaN"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Section name="Pos nf" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "Infinity"
+        </Original>
+        <Expanded>
+          "Infinity" == "Infinity"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Section name="Neg inf" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "-Infinity"
+        </Original>
+        <Expanded>
+          "-Infinity" == "-Infinity"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <OverallResult success="true" skips="0"/>
+  </TestCase>
+  <TestCase name="JsonWriter serializes non-finite FP using Python spelling - float" tags="[floating-point][JsonWriter]" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+    <Section name="NaN" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "NaN"
+        </Original>
+        <Expanded>
+          "NaN" == "NaN"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Section name="Pos nf" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "Infinity"
+        </Original>
+        <Expanded>
+          "Infinity" == "Infinity"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <Section name="Neg inf" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+        <Original>
+          sstream.str() == "-Infinity"
+        </Original>
+        <Expanded>
+          "-Infinity" == "-Infinity"
+        </Expanded>
+      </Expression>
+      <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
+    </Section>
+    <OverallResult success="true" skips="0"/>
+  </TestCase>
+  <TestCase name="JsonWriter serializes numbers independently of the global locale" tags="[JsonWriter]" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+    <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/Json.tests.cpp" >
+      <Original>
+        sstream.str(), ContainsSubstring( "\"double\": 1.5," ) &amp;&amp; ContainsSubstring( "\"int\": 1234567," ) &amp;&amp; ContainsSubstring( "\"bool-1\": true," ) &amp;&amp; ContainsSubstring( "\"bool-2\": false," ) &amp;&amp; ContainsSubstring( "\"array\": [\n    2.5,\n    1234567\n  ]\n}" )
+      </Original>
+      <Expanded>
+        "{
+  "double": 1.5,
+  "int": 1234567,
+  "bool-1": true,
+  "bool-2": false,
+  "array": [
+    2.5,
+    1234567
+  ]
+}" ( contains: ""double": 1.5," and contains: ""int": 1234567," and contains: ""bool-1": true," and contains: ""bool-2": false," and contains: ""array": [
+    2.5,
+    1234567
+  ]
+}" )
+      </Expanded>
+    </Expression>
+    <OverallResult success="true" skips="0"/>
+  </TestCase>
   <TestCase name="Lambdas in assertions" filename="tests/<exe-name>/UsageTests/Compilation.tests.cpp" >
     <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/UsageTests/Compilation.tests.cpp" >
       <Original>
@@ -23384,6 +23480,6 @@ Approx( -1.95996398454005449 )
     </Section>
     <OverallResult success="true" skips="0"/>
   </TestCase>
-  <OverallResults successes="2215" failures="158" expectedFailures="43" skips="12"/>
-  <OverallResultsCases successes="331" failures="96" expectedFailures="18" skips="6"/>
+  <OverallResults successes="2222" failures="158" expectedFailures="43" skips="12"/>
+  <OverallResultsCases successes="334" failures="96" expectedFailures="18" skips="6"/>
 </Catch2TestRun>
