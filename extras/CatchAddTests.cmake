@@ -75,6 +75,12 @@ function(catch_discover_tests_impl)
     ${ARGN}
   )
 
+  # We periodically append to the output file below, so we have to ensure
+  # that it is empty at the start, or we get duplicated test scripts.
+  file(REMOVE "${_CTEST_FILE}")
+  # Size (in Bytes) at which the intermediate `script` var is dumped to file.
+  set(_WriteToFileThreshold 50000)
+
   set(add_tags "${_ADD_TAGS_AS_LABELS}")
   set(prefix "${_TEST_PREFIX}")
   set(suffix "${_TEST_SUFFIX}")
@@ -213,6 +219,15 @@ function(catch_discover_tests_impl)
   math(EXPR num_tests "${num_tests} - 1")
 
   foreach(idx RANGE ${num_tests})
+    string(LENGTH "${script}" script_len)
+    # Because appending to the same string in CMake has quadratic runtime,
+    # we flush the script into the file periodically to avoid the worst case.
+    if (script_len GREATER _WriteToFileThreshold)
+      file(APPEND "${_CTEST_FILE}" "${script}")
+      set(script "")
+    endif()
+
+
     if(add_tags)
       string(JSON single_test GET "${test_listing}" ${idx})
       string(JSON test_tags GET "${single_test}" "tags")
@@ -295,8 +310,8 @@ function(catch_discover_tests_impl)
   prepare_command(set ${_TEST_LIST} ${tests})
   string(APPEND script "${_Command}")
 
-  # Write CTest script
-  file(WRITE "${_CTEST_FILE}" "${script}")
+  # Write any script leftovers we have
+  file(APPEND "${_CTEST_FILE}" "${script}")
 endfunction()
 
 # To enable `include`ing this file in the unit test scripts, we only run
