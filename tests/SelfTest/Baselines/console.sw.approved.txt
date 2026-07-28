@@ -11323,11 +11323,7 @@ with expansion:
           "name": "fake test name",
           "tags": [
             "fakeTestTag"
-          ],
-          "source-location": {
-            "filename": "fake-file.cpp",
-            "line": 123456789
-          }
+          ]
         }
       ]" ( contains: "fake test name" and contains: "fakeTestTag" )
 with message:

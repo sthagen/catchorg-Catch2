@@ -2775,7 +2775,7 @@ ok {test-number} - listingString, ContainsSubstring("fake reporter"s) for: "{   
 # Reporter's write listings to provided stream
 ok {test-number} - !(factories.empty()) for: !false
 # Reporter's write listings to provided stream
-ok {test-number} - listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) for: "{   "version": 2,   "metadata": {     "name": "",     "rng-seed": 1234,     "catch2-version": "<version>"   },   "listings": {     "tests": [       {         "name": "fake test name",         "tags": [           "fakeTestTag"         ],         "source-location": {           "filename": "fake-file.cpp",           "line": 123456789         }       }     ]" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: JSON'
+ok {test-number} - listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) for: "{   "version": 2,   "metadata": {     "name": "",     "rng-seed": 1234,     "catch2-version": "<version>"   },   "listings": {     "tests": [       {         "name": "fake test name",         "tags": [           "fakeTestTag"         ]       }     ]" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: JSON'
 # Reporter's write listings to provided stream
 ok {test-number} - !(factories.empty()) for: !false
 # Reporter's write listings to provided stream

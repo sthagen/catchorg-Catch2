@@ -13503,11 +13503,7 @@ Approx( 0.98999999999999999 )
         "name": "fake test name",
         "tags": [
           "fakeTestTag"
-        ],
-        "source-location": {
-          "filename": "fake-file.cpp",
-          "line": 123456789
-        }
+        ]
       }
     ]" ( contains: "fake test name" and contains: "fakeTestTag" )
         </Expanded>

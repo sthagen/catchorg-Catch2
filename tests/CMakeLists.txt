@@ -208,6 +208,21 @@ set_tests_properties(List::Tests::XmlOutput PROPERTIES
   FAIL_REGULAR_EXPRESSION "[0-9]+ test cases"
 )
 
+add_test(NAME List::Tests::Json::Normal COMMAND $<TARGET_FILE:SelfTest> --list-tests -r json)
+set_tests_properties(List::Tests::Json::Normal PROPERTIES
+  PASS_REGULAR_EXPRESSION "\"tags\": \\["
+  FAIL_REGULAR_EXPRESSION "\"source-location\": {"
+)
+add_test(NAME List::Tests::Json::Quiet COMMAND $<TARGET_FILE:SelfTest> --list-tests -r json::verbosity=quiet)
+set_tests_properties(List::Tests::Json::Quiet PROPERTIES
+  PASS_REGULAR_EXPRESSION "\"name\": \""
+  FAIL_REGULAR_EXPRESSION "\"tags\": \\["
+)
+add_test(NAME List::Tests::Json::High COMMAND $<TARGET_FILE:SelfTest> --list-tests -r json::verbosity=high)
+set_tests_properties(List::Tests::Json::High PROPERTIES
+  PASS_REGULAR_EXPRESSION "\"source-location\": {"
+)
+
 add_test(NAME List::Tags::Output COMMAND $<TARGET_FILE:SelfTest> --list-tags)
 set_tests_properties(List::Tags::Output PROPERTIES
   PASS_REGULAR_EXPRESSION "[0-9]+ tags"
@@ -216,6 +231,11 @@ add_test(NAME List::Tags::ExitCode COMMAND $<TARGET_FILE:SelfTest> --list-tags)
 add_test(NAME List::Tags::XmlOutput COMMAND $<TARGET_FILE:SelfTest> --list-tags -r xml)
 set_tests_properties(List::Tags::XmlOutput PROPERTIES
   PASS_REGULAR_EXPRESSION "<Count>18</Count>"
+  FAIL_REGULAR_EXPRESSION "[0-9]+ tags"
+)
+add_test(NAME List::Tags::JsonOutput COMMAND $<TARGET_FILE:SelfTest> --list-tags -r json)
+set_tests_properties(List::Tags::JsonOutput PROPERTIES
+  PASS_REGULAR_EXPRESSION "\"count\": 18"
   FAIL_REGULAR_EXPRESSION "[0-9]+ tags"
 )
 
@@ -227,6 +247,12 @@ set_tests_properties(List::Reporters::XmlOutput PROPERTIES
   PASS_REGULAR_EXPRESSION "<Name>compact</Name>"
   FAIL_REGULAR_EXPRESSION "Available reporters:"
 )
+add_test(NAME List::Reporters::JsonOutput COMMAND $<TARGET_FILE:SelfTest> --list-reporters -r json)
+set_tests_properties(List::Reporters::JsonOutput PROPERTIES
+  PASS_REGULAR_EXPRESSION "\"name\": \"compact\""
+  FAIL_REGULAR_EXPRESSION "Available reporters:"
+)
+
 
 add_test(NAME List::Listeners::Output
   COMMAND
@@ -251,6 +277,18 @@ set_tests_properties(List::Listeners::XmlOutput
     PASS_REGULAR_EXPRESSION "<RegisteredListeners>"
     FAIL_REGULAR_EXPRESSION "Registered listeners:"
 )
+add_test(NAME List::Listeners::JsonOutput
+  COMMAND
+    $<TARGET_FILE:SelfTest>
+      --list-listeners
+      --reporter json
+)
+set_tests_properties(List::Listeners::JsonOutput
+  PROPERTIES
+    PASS_REGULAR_EXPRESSION "\"listeners\": \\["
+    FAIL_REGULAR_EXPRESSION "Registered listeners:"
+)
+
 
 add_test(NAME NoAssertions COMMAND $<TARGET_FILE:SelfTest> -w NoAssertions "An empty test with no assertions")
 set_tests_properties(NoAssertions PROPERTIES PASS_REGULAR_EXPRESSION "No assertions in test case")

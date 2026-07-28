@@ -349,13 +349,15 @@ namespace Catch {
             if (!info.className.empty()) {
                 desc_writer.write( "class-name"_sr ).write( info.className );
             }
-            {
+            if ( m_verbosity >= Verbosity::Normal ) {
                 auto tag_writer = desc_writer.write( "tags"_sr ).writeArray();
                 for ( auto const& tag : info.tags ) {
                     tag_writer.write( tag.original );
                 }
             }
-            writeSourceInfo( desc_writer, info.lineInfo );
+            if ( m_verbosity >= Verbosity::High) {
+                writeSourceInfo( desc_writer, info.lineInfo );
+            }
         }
     }
     void JsonReporter::listTags( std::vector<TagInfo> const& tags ) {

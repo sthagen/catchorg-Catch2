@@ -8,6 +8,7 @@
 # SPDX-License-Identifier: BSL-1.0
 
 import argparse
+import copy
 import json
 import os
 import re
@@ -33,14 +34,19 @@ def load_template(path: str) -> dict:
     return catch_out
 
 
-def synthesize_listing(template_doc: dict, count: int, file) -> str:
+def synthesize_listing(template_doc: dict, count: int, file, with_tags: bool) -> str:
     """Writes JSON listing with exactly `count` test cases into `file`.
 
     The template entries are cycled through, and each name is made unique by
     appending an index, so that every registered CTest test has a distinct name.
     """
-    doc_copy = template_doc.copy()
-    template_tests = template_doc['listings']['tests']
+    # To avoid messing up the template tests by deletion, we have
+    # to take a deepcopy before the changes.
+    doc_copy = copy.deepcopy(template_doc)
+    template_tests = doc_copy['listings']['tests']
+    if not with_tags:
+        for test in template_tests:
+            del test['tags']
     num_original = len(template_tests)
 
     out_tests = []
@@ -176,10 +182,10 @@ def main():
         os.makedirs(workdir, exist_ok=True)
         for count in COUNTS:
             listing_path = os.path.join(workdir, f"listing-{count}.json")
-            with open(listing_path, "w", encoding="utf-8") as f:
-                synthesize_listing(template_doc, count, f)
 
             for add_tags in tag_modes:
+                with open(listing_path, "w", encoding="utf-8") as f:
+                    synthesize_listing(template_doc, count, f, add_tags)
                 mode = "on" if add_tags else "off"
                 ctest_file = os.path.join(workdir, f"ctest-{count}-{mode}.cmake")
                 cmd = build_command(args, listing_path, ctest_file, add_tags)

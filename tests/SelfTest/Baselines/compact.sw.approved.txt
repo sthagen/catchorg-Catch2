@@ -1740,11 +1740,7 @@ Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fa
         "name": "fake test name",
         "tags": [
           "fakeTestTag"
-        ],
-        "source-location": {
-          "filename": "fake-file.cpp",
-          "line": 123456789
-        }
+        ]
       }
     ]" ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: JSON'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
