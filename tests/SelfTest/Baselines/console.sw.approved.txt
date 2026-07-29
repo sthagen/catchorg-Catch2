@@ -11233,7 +11233,7 @@ Reporters.tests.cpp:<line number>: PASSED:
   REQUIRE_THAT( listingString, ContainsSubstring("fakeTag"s) )
 with expansion:
   "{
-    "version": 1,
+    "version": 2,
     "metadata": {
       "name": "",
       "rng-seed": 1234,
@@ -11273,7 +11273,7 @@ Reporters.tests.cpp:<line number>: PASSED:
   REQUIRE_THAT( listingString, ContainsSubstring("fake reporter"s) )
 with expansion:
   "{
-    "version": 1,
+    "version": 2,
     "metadata": {
       "name": "",
       "rng-seed": 1234,
@@ -11311,7 +11311,7 @@ Reporters.tests.cpp:<line number>: PASSED:
   REQUIRE_THAT( listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) )
 with expansion:
   "{
-    "version": 1,
+    "version": 2,
     "metadata": {
       "name": "",
       "rng-seed": 1234,
@@ -11321,7 +11321,6 @@ with expansion:
       "tests": [
         {
           "name": "fake test name",
-          "class-name": "",
           "tags": [
             "fakeTestTag"
           ],

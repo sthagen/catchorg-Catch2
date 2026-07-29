@@ -326,7 +326,7 @@ function(catch_discover_tests_impl)
 
   # Parse JSON output for list of tests/class names/tags
   string(JSON version GET "${listing_output}" "version")
-  if(NOT version STREQUAL "1")
+  if(NOT version STREQUAL "2")
     message(FATAL_ERROR "Unsupported catch output version: '${version}'")
   endif()
 

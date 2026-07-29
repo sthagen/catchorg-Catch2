@@ -13419,7 +13419,7 @@ Approx( 0.98999999999999999 )
         </Original>
         <Expanded>
           "{
-  "version": 1,
+  "version": 2,
   "metadata": {
     "name": "",
     "rng-seed": 1234,
@@ -13456,7 +13456,7 @@ Approx( 0.98999999999999999 )
         </Original>
         <Expanded>
           "{
-  "version": 1,
+  "version": 2,
   "metadata": {
     "name": "",
     "rng-seed": 1234,
@@ -13491,7 +13491,7 @@ Approx( 0.98999999999999999 )
         </Original>
         <Expanded>
           "{
-  "version": 1,
+  "version": 2,
   "metadata": {
     "name": "",
     "rng-seed": 1234,
@@ -13501,7 +13501,6 @@ Approx( 0.98999999999999999 )
     "tests": [
       {
         "name": "fake test name",
-        "class-name": "",
         "tags": [
           "fakeTestTag"
         ],

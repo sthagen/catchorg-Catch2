@@ -1694,7 +1694,7 @@ Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fa
 " ( contains: "fake test name" and contains: "fakeTestTag" ) with 1 message: 'Tested reporter: console'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fakeTag"s) for: "{
-  "version": 1,
+  "version": 2,
   "metadata": {
     "name": "",
     "rng-seed": 1234,
@@ -1711,7 +1711,7 @@ Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fak
     ]" contains: "fakeTag" with 1 message: 'Tested reporter: JSON'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fake reporter"s) for: "{
-  "version": 1,
+  "version": 2,
   "metadata": {
     "name": "",
     "rng-seed": 1234,
@@ -1726,7 +1726,7 @@ Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring("fak
     ]" contains: "fake reporter" with 1 message: 'Tested reporter: JSON'
 Reporters.tests.cpp:<line number>: passed: !(factories.empty()) for: !false
 Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fake test name"s ) && ContainsSubstring( "fakeTestTag"s ) for: "{
-  "version": 1,
+  "version": 2,
   "metadata": {
     "name": "",
     "rng-seed": 1234,
@@ -1736,7 +1736,6 @@ Reporters.tests.cpp:<line number>: passed: listingString, ContainsSubstring( "fa
     "tests": [
       {
         "name": "fake test name",
-        "class-name": "",
         "tags": [
           "fakeTestTag"
         ],

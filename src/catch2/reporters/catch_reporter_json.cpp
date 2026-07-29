@@ -16,6 +16,8 @@
 
 namespace Catch {
     namespace {
+        static size_t kJsonOutputVersion = 2;
+
         void writeSourceInfo( JsonObjectWriter& writer,
                               SourceLineInfo const& sourceInfo ) {
             auto source_location_writer =
@@ -58,7 +60,7 @@ namespace Catch {
         m_writers.emplace( Writer::Object );
         auto& writer = m_objectWriters.top();
 
-        writer.write( "version"_sr ).write( 1 );
+        writer.write( "version"_sr ).write( kJsonOutputVersion );
 
         {
             auto metadata_writer = writer.write( "metadata"_sr ).writeObject();
@@ -344,7 +346,9 @@ namespace Catch {
             auto const& info = test.getTestCaseInfo();
 
             desc_writer.write( "name"_sr ).write( info.name );
-            desc_writer.write( "class-name"_sr ).write( info.className );
+            if (!info.className.empty()) {
+                desc_writer.write( "class-name"_sr ).write( info.className );
+            }
             {
                 auto tag_writer = desc_writer.write( "tags"_sr ).writeArray();
                 for ( auto const& tag : info.tags ) {
