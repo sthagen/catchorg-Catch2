@@ -202,8 +202,13 @@ as many times as you want, e.g. `--reporter xml::out=someFile.xml` or
 
 The keys must either be prefixed by "X", in which case they are not parsed
 by Catch2 and are only passed down to the reporter, or one of options
-hardcoded into Catch2. Currently there are only 2,
-["out"](#sending-output-to-a-file), and ["colour-mode"](#colour-mode).
+hardcoded into Catch2. Currently there are 3 supported options:
+
+* ["out"](#sending-output-to-a-file)
+* ["colour-mode"](#colour-mode)
+* ["verbosity"](#output-verbosity)
+
+> Support for per-reporter verbosity option was added in Catch2 vX.Y.Z
 
 _Note that the reporter might still check the X-prefixed options for
 validity, and throw an error if they are wrong._

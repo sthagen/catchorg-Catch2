@@ -89,6 +89,7 @@ namespace Catch {
         return lhs.name == rhs.name &&
                lhs.outputFilename == rhs.outputFilename &&
                lhs.colourMode == rhs.colourMode &&
+               lhs.verbosity == rhs.verbosity &&
                lhs.customOptions == rhs.customOptions;
     }
 
@@ -157,6 +158,7 @@ namespace Catch {
                 reporterSpec.outputFile() ? *reporterSpec.outputFile()
                                           : data.defaultOutputFilename,
                 reporterSpec.colourMode().valueOr( data.defaultColourMode ),
+                reporterSpec.verbosity().valueOr( data.verbosity ),
                 reporterSpec.customOptions() } );
         }
     }
@@ -232,7 +234,7 @@ namespace Catch {
 
         if ( bazelOutputFile ) {
             m_data.reporterSpecifications.push_back(
-                { "junit", std::string( bazelOutputFile ), {}, {} } );
+                { "junit", std::string( bazelOutputFile ), {}, {}, {} } );
         }
 
         const auto bazelTestSpec = Detail::getEnv( "TESTBRIDGE_TEST_ONLY" );

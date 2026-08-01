@@ -11976,7 +11976,7 @@ Approx( 1.21999999999999997 )
       </Expression>
       <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
         <Original>
-          cfg.getReporterSpecs()[0] == Catch::ReporterSpec{ expectedReporter, {}, {}, {} }
+          cfg.getReporterSpecs()[0] == Catch::ReporterSpec{ expectedReporter, {}, {}, {}, {} }
         </Original>
         <Expanded>
           {?} == {?}
@@ -11992,7 +11992,7 @@ Approx( 1.21999999999999997 )
       </Expression>
       <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
         <Original>
-          cfg.getProcessedReporterSpecs()[0] == Catch::ProcessedReporterSpec{ expectedReporter, std::string{}, Catch::ColourMode::PlatformDefault, {} }
+          cfg.getProcessedReporterSpecs()[0] == Catch::ProcessedReporterSpec{ expectedReporter, std::string{}, Catch::ColourMode::PlatformDefault, Catch::Verbosity::Normal, {} }
         </Original>
         <Expanded>
           {?} == {?}
@@ -12132,7 +12132,7 @@ Approx( 1.21999999999999997 )
         </Info>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.reporterSpecifications == vec_Specs{ { "console", {}, {}, {} } }
+            config.reporterSpecifications == vec_Specs{ { "console", {}, {}, {}, {} } }
           </Original>
           <Expanded>
             { {?} } == { {?} }
@@ -12160,7 +12160,7 @@ Approx( 1.21999999999999997 )
         </Info>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.reporterSpecifications == vec_Specs{ { "xml", {}, {}, {} } }
+            config.reporterSpecifications == vec_Specs{ { "xml", {}, {}, {}, {} } }
           </Original>
           <Expanded>
             { {?} } == { {?} }
@@ -12188,7 +12188,7 @@ Approx( 1.21999999999999997 )
         </Info>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.reporterSpecifications == vec_Specs{ { "junit", {}, {}, {} } }
+            config.reporterSpecifications == vec_Specs{ { "junit", {}, {}, {}, {} } }
           </Original>
           <Expanded>
             { {?} } == { {?} }
@@ -12238,7 +12238,7 @@ Approx( 1.21999999999999997 )
         </Info>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.reporterSpecifications == vec_Specs{ { "console", "out.txt"s, {}, {} } }
+            config.reporterSpecifications == vec_Specs{ { "console", "out.txt"s, {}, {}, {} } }
           </Original>
           <Expanded>
             { {?} } == { {?} }
@@ -12266,7 +12266,7 @@ Approx( 1.21999999999999997 )
         </Info>
         <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.reporterSpecifications == vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {} } }
+            config.reporterSpecifications == vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {}, {} } }
           </Original>
           <Expanded>
             { {?} } == { {?} }
@@ -12289,7 +12289,7 @@ Approx( 1.21999999999999997 )
           </Expression>
           <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {} }, { "junit", "output-junit.xml"s, {}, {} } }
+              config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {}, {} }, { "junit", "output-junit.xml"s, {}, {}, {} } }
             </Original>
             <Expanded>
               { {?}, {?} } == { {?}, {?} }
@@ -12314,7 +12314,7 @@ Approx( 1.21999999999999997 )
           </Expression>
           <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {} }, { "console", {}, {}, {} } }
+              config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {}, {} }, { "console", {}, {}, {}, {} } }
             </Original>
             <Expanded>
               { {?}, {?} } == { {?}, {?} }

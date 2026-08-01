@@ -35,6 +35,7 @@ namespace Catch {
         std::string name;
         std::string outputFilename;
         ColourMode colourMode;
+        Verbosity verbosity;
         std::map<std::string, std::string> customOptions;
         friend bool operator==( ProcessedReporterSpec const& lhs,
                                 ProcessedReporterSpec const& rhs );

@@ -58,12 +58,13 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
 
         CHECK( cfg.getReporterSpecs().size() == 1 );
         CHECK( cfg.getReporterSpecs()[0] ==
-               Catch::ReporterSpec{ expectedReporter, {}, {}, {} } );
+               Catch::ReporterSpec{ expectedReporter, {}, {}, {}, {} } );
         CHECK( cfg.getProcessedReporterSpecs().size() == 1 );
         CHECK( cfg.getProcessedReporterSpecs()[0] ==
                Catch::ProcessedReporterSpec{ expectedReporter,
                                              std::string{},
                                              Catch::ColourMode::PlatformDefault,
+                                             Catch::Verbosity::Normal,
                                              {} } );
     }
 
@@ -108,7 +109,7 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
             CHECK(result);
 
             REQUIRE( config.reporterSpecifications ==
-                     vec_Specs{ { "console", {}, {}, {} } } );
+                     vec_Specs{ { "console", {}, {}, {}, {} } } );
         }
         SECTION("-r/xml") {
             auto result = cli.parse({"test", "-r", "xml"});
@@ -116,7 +117,7 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
             CHECK(result);
 
             REQUIRE( config.reporterSpecifications ==
-                     vec_Specs{ { "xml", {}, {}, {} } } );
+                     vec_Specs{ { "xml", {}, {}, {}, {} } } );
         }
         SECTION("--reporter/junit") {
             auto result = cli.parse({"test", "--reporter", "junit"});
@@ -124,7 +125,7 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
             CHECK(result);
 
             REQUIRE( config.reporterSpecifications ==
-                     vec_Specs{ { "junit", {}, {}, {} } } );
+                     vec_Specs{ { "junit", {}, {}, {}, {} } } );
         }
         SECTION("must match one of the available ones") {
             auto result = cli.parse({"test", "--reporter", "unsupported"});
@@ -137,27 +138,27 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
             CAPTURE(result.errorMessage());
             CHECK(result);
             REQUIRE( config.reporterSpecifications ==
-                     vec_Specs{ { "console", "out.txt"s, {}, {} } } );
+                     vec_Specs{ { "console", "out.txt"s, {}, {}, {} } } );
         }
         SECTION("With Windows-like absolute path as output file") {
             auto result = cli.parse({ "test", "-r", "console::out=C:\\Temp\\out.txt" });
             CAPTURE(result.errorMessage());
             CHECK(result);
             REQUIRE( config.reporterSpecifications ==
-                     vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {} } } );
+                     vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {}, {} } } );
         }
         SECTION("Multiple reporters") {
             SECTION("All with output files") {
                 CHECK(cli.parse({ "test", "-r", "xml::out=output.xml", "-r", "junit::out=output-junit.xml" }));
                 REQUIRE( config.reporterSpecifications ==
-                         vec_Specs{ { "xml", "output.xml"s, {}, {} },
-                               { "junit", "output-junit.xml"s, {}, {} } } );
+                    vec_Specs{ { "xml", "output.xml"s, {}, {}, {} },
+                               { "junit", "output-junit.xml"s, {}, {}, {} } } );
             }
             SECTION("Mixed output files and default output") {
                 CHECK(cli.parse({ "test", "-r", "xml::out=output.xml", "-r", "console" }));
                 REQUIRE( config.reporterSpecifications ==
-                         vec_Specs{ { "xml", "output.xml"s, {}, {} },
-                                    { "console", {}, {}, {} } } );
+                         vec_Specs{ { "xml", "output.xml"s, {}, {}, {} },
+                                    { "console", {}, {}, {}, {} } } );
             }
             SECTION("cannot have multiple reporters with default output") {
                 auto result = cli.parse({ "test", "-r", "console", "-r", "xml::out=output.xml", "-r", "junit" });

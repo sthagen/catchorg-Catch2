@@ -9975,7 +9975,7 @@ with expansion:
   1 == 1
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  CHECK( cfg.getReporterSpecs()[0] == Catch::ReporterSpec{ expectedReporter, {}, {}, {} } )
+  CHECK( cfg.getReporterSpecs()[0] == Catch::ReporterSpec{ expectedReporter, {}, {}, {}, {} } )
 with expansion:
   {?} == {?}
 
@@ -9985,7 +9985,7 @@ with expansion:
   1 == 1
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  CHECK( cfg.getProcessedReporterSpecs()[0] == Catch::ProcessedReporterSpec{ expectedReporter, std::string{}, Catch::ColourMode::PlatformDefault, {} } )
+  CHECK( cfg.getProcessedReporterSpecs()[0] == Catch::ProcessedReporterSpec{ expectedReporter, std::string{}, Catch::ColourMode::PlatformDefault, Catch::Verbosity::Normal, {} } )
 with expansion:
   {?} == {?}
 
@@ -10089,7 +10089,7 @@ with message:
   result.errorMessage() := ""
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterSpecifications == vec_Specs{ { "console", {}, {}, {} } } )
+  REQUIRE( config.reporterSpecifications == vec_Specs{ { "console", {}, {}, {}, {} } } )
 with expansion:
   { {?} } == { {?} }
 with message:
@@ -10111,7 +10111,7 @@ with message:
   result.errorMessage() := ""
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterSpecifications == vec_Specs{ { "xml", {}, {}, {} } } )
+  REQUIRE( config.reporterSpecifications == vec_Specs{ { "xml", {}, {}, {}, {} } } )
 with expansion:
   { {?} } == { {?} }
 with message:
@@ -10133,7 +10133,7 @@ with message:
   result.errorMessage() := ""
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterSpecifications == vec_Specs{ { "junit", {}, {}, {} } } )
+  REQUIRE( config.reporterSpecifications == vec_Specs{ { "junit", {}, {}, {}, {} } } )
 with expansion:
   { {?} } == { {?} }
 with message:
@@ -10174,7 +10174,7 @@ with message:
   result.errorMessage() := ""
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterSpecifications == vec_Specs{ { "console", "out.txt"s, {}, {} } } )
+  REQUIRE( config.reporterSpecifications == vec_Specs{ { "console", "out.txt"s, {}, {}, {} } } )
 with expansion:
   { {?} } == { {?} }
 with message:
@@ -10196,7 +10196,7 @@ with message:
   result.errorMessage() := ""
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterSpecifications == vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {} } } )
+  REQUIRE( config.reporterSpecifications == vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {}, {} } } )
 with expansion:
   { {?} } == { {?} }
 with message:
@@ -10217,7 +10217,7 @@ with expansion:
   {?}
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {} }, { "junit", "output-junit.xml"s, {}, {} } } )
+  REQUIRE( config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {}, {} }, { "junit", "output-junit.xml"s, {}, {}, {} } } )
 with expansion:
   { {?}, {?} } == { {?}, {?} }
 
@@ -10236,7 +10236,7 @@ with expansion:
   {?}
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {} }, { "console", {}, {}, {} } } )
+  REQUIRE( config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {}, {} }, { "console", {}, {}, {}, {} } } )
 with expansion:
   { {?}, {?} } == { {?}, {?} }
 

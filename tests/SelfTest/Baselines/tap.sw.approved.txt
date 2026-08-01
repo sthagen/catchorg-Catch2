@@ -2515,11 +2515,11 @@ ok {test-number} - !(cfg.hasTestFilters()) for: !false
 # Process can be configured on command line
 ok {test-number} - cfg.getReporterSpecs().size() == 1 for: 1 == 1
 # Process can be configured on command line
-ok {test-number} - cfg.getReporterSpecs()[0] == Catch::ReporterSpec{ expectedReporter, {}, {}, {} } for: {?} == {?}
+ok {test-number} - cfg.getReporterSpecs()[0] == Catch::ReporterSpec{ expectedReporter, {}, {}, {}, {} } for: {?} == {?}
 # Process can be configured on command line
 ok {test-number} - cfg.getProcessedReporterSpecs().size() == 1 for: 1 == 1
 # Process can be configured on command line
-ok {test-number} - cfg.getProcessedReporterSpecs()[0] == Catch::ProcessedReporterSpec{ expectedReporter, std::string{}, Catch::ColourMode::PlatformDefault, {} } for: {?} == {?}
+ok {test-number} - cfg.getProcessedReporterSpecs()[0] == Catch::ProcessedReporterSpec{ expectedReporter, std::string{}, Catch::ColourMode::PlatformDefault, Catch::Verbosity::Normal, {} } for: {?} == {?}
 # Process can be configured on command line
 ok {test-number} - result for: {?}
 # Process can be configured on command line
@@ -2547,15 +2547,15 @@ ok {test-number} - cfg.testSpec().matches(*fakeTestCase("alwaysIncluded")) for: 
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_Specs{ { "console", {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "console", {}, {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_Specs{ { "xml", {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "xml", {}, {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_Specs{ { "junit", {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "junit", {}, {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
 ok {test-number} - !result for: true
 # Process can be configured on command line
@@ -2563,19 +2563,19 @@ ok {test-number} - result.errorMessage(), ContainsSubstring("Unrecognized report
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_Specs{ { "console", "out.txt"s, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "console", "out.txt"s, {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
 ok {test-number} - result for: {?} with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "console", "C:\\Temp\\out.txt"s, {}, {}, {} } } for: { {?} } == { {?} } with 1 message: 'result.errorMessage() := ""'
 # Process can be configured on command line
 ok {test-number} - cli.parse({ "test", "-r", "xml::out=output.xml", "-r", "junit::out=output-junit.xml" }) for: {?}
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {} }, { "junit", "output-junit.xml"s, {}, {} } } for: { {?}, {?} } == { {?}, {?} }
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {}, {} }, { "junit", "output-junit.xml"s, {}, {}, {} } } for: { {?}, {?} } == { {?}, {?} }
 # Process can be configured on command line
 ok {test-number} - cli.parse({ "test", "-r", "xml::out=output.xml", "-r", "console" }) for: {?}
 # Process can be configured on command line
-ok {test-number} - config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {} }, { "console", {}, {}, {} } } for: { {?}, {?} } == { {?}, {?} }
+ok {test-number} - config.reporterSpecifications == vec_Specs{ { "xml", "output.xml"s, {}, {}, {} }, { "console", {}, {}, {}, {} } } for: { {?}, {?} } == { {?}, {?} }
 # Process can be configured on command line
 ok {test-number} - !result for: true
 # Process can be configured on command line

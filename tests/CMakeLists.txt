@@ -184,6 +184,13 @@ set_tests_properties(List::Tests::Output PROPERTIES
   PASS_REGULAR_EXPRESSION "[0-9]+ test cases"
   FAIL_REGULAR_EXPRESSION "Hidden Test"
 )
+
+add_test(NAME VerbosityIsPerReporter COMMAND $<TARGET_FILE:SelfTest> --list-tests --verbosity high --reporter console::verbosity=quiet)
+set_tests_properties(VerbosityIsPerReporter
+  PROPERTIES
+    FAIL_REGULAR_EXPRESSION "\.cpp"
+)
+
 # This should be equivalent to the old --list-test-names-only and be usable
 # with --input-file.
 add_test(NAME List::Tests::Quiet COMMAND $<TARGET_FILE:SelfTest> --list-tests --verbosity quiet)
@@ -193,6 +200,7 @@ set_tests_properties(List::Tests::Quiet PROPERTIES
   PASS_REGULAR_EXPRESSION "\"#1905 -- test spec parser properly clears internal state between compound tests\"[\r\n]"
   FAIL_REGULAR_EXPRESSION "[ \t]\"#1905 -- test spec parser properly clears internal state between compound tests\""
 )
+
 add_test(NAME List::Tests::ExitCode COMMAND $<TARGET_FILE:SelfTest> --list-tests --verbosity high)
 add_test(NAME List::Tests::XmlOutput COMMAND $<TARGET_FILE:SelfTest> --list-tests --verbosity high -r xml)
 set_tests_properties(List::Tests::XmlOutput PROPERTIES

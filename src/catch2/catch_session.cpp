@@ -52,6 +52,7 @@ namespace Catch {
                     ReporterConfig( config,
                                     makeStream( spec.outputFilename ),
                                     spec.colourMode,
+                                    spec.verbosity,
                                     spec.customOptions ) );
             }
 
@@ -68,6 +69,7 @@ namespace Catch {
                     ReporterConfig( config,
                                     makeStream( reporterSpec.outputFilename ),
                                     reporterSpec.colourMode,
+                                    reporterSpec.verbosity,
                                     reporterSpec.customOptions ) ) );
             }
 
