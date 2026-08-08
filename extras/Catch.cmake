@@ -58,6 +58,11 @@ same as the Catch name; see also ``TEST_PREFIX`` and ``TEST_SUFFIX``.
   directory property.  The set of discovered tests is made accessible to such a
   script via the ``<target>_TESTS`` variable.
 
+  Note that ``<target>_TESTS`` variable contains test names with brackets
+  ("[", "]") escaped into ASCII char 2, 3 respectively, to work around CMake's
+  list parsing rules. You have to unescape them back for each element to get
+  the original names.
+
   The options are:
 
   ``target``

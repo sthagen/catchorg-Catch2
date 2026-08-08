@@ -12,14 +12,28 @@
 # exist in JSON unescaped.
 #
 #   0x01  <=> ';'   (CMake list separator)
-#   0x02  ==  element boundary marker used while splitting the tests array
-#   0x03  <-> '['   (opens a CMake bracket-argument context)
-#   0x04  <-> ']'   (closes a CMake bracket-argument context)
+#   0x02  <-> '['   (opens a CMake bracket-argument context)
+#   0x03  <-> ']'   (closes a CMake bracket-argument context)
+#   0x04  ==  element boundary marker used while splitting the tests array
 #
 string(ASCII 1 _SemicolonEscape)
-string(ASCII 2 _BoundaryEscape)
-string(ASCII 3 _OpenBracketEscape)
-string(ASCII 4 _CloseBracketEscape)
+string(ASCII 2 _OpenBracketEscape)
+string(ASCII 3 _CloseBracketEscape)
+string(ASCII 4 _BoundaryEscape)
+
+
+# As far as I can tell, the only way of having unclosed '[' or ']' in the
+# list of test names we define for CTest, is to escape them into completely
+# different characters. Otherwise, they will break parsing of unrelated
+# semicolons (inserted by CMake after parsing the list from the user-facing
+# space separated format). This means that the consumers of the list have
+# to unescape them back, but that's CMake :v
+#
+#   0x02  <-> '['
+#   0x03  <-> ']'
+#
+string(ASCII 2 _OpenBracketListingEscape)
+string(ASCII 3 _CloseBracketListingEscape)
 
 
 # Placeholder bytes in the listing would break our parsing hack, so
@@ -221,6 +235,10 @@ function(catch_discover_tests_impl)
   set(script)
   set(suite)
   set(tests)
+  # Holds the list of all registered test names **as a string**, not list.
+  # This avoids issue of CMake removing semicolon escapes even inside
+  # bracket-quoted strings.
+  set(_test_names)
 
   if(WIN32)
     set(dl_paths_variable_name PATH)
@@ -431,13 +449,25 @@ function(catch_discover_tests_impl)
       string(APPEND script "${_Command}")
     endif()
 
-    list(APPEND tests "${prefix}${plain_name}${suffix}")
+    # The test name has to be escaped using the same rules as prepare_command
+    # uses for the arguments, so that it keeps being single element in list
+    # even with weird characters and semicolons.
+    set(full_list_name "${prefix}${plain_name}${suffix}")
+    string(REPLACE ";" "\\;" full_list_name "${full_list_name}")
+    string(REPLACE "[" "${_OpenBracketListingEscape}" full_list_name "${full_list_name}")
+    string(REPLACE "]" "${_CloseBracketListingEscape}" full_list_name "${full_list_name}")
+    if(full_list_name MATCHES "[^-./:a-zA-Z0-9_]")
+      # The space before the start of quote is important, so that we get
+      # space-separated list in the final file.
+      string(APPEND _test_names " [==[${full_list_name}]==]")
+    else()
+      string(APPEND _test_names " ${full_list_name}")
+    endif()
   endforeach()
 
   # Create a list of all discovered tests, which users may use to e.g. set
   # properties on the tests
-  prepare_command(set ${_TEST_LIST} ${tests})
-  string(APPEND script "${_Command}")
+  string(APPEND script "set(${_TEST_LIST}${_test_names})\n")
 
   # Write any script leftovers we have
   file(APPEND "${_CTEST_FILE}" "${script}")
