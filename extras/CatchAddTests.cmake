@@ -204,6 +204,23 @@ function(make_temp_file_path OUT_VARIABLE FALLBACK_PATH)
   set(${OUT_VARIABLE} "${FINAL_TEMP_PATH}" PARENT_SCOPE)
 endfunction()
 
+# Computes the path of the test-list file based on the path for the main
+# CTest script file (passed in `CTEST_FILE`).
+#
+# It works by replacing the `_tests` part of the original name with
+# `_test-list`, or failing that, it appends `-list.cmake` instead.
+#
+#   <base>_tests.cmake       -> <base>_test-list.cmake
+#   <base>_tests-Debug.cmake -> <base>_test-list-Debug.cmake
+function(make_test_list_file_path CTEST_FILE OUT_VARIABLE)
+  if("${CTEST_FILE}" MATCHES "_tests(.*)\\.cmake$")
+    string(REGEX REPLACE "_tests(.*)\\.cmake$" "_test-list\\1.cmake" list_file "${CTEST_FILE}")
+  else()
+    set(list_file "${CTEST_FILE}-list.cmake")
+  endif()
+  set(${OUT_VARIABLE} "${list_file}" PARENT_SCOPE)
+endfunction()
+
 function(catch_discover_tests_impl)
   cmake_parse_arguments(
     ""
@@ -213,9 +230,14 @@ function(catch_discover_tests_impl)
     ${ARGN}
   )
 
-  # We periodically append to the output file below, so we have to ensure
+  # We write the list of all discovered tests into a separate file
+  make_test_list_file_path("${_CTEST_FILE}" _CTEST_LIST_FILE)
+
+  # We periodically append to the output files below, so we have to ensure
   # that it is empty at the start, or we get duplicated test scripts.
   file(REMOVE "${_CTEST_FILE}")
+  file(REMOVE "${_CTEST_LIST_FILE}")
+
   # Size (in Bytes) at which the intermediate `script` var is dumped to file.
   set(_WriteToFileThreshold 50000)
 
@@ -360,9 +382,18 @@ function(catch_discover_tests_impl)
 
   # Exit early if no tests are detected
   if(NOT tests)
-    file(WRITE "${_CTEST_FILE}" "")
+    # Still emit an (empty) test list file and have the main script include
+    # it, so that consumers relying on the `${_TEST_LIST}` variable and on the
+    # include structure get consistent behavior regardless of test count.
+    file(WRITE "${_CTEST_LIST_FILE}" "set(${_TEST_LIST})\n")
+    file(WRITE "${_CTEST_FILE}" "include(\"${_CTEST_LIST_FILE}\")\n")
     return()
   endif()
+
+
+  # The 'set(VAR` header for the test list has to be written separately,
+  # so that each test name can be appended file without further processing.
+  set(test_names "set(${_TEST_LIST}")
 
   # Each element in the tests is JSON-string representing one test object.
   # We have to parse it and then turn it into CTest script commands.
@@ -373,6 +404,11 @@ function(catch_discover_tests_impl)
     if (script_len GREATER _WriteToFileThreshold)
       file(APPEND "${_CTEST_FILE}" "${script}")
       set(script "")
+    endif()
+    string(LENGTH "${test_names}" names_len)
+    if (names_len GREATER _WriteToFileThreshold)
+      file(APPEND "${_CTEST_LIST_FILE}" "${test_names}")
+      set(test_names "")
     endif()
 
     # The elements are still escaped and contain JSON-invalid characters,
@@ -459,18 +495,17 @@ function(catch_discover_tests_impl)
     if(full_list_name MATCHES "[^-./:a-zA-Z0-9_]")
       # The space before the start of quote is important, so that we get
       # space-separated list in the final file.
-      string(APPEND _test_names " [==[${full_list_name}]==]")
+      string(APPEND test_names " [==[${full_list_name}]==]")
     else()
-      string(APPEND _test_names " ${full_list_name}")
+      string(APPEND test_names " ${full_list_name}")
     endif()
   endforeach()
 
-  # Create a list of all discovered tests, which users may use to e.g. set
-  # properties on the tests
-  string(APPEND script "set(${_TEST_LIST}${_test_names})\n")
-
-  # Write any script leftovers we have
+  # Write any test names leftovers we have
+  file(APPEND "${_CTEST_LIST_FILE}" "${test_names})\n")
+  # Write any main script leftovers we have, and append the include of test names
   file(APPEND "${_CTEST_FILE}" "${script}")
+  file(APPEND "${_CTEST_FILE}" "include(\"${_CTEST_LIST_FILE}\")\n")
 endfunction()
 
 # To enable `include`ing this file in the unit test scripts, we only run
