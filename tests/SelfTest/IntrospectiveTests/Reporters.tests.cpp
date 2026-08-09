@@ -42,6 +42,7 @@ namespace {
             &config,
             Catch::Detail::make_unique<StringIStream>(),
             Catch::ColourMode::None,
+            Catch::Verbosity::Normal,
             {} };
     }
 }
@@ -114,7 +115,7 @@ TEST_CASE( "Reporter's write listings to provided stream", "[reporters]" ) {
         cfg_data.rngSeed = 1234;
         Catch::Config config( cfg_data );
         auto reporter = factory.second->create( Catch::ReporterConfig{
-            &config, CATCH_MOVE( sstream ), Catch::ColourMode::None, {} } );
+            &config, CATCH_MOVE( sstream ), Catch::ColourMode::None, Catch::Verbosity::Normal, {} } );
 
         DYNAMIC_SECTION( factory.first << " reporter lists tags" ) {
             std::vector<Catch::TagInfo> tags(1);

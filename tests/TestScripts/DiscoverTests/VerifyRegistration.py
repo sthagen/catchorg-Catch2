@@ -87,7 +87,7 @@ def get_test_names(build_path: str) -> List[TestInfo]:
         with open(fname, mode='r', encoding='utf-8') as file:
             test_listing = json.load(file)
 
-    assert test_listing['version'] == 1
+    assert test_listing['version'] == 2
 
     tests = []
     for test in test_listing['listings']['tests']:
