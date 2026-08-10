@@ -21,7 +21,7 @@ import time
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, "listing_template.json")
 SHIM = os.path.join(HERE, "copy_shim.cmake")
-COUNTS = [1, 10, 500, 1000, 2000, 4000, 8000]
+COUNTS = [1, 10, 500, 1000, 2000, 4000, 8000, 16000]
 #COUNTS = [1, 10, 100]
 REPEATS = 5
 

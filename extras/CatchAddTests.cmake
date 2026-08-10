@@ -140,34 +140,27 @@ function(split_json_array json_array_var out_var)
   set(${out_var} "${array_elements}" PARENT_SCOPE)
 endfunction()
 
-# TBD: Further possible optimization is that most arguments for per-test
-#      `prepare_command` call are constant across one invocation of
-#      `catch_discover_tests`, and thus need checking and escaping only
-#      once, instead of for each test.
-#      This would provide nice speed-up of the actual command preparation,
-#      but it will make the script much harder to read, and it is utterly
-#      dwarfed by the quadratic scaling of parsing JSON arrays in CMake.
 
-
-# Prepare command with escaped (bracketed) arguments and return it via `_Command` out variable.
+# Prepare (a part of) command with bracketed arguments and return it via `out_var`.
 #
-# To avoid quadratic performance when concatenating all commands together,
-# the actual concatenation must be done by the caller, by appending it
-# into a string of all other commands.
-function(prepare_command NAME)
+# This allows the registration script to escape parts of the test script
+# only once, instead of escaping the unchanged arguments over and over again.
+function(prepare_command_fragment out_var)
   set(_args "")
-  # use ARGV* instead of ARGN, because ARGN splits arrays into multiple arguments
   math(EXPR _last_arg ${ARGC}-1)
-  foreach(_n RANGE 1 ${_last_arg})
-    set(_arg "${ARGV${_n}}")
-    if(_arg MATCHES "[^-./:a-zA-Z0-9_]")
-      set(_args "${_args} [==[${_arg}]==]") # form a bracket_argument
-    else()
-      set(_args "${_args} ${_arg}")
-    endif()
-  endforeach()
-  set(_Command "${NAME}(${_args})\n" PARENT_SCOPE)
+  if(_last_arg GREATER_EQUAL 1)
+    foreach(_n RANGE 1 ${_last_arg})
+      set(_arg "${ARGV${_n}}")
+      if(_arg MATCHES "[^-./:a-zA-Z0-9_]")
+        set(_args "${_args} [==[${_arg}]==]") # form a bracket_argument
+      else()
+        set(_args "${_args} ${_arg}")
+      endif()
+    endforeach()
+  endif()
+  set(${out_var} "${_args}" PARENT_SCOPE)
 endfunction()
+
 
 # Generates random filename in the temp folder.
 # Temp folder is retrieved by checking env vars from various platforms.
@@ -395,6 +388,41 @@ function(catch_discover_tests_impl)
   # so that each test name can be appended file without further processing.
   set(test_names "set(${_TEST_LIST}")
 
+  # Most of the commands/arguments in the CTest script are identical
+  # for every test registered with one `catch_discover_tests` call.
+  # To avoid repeating the work in escaping them, we escape them before
+  # the per-test loop and reuse the escaped fragments.
+  #
+  # `add_test` calls are
+  #   add_test(<name><exec><exe><escaped_name><extra_args><reporter><out_dir>)
+  # Of these, <exec>,<exe>,<extra_args>, and <reporter> are the same between
+  # all tests.
+  prepare_command_fragment(_exec_exe_fragment
+    ${_TEST_EXECUTOR}
+    "${_TEST_EXECUTABLE}"
+  )
+  prepare_command_fragment(_args_reporter_fragment
+    ${extra_args}
+    "${reporter_arg}"
+  )
+
+  # `set_tests_properties` calls are
+  #   set_tests_properties(<name> PROPERTIES WORKING_DIRECTORY <dir> <properties>)
+  #   set_tests_properties(<name> PROPERTIES ENVIRONMENT_MODIFICATION <env_mod>)
+  # Of these, only the <name> changes between tests.
+  prepare_command_fragment(_properties_fragment
+    PROPERTIES
+    WORKING_DIRECTORY "${_TEST_WORKING_DIR}"
+    ${properties}
+  )
+  # Env modification is optional, so we prepare it in a separate command
+  if(environment_modifications)
+    prepare_command_fragment(_env_modification_fragment
+      PROPERTIES
+      ENVIRONMENT_MODIFICATION "${environment_modifications}"
+    )
+  endif()
+
   # Each element in the tests is JSON-string representing one test object.
   # We have to parse it and then turn it into CTest script commands.
   foreach(single_test IN LISTS tests)
@@ -431,24 +459,15 @@ function(catch_discover_tests_impl)
       set(output_dir_arg "--out ${output_dir}/${output_prefix}${escaped_name_clean}${output_suffix}")
     endif()
 
-    # ...and add to script
-    prepare_command(add_test
-      "${prefix}${plain_name}${suffix}"
-      ${_TEST_EXECUTOR}
-      "${_TEST_EXECUTABLE}"
-      "${escaped_name}"
-      ${extra_args}
-      "${reporter_arg}"
-      "${output_dir_arg}"
-    )
-    string(APPEND script "${_Command}")
-    prepare_command(set_tests_properties
-      "${prefix}${plain_name}${suffix}"
-      PROPERTIES
-      WORKING_DIRECTORY "${_TEST_WORKING_DIR}"
-      ${properties}
-    )
-    string(APPEND script "${_Command}")
+    set(full_name "${prefix}${plain_name}${suffix}")
+    prepare_command_fragment(_full_name_fragment "${full_name}")
+    prepare_command_fragment(_escaped_name_fragment "${escaped_name}")
+    prepare_command_fragment(_outdir_fragment "${output_dir_arg}")
+
+    string(APPEND script
+      "add_test(${_full_name_fragment}${_exec_exe_fragment}${_escaped_name_fragment}${_args_reporter_fragment}${_outdir_fragment})\n")
+    string(APPEND script
+      "set_tests_properties(${_full_name_fragment}${_properties_fragment})\n")
 
     if(add_tags)
       string(JSON num_tags LENGTH "${test_tags}")
@@ -468,21 +487,16 @@ function(catch_discover_tests_impl)
           list(APPEND tag_list "${a_tag}")
         endforeach()
 
-        prepare_command(set_tests_properties
-          "${prefix}${plain_name}${suffix}"
+        prepare_command_fragment(_labels_fragment
           PROPERTIES
           LABELS "${tag_list}"
         )
-        string(APPEND script "${_Command}")
+        string(APPEND script "set_tests_properties(${_full_name_fragment}${_labels_fragment})\n")
       endif()
     endif(add_tags)
 
     if(environment_modifications)
-      prepare_command(set_tests_properties
-        "${prefix}${plain_name}${suffix}"
-        PROPERTIES
-        ENVIRONMENT_MODIFICATION "${environment_modifications}")
-      string(APPEND script "${_Command}")
+      string(APPEND script "set_tests_properties(${_full_name_fragment}${_env_modification_fragment})\n")
     endif()
 
     # The test name has to be escaped using the same rules as prepare_command
