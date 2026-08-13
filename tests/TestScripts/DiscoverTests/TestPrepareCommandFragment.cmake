@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: BSL-1.0
 
-# Unit tests for `prepare_command` helper in `extras/CatchAddTests.cmake`.
+# Unit tests for `prepare_command_fragment` helper in `extras/CatchAddTests.cmake`.
 #
 # Yes, we are at the stage where the script helpers need unit tests.
 #
 # Run as
 #     cmake -DCATCH_ADD_TESTS_SCRIPT=/path/to/extras/CatchAddTests.cmake \
-#           -P TestPrepareCommand.cmake
+#           -P TestPrepareCommandFragment.cmake
 
 
 cmake_minimum_required(VERSION 3.19)
@@ -37,25 +37,25 @@ function(expect_equal description actual expected)
   endif()
 endfunction()
 
-prepare_command(add_test SimpleName /path/to/tests)
-expect_equal("Simple arg, no quotes" "${_Command}" "add_test( SimpleName /path/to/tests)\n")
+prepare_command_fragment(test_fragment SimpleName /path/to/tests)
+expect_equal("Simple arg, no quotes" "${test_fragment}" " SimpleName /path/to/tests")
 
-prepare_command(add_test "Name with spaces")
-expect_equal("Spaces in arg, needs quotes" "${_Command}" "add_test( [==[Name with spaces]==])\n")
+prepare_command_fragment(test_fragment "Name with spaces")
+expect_equal("Spaces in arg, needs quotes" "${test_fragment}" " [==[Name with spaces]==]")
 
-prepare_command(set_tests_properties Foo PROPERTIES LABELS "tagA\;tagB\;tagC")
+prepare_command_fragment(test_fragment Foo PROPERTIES LABELS "tagA\;tagB\;tagC")
 expect_equal("semicolons in argument are kept and quoted"
-  "${_Command}" "set_tests_properties( Foo PROPERTIES LABELS [==[tagA\;tagB\;tagC]==])\n")
+  "${test_fragment}" " Foo PROPERTIES LABELS [==[tagA\;tagB\;tagC]==]")
 
-set(_Command "PRE-EXISTING")
-prepare_command(set_tests_properties Foo PROPERTIES BAR baz)
-expect_equal("_Command var does no accumulate commands"
-  "${_Command}" "set_tests_properties( Foo PROPERTIES BAR baz)\n")
+set(test_fragment "PRE-EXISTING")
+prepare_command_fragment(test_fragment Foo PROPERTIES BAR baz)
+expect_equal("out var does no accumulate commands"
+  "${test_fragment}" " Foo PROPERTIES BAR baz")
 
 
 
 if(_failures GREATER 0)
-  message(FATAL_ERROR "${_failures} prepare_command test(s) failed")
+  message(FATAL_ERROR "${_failures} prepare_command_fragment test(s) failed")
 else()
-  message(STATUS "All prepare_command tests passed")
+  message(STATUS "All prepare_command_fragment tests passed")
 endif()

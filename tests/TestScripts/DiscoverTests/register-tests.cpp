@@ -40,7 +40,11 @@ public:
 
 TEST_CASE_METHOD(TestCaseFixture, "A test case as method", "[tagstagstags]") {}
 
+TEST_CASE("Unclosed right ) parenthesis") {}
+TEST_CASE("Unclosed left ( parenthesis") {}
+
 TEST_CASE( "Newlines\nAnd\rOther\n\tWhitespace", "[whitespace-going-wild]" ) {}
+TEST_CASE( "Escaped \\n newline and \\r other whitespace", "[whitespace-going-wild]") {}
 
 // Some JSON-like and JSON-adjacent characters and substrings in the test names/tags
 // This serves to test that the parse-json-via-string-splitting hack in

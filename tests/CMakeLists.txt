@@ -672,11 +672,11 @@ if(CATCH_ENABLE_CMAKE_HELPER_TESTS)
       LABELS "uses-python"
   )
 
-  add_test(NAME "CMakeHelper::PrepareCommand"
+  add_test(NAME "CMakeHelper::PrepareCommandFragment"
     COMMAND
       "${CMAKE_COMMAND}"
       "-DCATCH_ADD_TESTS_SCRIPT=${CATCH_DIR}/extras/CatchAddTests.cmake"
-      -P "${CMAKE_CURRENT_LIST_DIR}/TestScripts/DiscoverTests/TestPrepareCommand.cmake"
+      -P "${CMAKE_CURRENT_LIST_DIR}/TestScripts/DiscoverTests/TestPrepareCommandFragment.cmake"
   )
 
   add_test(NAME "CMakeHelper::DecomposeJsonArray"
