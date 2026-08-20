@@ -9,6 +9,7 @@
 #define CATCH_PREPROCESSOR_HPP_INCLUDED
 
 #include <catch2/internal/catch_preprocessor_remove_parens.hpp>
+#include <catch2/internal/catch_meta.hpp>
 
 #if defined(__GNUC__)
 // We need to silence "empty __VA_ARGS__ warning", and using just _Pragma does not work
@@ -22,6 +23,34 @@ namespace Catch {
         struct priority_tag : priority_tag<N - 1> {};
         template <>
         struct priority_tag<0> {};
+
+        // This is a bunch of helpers for the templated test case handling.
+        // They should live elsewhere in the long run, but as an in-between
+        // step we toss them all here.
+        template <typename...> struct TypeList {};
+        template <typename... Ts>
+        constexpr auto get_wrapper( priority_tag<1> ) noexcept -> TypeList<Ts...> { return {}; }
+        template <template <typename...> class...> struct TemplateTypeList {};
+        // Clang 20 and 21 cannot handle an explicitly specified all-pack
+        // template-template parameter here ("conflicting deduction" regression,
+        // llvm/llvm-project#130778; fixed for Clang 22).
+        // Remove get_template_wrapper once Clang 21 is no longer supported.
+        template <template <typename...> class C, template <typename...> class... Cs>
+        constexpr auto get_template_wrapper( priority_tag<1> ) noexcept -> TemplateTypeList<C, Cs...> { return {}; }
+
+        template <typename...>
+        struct append;
+        template <typename T>
+        struct append<T> { using type = T; };
+        template <template <typename...> class L1, typename... E1, template <typename...> class L2, typename... E2, typename... Rest>
+        struct append<L1<E1...>, L2<E2...>, Rest...> { using type = typename append<L1<E1..., E2...>, Rest...>::type; };
+        template <template <typename...> class L1, typename... E1, typename... Rest>
+        struct append<L1<E1...>, TypeList<mpl_::na>, Rest...> { using type = L1<E1...>; };
+
+        template <template <typename...> class, typename>
+        struct convert;
+        template <template <typename...> class Final, template <typename...> class List, typename... Ts>
+        struct convert<Final, List<Ts...>> { using type = typename append<Final<>, TypeList<Ts>...>::type; };
     }
 }
 
@@ -108,41 +137,28 @@ namespace Catch {
 
 #define INTERNAL_CATCH_VA_NARGS_IMPL(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, N, ...) N
 
-#define INTERNAL_CATCH_TYPE_GEN\
-    template<typename...> struct TypeList {};\
-    template<typename... Ts>\
-    constexpr auto get_wrapper(Catch::Detail::priority_tag<1>) noexcept -> TypeList<Ts...> { return {}; }\
-    template<template<typename...> class...> struct TemplateTypeList{};\
-    /* Clang 20 and 21 cannot handle an explicitly specified all-pack template-template parameter here\
-       ("conflicting deduction" regression, llvm/llvm-project#130778; fixed for Clang 22).\
-       Remove get_template_wrapper once Clang 21 is no longer supported. */\
-    template<template<typename...> class C, template<typename...> class...Cs>\
-    constexpr auto get_template_wrapper(Catch::Detail::priority_tag<1>) noexcept -> TemplateTypeList<C, Cs...> { return {}; }\
-    template<typename...>\
-    struct append;\
-    template<typename...>\
-    struct rewrap;\
-    template<template<typename...> class, typename...>\
-    struct create;\
-    template<template<typename...> class, typename>\
-    struct convert;\
-    \
-    template<typename T> \
-    struct append<T> { using type = T; };\
-    template< template<typename...> class L1, typename...E1, template<typename...> class L2, typename...E2, typename...Rest>\
-    struct append<L1<E1...>, L2<E2...>, Rest...> { using type = typename append<L1<E1...,E2...>, Rest...>::type; };\
-    template< template<typename...> class L1, typename...E1, typename...Rest>\
-    struct append<L1<E1...>, TypeList<mpl_::na>, Rest...> { using type = L1<E1...>; };\
-    \
+#define INTERNAL_CATCH_TYPE_GEN \
+    /* We moved these into a central location and no longer create them
+       in each templated test's unnamed namespace, but we pull them in
+       with using to avoid qualifying all the references. */ \
+    using Catch::Detail::TypeList;                     \
+    using Catch::Detail::get_wrapper;                  \
+    using Catch::Detail::TemplateTypeList;             \
+    using Catch::Detail::get_template_wrapper;         \
+    using Catch::Detail::append;                       \
+    using Catch::Detail::convert;                      \
+    template<typename...>                              \
+    struct rewrap;                                     \
+    template<template<typename...> class, typename...> \
+    struct create;                                     \
+                                                       \
     template< template<typename...> class Container, template<typename...> class List, typename...elems>\
     struct rewrap<TemplateTypeList<Container>, List<elems...>> { using type = TypeList<Container<elems...>>; };\
     template< template<typename...> class Container, template<typename...> class List, class...Elems, typename...Elements>\
     struct rewrap<TemplateTypeList<Container>, List<Elems...>, Elements...> { using type = typename append<TypeList<Container<Elems...>>, typename rewrap<TemplateTypeList<Container>, Elements...>::type>::type; };\
     \
     template<template <typename...> class Final, template< typename...> class...Containers, typename...Types>\
-    struct create<Final, TemplateTypeList<Containers...>, TypeList<Types...>> { using type = typename append<Final<>, typename rewrap<TemplateTypeList<Containers>, Types...>::type...>::type; };\
-    template<template <typename...> class Final, template <typename...> class List, typename...Ts>\
-    struct convert<Final, List<Ts...>> { using type = typename append<Final<>,TypeList<Ts>...>::type; };
+    struct create<Final, TemplateTypeList<Containers...>, TypeList<Types...>> { using type = typename append<Final<>, typename rewrap<TemplateTypeList<Containers>, Types...>::type...>::type; };
 
 #define INTERNAL_CATCH_NTTP_1(signature, ...)\
     template<INTERNAL_CATCH_REMOVE_PARENS(signature)> struct Nttp{};\
