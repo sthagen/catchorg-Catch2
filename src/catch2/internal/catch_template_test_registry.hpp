@@ -223,7 +223,7 @@
             static const int INTERNAL_CATCH_UNIQUE_NAME( globalRegistrar ) = [](){\
                 TestNameClass<INTERNAL_CATCH_MAKE_TYPE_LISTS_FROM_TYPES(__VA_ARGS__)>();\
                 return 0;\
-        }();\
+            }();\
         }\
         }\
         CATCH_INTERNAL_STOP_WARNINGS_SUPPRESSION \
