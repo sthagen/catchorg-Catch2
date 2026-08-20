@@ -21,6 +21,11 @@ TestInfo = namedtuple('TestInfo', ['name', 'tags'])
 
 cmake_version_regex = re.compile(r'cmake version (\d+)\.(\d+)\.(\d+)')
 
+# Note that these both intentionally include preceding/trailing space,
+# which should not get stripped.
+CTEST_NAME_PREFIX = ' prefix '
+CTEST_NAME_SUFFIX = ' suffix '
+
 def get_cmake_version():
     result = subprocess.run(['cmake', '--version'],
                             capture_output = True,
@@ -221,7 +226,7 @@ def extract_tests_list_from_ctest_script(build_path: str) -> List[str]:
         print(f'stdout: {err.stdout}')
         exit(4)
 
-    lines = result.stdout.strip().split('\n')
+    lines = [x for x in result.stdout.split('\n') if x.strip()]
     test_num_line = lines[0]
     test_lines = lines[1:]
 
@@ -281,7 +286,7 @@ if __name__ == '__main__':
     print(f"{len(catch_test_names)} tests matched in CTest listing")
 
     test_list_names = sorted(extract_tests_list_from_ctest_script(build_path))
-    expected_names = sorted(info.name for info in raw_catch_test_names)
+    expected_names = sorted(CTEST_NAME_PREFIX + info.name + CTEST_NAME_SUFFIX for info in raw_catch_test_names)
     if test_list_names != expected_names:
         print("TEST_LIST variable (tests_TESTS) does not match Catch2 test listing!")
         for name in test_list_names:
