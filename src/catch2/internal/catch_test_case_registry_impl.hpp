@@ -36,6 +36,7 @@ namespace Catch {
         std::vector<TestCaseHandle> const& getAllTests() const override;
         std::vector<TestCaseHandle> const& getAllTestsSorted( IConfig const& config ) const override;
 
+        TestRegistry();
         ~TestRegistry() override; // = default
 
     private:

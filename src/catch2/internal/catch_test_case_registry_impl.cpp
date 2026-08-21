@@ -22,6 +22,9 @@
 namespace Catch {
 
     namespace {
+        // Picked small-ish number at random
+        static size_t kInitialTestCount = 120;
+
         static void enforceNoDuplicateTestCases(
             std::vector<TestCaseHandle> const& tests ) {
             auto testInfoCmp = []( TestCaseInfo const* lhs,
@@ -123,6 +126,15 @@ namespace Catch {
         return getRegistryHub().getTestCaseRegistry().getAllTestsSorted( config );
     }
 
+
+    TestRegistry::TestRegistry() {
+        // We pre-reserve some reasonable number of tests to avoid the
+        // initial geometric growth churning during test registration.
+        m_handles.reserve( kInitialTestCount );
+        m_viewed_test_infos.reserve( kInitialTestCount );
+        m_owned_test_infos.reserve( kInitialTestCount );
+        m_invokers.reserve( kInitialTestCount );
+    }
     TestRegistry::~TestRegistry() = default;
 
     void TestRegistry::registerTest(Detail::unique_ptr<TestCaseInfo> testInfo, Detail::unique_ptr<ITestInvoker> testInvoker) {
