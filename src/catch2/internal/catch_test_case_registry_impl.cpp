@@ -131,21 +131,21 @@ namespace Catch {
         // We pre-reserve some reasonable number of tests to avoid the
         // initial geometric growth churning during test registration.
         m_handles.reserve( kInitialTestCount );
-        m_viewed_test_infos.reserve( kInitialTestCount );
-        m_owned_test_infos.reserve( kInitialTestCount );
+        m_test_infos.reserve( kInitialTestCount );
         m_invokers.reserve( kInitialTestCount );
     }
     TestRegistry::~TestRegistry() = default;
 
     void TestRegistry::registerTest(Detail::unique_ptr<TestCaseInfo> testInfo, Detail::unique_ptr<ITestInvoker> testInvoker) {
         m_handles.emplace_back(testInfo.get(), testInvoker.get());
-        m_viewed_test_infos.push_back(testInfo.get());
-        m_owned_test_infos.push_back(CATCH_MOVE(testInfo));
+        m_test_infos.push_back(CATCH_MOVE(testInfo));
         m_invokers.push_back(CATCH_MOVE(testInvoker));
     }
 
-    std::vector<TestCaseInfo*> const& TestRegistry::getAllInfos() const {
-        return m_viewed_test_infos;
+    void TestRegistry::enableFilenameTags() {
+        for (auto& info : m_test_infos) {
+            info->addFilenameTag();
+        }
     }
 
     std::vector<TestCaseHandle> const& TestRegistry::getAllTests() const {
