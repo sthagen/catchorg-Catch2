@@ -127,6 +127,7 @@
         namespace INTERNAL_CATCH_MAKE_NAMESPACE(TestName) {                                     \
             INTERNAL_CATCH_TYPE_GEN                                                  \
             INTERNAL_CATCH_NTTP_GEN(INTERNAL_CATCH_REMOVE_PARENS(Signature))         \
+            INTERNAL_CATCH_NTTP_REWRAP_GEN(INTERNAL_CATCH_REMOVE_PARENS(Signature))  \
             template<typename... Types>                               \
             struct TestName {                                         \
                 void reg_tests() {                                          \
@@ -259,6 +260,7 @@
     namespace INTERNAL_CATCH_MAKE_NAMESPACE(TestNameClass) {\
         INTERNAL_CATCH_TYPE_GEN                  \
         INTERNAL_CATCH_NTTP_GEN(INTERNAL_CATCH_REMOVE_PARENS(Signature))\
+        INTERNAL_CATCH_NTTP_REWRAP_GEN(INTERNAL_CATCH_REMOVE_PARENS(Signature))\
         template<typename...Types>\
         struct TestNameClass{\
             void reg_tests(){\
