@@ -4519,7 +4519,7 @@ Matchers.tests.cpp:<line number>: PASSED:
   CHECK_THAT( testStringForMatching(), Equals( "this string contains 'ABC' as a substring", Catch::CaseSensitive::No ) )
 with expansion:
   "this string contains 'abc' as a substring" equals: "this string contains
-  'abc' as a substring" (case insensitive)
+  'ABC' as a substring" (case insensitive)
 
 -------------------------------------------------------------------------------
 Equals string matcher
@@ -4677,7 +4677,7 @@ Exception.tests.cpp:<line number>
 Exception.tests.cpp:<line number>: PASSED:
   REQUIRE_THROWS_WITH( thisThrows(), Equals( "expecteD Exception", Catch::CaseSensitive::No ) )
 with expansion:
-  "expected exception" equals: "expected exception" (case insensitive)
+  "expected exception" equals: "expecteD Exception" (case insensitive)
 
 -------------------------------------------------------------------------------
 Exception messages can be tested for
@@ -4704,7 +4704,7 @@ with expansion:
 Exception.tests.cpp:<line number>: PASSED:
   REQUIRE_THROWS_WITH( thisThrows(), ContainsSubstring( "exCept", Catch::CaseSensitive::No ) )
 with expansion:
-  "expected exception" contains: "except" (case insensitive)
+  "expected exception" contains: "exCept" (case insensitive)
 
 -------------------------------------------------------------------------------
 Exception thrown inside stringify does not fail the test
@@ -12188,7 +12188,7 @@ with expansion:
 Matchers.tests.cpp:<line number>: PASSED:
   CHECK_THAT( testStringForMatching(), ContainsSubstring( "aBC", Catch::CaseSensitive::No ) )
 with expansion:
-  "this string contains 'abc' as a substring" contains: "abc" (case
+  "this string contains 'abc' as a substring" contains: "aBC" (case
   insensitive)
 
 Matchers.tests.cpp:<line number>: PASSED:
@@ -12199,7 +12199,7 @@ with expansion:
 Matchers.tests.cpp:<line number>: PASSED:
   CHECK_THAT( testStringForMatching(), StartsWith( "THIS", Catch::CaseSensitive::No ) )
 with expansion:
-  "this string contains 'abc' as a substring" starts with: "this" (case
+  "this string contains 'abc' as a substring" starts with: "THIS" (case
   insensitive)
 
 Matchers.tests.cpp:<line number>: PASSED:
@@ -12210,7 +12210,7 @@ with expansion:
 Matchers.tests.cpp:<line number>: PASSED:
   CHECK_THAT( testStringForMatching(), EndsWith( " SuBsTrInG", Catch::CaseSensitive::No ) )
 with expansion:
-  "this string contains 'abc' as a substring" ends with: " substring" (case
+  "this string contains 'abc' as a substring" ends with: " SuBsTrInG" (case
   insensitive)
 
 -------------------------------------------------------------------------------

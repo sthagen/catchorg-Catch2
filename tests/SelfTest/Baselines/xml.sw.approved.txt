@@ -5102,7 +5102,7 @@ Approx( 1.30000000000000004 )
         testStringForMatching(), Equals( "this string contains 'ABC' as a substring", Catch::CaseSensitive::No )
       </Original>
       <Expanded>
-        "this string contains 'abc' as a substring" equals: "this string contains 'abc' as a substring" (case insensitive)
+        "this string contains 'abc' as a substring" equals: "this string contains 'ABC' as a substring" (case insensitive)
       </Expanded>
     </Expression>
     <OverallResult success="true" skips="0"/>
@@ -5295,7 +5295,7 @@ Approx( 1.30000000000000004 )
           thisThrows(), Equals( "expecteD Exception", Catch::CaseSensitive::No )
         </Original>
         <Expanded>
-          "expected exception" equals: "expected exception" (case insensitive)
+          "expected exception" equals: "expecteD Exception" (case insensitive)
         </Expanded>
       </Expression>
       <OverallResults successes="1" failures="0" expectedFailures="0" skipped="false"/>
@@ -5330,7 +5330,7 @@ Approx( 1.30000000000000004 )
           thisThrows(), ContainsSubstring( "exCept", Catch::CaseSensitive::No )
         </Original>
         <Expanded>
-          "expected exception" contains: "except" (case insensitive)
+          "expected exception" contains: "exCept" (case insensitive)
         </Expanded>
       </Expression>
       <OverallResults successes="4" failures="0" expectedFailures="0" skipped="false"/>
@@ -14357,7 +14357,7 @@ Message from section two
         testStringForMatching(), ContainsSubstring( "aBC", Catch::CaseSensitive::No )
       </Original>
       <Expanded>
-        "this string contains 'abc' as a substring" contains: "abc" (case insensitive)
+        "this string contains 'abc' as a substring" contains: "aBC" (case insensitive)
       </Expanded>
     </Expression>
     <Expression success="true" type="CHECK_THAT" filename="tests/<exe-name>/UsageTests/Matchers.tests.cpp" >
@@ -14373,7 +14373,7 @@ Message from section two
         testStringForMatching(), StartsWith( "THIS", Catch::CaseSensitive::No )
       </Original>
       <Expanded>
-        "this string contains 'abc' as a substring" starts with: "this" (case insensitive)
+        "this string contains 'abc' as a substring" starts with: "THIS" (case insensitive)
       </Expanded>
     </Expression>
     <Expression success="true" type="CHECK_THAT" filename="tests/<exe-name>/UsageTests/Matchers.tests.cpp" >
@@ -14389,7 +14389,7 @@ Message from section two
         testStringForMatching(), EndsWith( " SuBsTrInG", Catch::CaseSensitive::No )
       </Original>
       <Expanded>
-        "this string contains 'abc' as a substring" ends with: " substring" (case insensitive)
+        "this string contains 'abc' as a substring" ends with: " SuBsTrInG" (case insensitive)
       </Expanded>
     </Expression>
     <OverallResult success="true" skips="0"/>

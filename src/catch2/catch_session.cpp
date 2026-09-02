@@ -140,9 +140,7 @@ namespace Catch {
         };
 
         void applyFilenamesAsTags() {
-            for (auto const& testInfo : getRegistryHub().getTestCaseRegistry().getAllInfos()) {
-                testInfo->addFilenameTag();
-            }
+            getMutableRegistryHub().getMutableTestCaseRegistry().enableFilenameTags();
         }
 
         // Creates empty file at path. The path must be writable, we do not
